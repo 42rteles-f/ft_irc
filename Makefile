@@ -6,15 +6,15 @@
 #    By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/02 20:08:19 by rteles-f          #+#    #+#              #
-#    Updated: 2024/02/19 18:08:49 by rteles-f         ###   ########.fr        #
+#    Updated: 2024/02/19 18:13:59 by rteles-f         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		= 	ft_irc
 
-CC			= 	c++ #-g -fsanitize=address
+CXX			= 	c++ #-g -fsanitize=address
 
-CFLAGS		= 	#-Wall -Wextra -Werror -std=c++98
+CXXFLAGS		= 	#-Wall -Wextra -Werror -std=c++98
 
 RM			= 	rm -f
 
@@ -27,10 +27,10 @@ OBJS		= 	$(SRCS:.cpp=.o)
 all: 		$(NAME)
 
 $(NAME):	$(OBJS) 
-			@$(CC) $(INCLUDES) $(CFLAGS) $(OBJS) -o $(NAME)
+			@$(CXX) $(INCLUDES) $(CXXFLAGS) $(OBJS) -o $(NAME)
 
 %.o: %.cpp
-			$(CC) $(INCLUDES) $(CFLAGS) -c -o $@ $<
+			$(CXX) $(INCLUDES) $(CXXFLAGS) -c -o $@ $<
 
 clean:
 			@$(RM) $(OBJS)
