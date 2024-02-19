@@ -6,7 +6,7 @@
 #    By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/02 20:08:19 by rteles-f          #+#    #+#              #
-#    Updated: 2024/02/19 18:13:59 by rteles-f         ###   ########.fr        #
+#    Updated: 2024/02/19 18:36:58 by rteles-f         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ RM			= 	rm -f
 
 INCLUDES	= 	-Iheaders/
 
-SRCS		=	src/gnl/get_next_line.c src/main/irc.cpp
+SRCS		=	src/main/irc.cpp
 
 OBJS		= 	$(SRCS:.cpp=.o)
 

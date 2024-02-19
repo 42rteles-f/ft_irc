@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 18:05:27 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/02/19 18:16:21 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/02/19 18:40:58 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int main(int ac, char **args)
     int         test;
     int         size;
     int         port;
+    char        buffer[1024];
 
     if (ac != 2)
         return (write(2, "Usage: ./program <port number>\n", 32));
@@ -36,7 +37,11 @@ int main(int ac, char **args)
         printf("connection %i.\n", test);
     else
         printf("fail.\n");
-    
+    while (1) {
+        recv(test, (void *)buffer, 1024, 0);
+        printf("information: %s\n", buffer);
+        bzero(buffer, 1024);
+    }
     if ((test = accept(server_fd, (sockaddr *)&sock, (socklen_t *)&size)) > 0)
         printf("connection %i.\n", test);
     else
