@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 18:04:14 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/02/19 18:41:34 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/02/19 19:39:20 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <strings.h>
+# include <string.h>
 
 typedef struct protoent     t_protocol;
 typedef struct sockaddr_in  t_sock;
