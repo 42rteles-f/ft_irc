@@ -35,7 +35,8 @@ char	*seek_line(int fd, int pos, char *piece, char *save)
 		line = seek_line(fd, (pos + i), buffer, save);
 	else
 	{
-		line = malloc(sizeof(char) * (pos + i + (piece[i] == '\n') + 1));
+		line = (char *)malloc(
+            sizeof(char) * (pos + i + (piece[i] == '\n') + 1));
 		if (!line)
 			return (NULL);
 		line[pos + i + (piece[i] == '\n')] = '\0';

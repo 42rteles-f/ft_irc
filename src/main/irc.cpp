@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   irc.c                                              :+:      :+:    :+:   */
+/*   irc.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 18:05:27 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/02/19 18:07:19 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/02/19 18:16:21 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,12 @@ int main(int ac, char **args)
     bind(server_fd, (struct sockaddr*)&sock, sizeof(sock));
     listen(server_fd, 0);
     size = sizeof(struct sockaddr_in);
-    if ((test = accept(server_fd, (void *)&sock, &size)) > 0)
+    if ((test = accept(server_fd, (sockaddr *)&sock, (socklen_t *)&size)) > 0)
         printf("connection %i.\n", test);
     else
         printf("fail.\n");
     
-    if ((test = accept(server_fd, (void *)&sock, &size)) > 0)
+    if ((test = accept(server_fd, (sockaddr *)&sock, (socklen_t *)&size)) > 0)
         printf("connection %i.\n", test);
     else
         printf("fail.\n");
