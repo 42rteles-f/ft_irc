@@ -1,27 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Server.cpp                                         :+:      :+:    :+:   */
+/*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/02/20 16:39:26 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/02/20 16:54:06 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Server.hpp"
+#include "Channel.hpp"
 
-Server::Server()
+Channel::Channel()
 {}
 
-Server::Server(const Server& tocopy)
+Channel::Channel(const Channel& tocopy)
 {}
 
-Server::~Server()
+Channel::~Channel()
 {}
 
-Server& Server::operator=(const Server& tocopy) {
+Channel& Channel::operator=(const Channel& tocopy) {
 	if (this == &tocopy)
 		return (*this);
 	/*
@@ -30,33 +30,21 @@ Server& Server::operator=(const Server& tocopy) {
 	return (*this);
 }
 
-std::list<Client>	Server::getChannel(int channel) {
+std::list<Client>	Channel::getChannel(int channel) {
 	
 	return ()
 }
 
-void	Server::online(void){
-	
-	while (_online)
-	{
-		manageConnections();
-		updateChannels();
-	}
-}
+void	Channel::update(void) {
+	std::list<Client>::iterator	client;
+	std::string					input;
 
-void	Server::offline(void){
-	
-}
-
-void	changeChannel() {
-	Server	main;
-
-}
-
-void	Server::updateChannels(void) {
-	std::map<int, std::list<Channel>>::iterator	channel;
-
-	for (channel = _channels.begin(); channel != _channels.end(); channel++) {
-		channel.update();
+	for (client = _clients.begin(); client!= _clients.end(); client++) {
+		client.readInput();
+		if (isCommand(client.getInput()))
+			executeCommand(client);
+		else if (!input.empty())
+			this->broadcast(client.getInput());
+		client.clearInput();
 	}
 }

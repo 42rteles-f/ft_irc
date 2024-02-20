@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 18:05:27 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/02/19 20:57:41 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/02/20 16:12:54 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,9 @@ int main(int ac, char **args)
     int         fd1;
     int         fd2;
     char        buffer[1024];
+    Server      server;
 
+    
     if (ac != 2)
         return (write(2, "Usage: ./program <port number>\n", 32));
     port = atoi(args[1]);

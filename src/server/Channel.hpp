@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Server.hpp                                         :+:      :+:    :+:   */
+/*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/02/20 16:40:34 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/02/20 16:37:39 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SERVER_HPP
-# define SERVER_HPP
+#ifndef CHANNEL_HPP
+# define CHANNEL_HPP
 
 # include <ft_irc.hpp>
 # include <iostream>
@@ -19,26 +19,19 @@
 # include <map>
 
 class Client;
-class Channel;
 
-class Server {
+class Channel {
 	private:
-		bool								_online;
-		std::map<int, std::list<Channel>>	_channels;
-		void	updateChannels(void);
-		std::list<Client>	getChannel(int socket);
+		std::list<Client> _clients;
 
 	public:
-		Server();
-		Server(const Server& tocopy);
-		~Server();
+		Channel();
+		Channel(const Channel& tocopy);
+		~Channel();
 
-		Server& operator=(const Server& tocopy);
-
-		void	setup(void);
-		void	online(void);
-		void	offline(void);
-
+		Channel& operator=(const Channel& tocopy);
+		std::list<Client>	getChannel(int socket);
+		void	update(void);
 
 } ;
 
