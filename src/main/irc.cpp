@@ -10,7 +10,24 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ft_irc.hpp>
+// #include <ft_irc.hpp>
+
+# include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <fcntl.h>
+# include <sys/socket.h>
+# include <sys/select.h>
+# include <stdlib.h>
+# include <netdb.h>
+# include <netinet/in.h>
+# include <stdio.h>
+# include <unistd.h>
+# include <strings.h>
+# include <string.h>
+
+typedef struct protoent     t_protocol;
+typedef struct sockaddr_in  t_sock;
 
 void    end_chat(int server, int fd1, int fd2)
 {
@@ -31,16 +48,15 @@ int main(int ac, char **args)
     int         fd1;
     int         fd2;
     char        buffer[1024];
-    Server      server;
+    // Server      server;
 
-    
     if (ac != 2)
         return (write(2, "Usage: ./program <port number>\n", 32));
     port = atoi(args[1]);
     tcp = getprotobyname("tcp");
     server_fd = socket(AF_INET, SOCK_STREAM, tcp->p_proto);
     sock.sin_family = AF_INET;
-    sock.sin_addr.s_addr = INADDR_ANY;
+    sock.sin_addr.s_addr = INADDR_ANY;	
     sock.sin_port = htons(port);
     bind(server_fd, (struct sockaddr*)&sock, sizeof(sock));
     listen(server_fd, 0);
