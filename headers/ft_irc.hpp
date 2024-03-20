@@ -19,10 +19,10 @@
 # include <fcntl.h>
 # include <sys/socket.h>
 # include <sys/select.h>
-# include <stdlib.h>
 # include <netdb.h>
 # include <netinet/in.h>
 # include <stdio.h>
+# include <stdlib.h>
 # include <unistd.h>
 # include <strings.h>
 # include <string.h>

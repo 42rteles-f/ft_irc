@@ -23,8 +23,9 @@ class Channel;
 
 class Server {
 	private:
+		std::map<std::string, Channel>	_channels;
+		Channel	wait_room;
 		bool								_online;
-		std::map<int, std::list<Channel>>	_channels;
 		void	updateChannels(void);
 		std::list<Client>	getChannel(int socket);
 

@@ -31,7 +31,7 @@ Channel& Channel::operator=(const Channel& tocopy) {
 }
 
 std::list<Client>	Channel::getChannel(int channel) {
-	
+
 	return ()
 }
 

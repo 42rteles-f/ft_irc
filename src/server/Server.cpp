@@ -35,17 +35,19 @@ std::list<Client>	Server::getChannel(int channel) {
 	return ()
 }
 
-void	Server::online(void){
-	
+void	Server::online(void) {
+
 	while (_online)
 	{
 		manageConnections();
+		wait_room.update();
+		_channels.for_each_minimal_n();
 		updateChannels();
 	}
 }
 
 void	Server::offline(void){
-	
+
 }
 
 void	changeChannel() {
@@ -54,9 +56,9 @@ void	changeChannel() {
 }
 
 void	Server::updateChannels(void) {
-	std::map<int, std::list<Channel>>::iterator	channel;
+	std::map<std::string, std::list<Channel>>::iterator	it;
 
-	for (channel = _channels.begin(); channel != _channels.end(); channel++) {
+	for (it = _channels.begin(); it != _channels.end(); it++) {
 		channel.update();
 	}
 }
