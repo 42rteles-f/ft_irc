@@ -25,6 +25,7 @@ class Server {
 	private:
 		std::map<std::string, Channel>	_channels;
 		Channel	connections;
+		int		server_socket;
 		bool	_online;
 
 		void	updateChannels(void);
