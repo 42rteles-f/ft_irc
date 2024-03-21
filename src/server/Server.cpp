@@ -39,10 +39,8 @@ void	Server::online(void) {
 
 	while (_online)
 	{
-		manageConnections();
-		wait_room.update();
-		_channels.for_each_minimal_n();
-		updateChannels();
+		this->incomingConnections();
+		connections.update();
 	}
 }
 
@@ -51,7 +49,6 @@ void	Server::offline(void){
 }
 
 void	changeChannel() {
-	Server	main;
 
 }
 

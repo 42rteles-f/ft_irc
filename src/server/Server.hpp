@@ -24,10 +24,10 @@ class Channel;
 class Server {
 	private:
 		std::map<std::string, Channel>	_channels;
-		Channel	wait_room;
-		bool								_online;
+		Channel	connections;
+		bool	_online;
+
 		void	updateChannels(void);
-		std::list<Client>	getChannel(int socket);
 
 	public:
 		Server();
@@ -39,8 +39,6 @@ class Server {
 		void	setup(void);
 		void	online(void);
 		void	offline(void);
-
-
 } ;
 
 #endif
