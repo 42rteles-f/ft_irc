@@ -10,13 +10,30 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SERVER_HPP
-# define SERVER_HPP
+#pragma once
 
 # include <ft_irc.hpp>
 # include <iostream>
 # include <list>
 # include <map>
+
+# include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <fcntl.h>
+# include <sys/socket.h>
+# include <sys/select.h>
+# include <stdlib.h>
+# include <netdb.h>
+# include <netinet/in.h>
+# include <stdio.h>
+# include <unistd.h>
+# include <strings.h>
+# include <string.h>
+
+
+typedef struct protoent     t_protocol;
+typedef struct sockaddr_in  t_sock;
 
 class Client;
 class Channel;
@@ -25,8 +42,12 @@ class Server {
 	private:
 		std::map<std::string, Channel>	_channels;
 		Channel	connections;
-		int		server_socket;
+		int		server_fd;
+		t_sock	_sock;
+		fd_set	request_set;
+		fd_set	client_set;
 		bool	_online;
+		
 
 		void	updateChannels(void);
 
@@ -41,5 +62,3 @@ class Server {
 		void	online(void);
 		void	offline(void);
 } ;
-
-#endif

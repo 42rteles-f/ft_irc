@@ -39,6 +39,18 @@ void    end_chat(int server, int fd1, int fd2)
 
 int main(int ac, char **args)
 {
+	Server	server;
+
+	if (!server.setup(args)) {
+		std::cout << "Error" << std::endl;
+		return (1);
+	}
+	server.run();
+	server.end();
+
+
+
+
     t_protocol  *tcp;
     t_sock      sock;
     int         server_fd;
@@ -48,7 +60,6 @@ int main(int ac, char **args)
     int         fd1;
     int         fd2;
     char        buffer[1024];
-    // Server      server;
 
     if (ac != 2)
         return (write(2, "Usage: ./program <port number>\n", 32));
