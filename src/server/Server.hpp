@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/02/20 16:40:34 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/03/27 20:55:22 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 # include <ft_irc.hpp>
 # include <iostream>
+# include <vector>
 # include <list>
 # include <map>
 
@@ -41,13 +42,12 @@ class Channel;
 class Server {
 	private:
 		std::map<std::string, Channel>	_channels;
-		Channel	connections;
+		std::vector<int>	connections;
 		int		server_fd;
 		t_sock	_sock;
 		fd_set	request_set;
 		fd_set	client_set;
 		bool	_online;
-		
 
 		void	updateChannels(void);
 

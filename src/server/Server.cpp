@@ -6,11 +6,11 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/02/20 16:39:26 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/03/27 20:55:14 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Server.hpp"
+#include <ft_irc.hpp>
 
 Server::Server()
 {}
@@ -55,8 +55,9 @@ bool	setup(char **init) {
 void	Server::incomingConnections(void) {
 	
 	struct timeval time;
-	int	value, connection, size;
+	int	value, connection, size, count;
 
+	count = 0;
 	bzero(time, sizeof(struct timeval));
 	do {
 		value = select(server_socket, &request_set, NULL, NULL, &time);
@@ -66,9 +67,8 @@ void	Server::incomingConnections(void) {
 			size = sizeof(struct sockaddr_in);
 			connection = accept(server_socket, (sockaddr *)&sock, (socklen_t *)&size);
 		}
-			
-	}
-	while (value)
+		count++;
+	} while (value)
 }
 
 std::list<Client>	Server::getChannel(int channel) {
