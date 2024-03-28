@@ -17,6 +17,7 @@
 # include <vector>
 # include <list>
 # include <map>
+# include <poll.h>
 
 # include <stdio.h>
 # include <stdlib.h>
@@ -31,22 +32,19 @@
 # include <unistd.h>
 # include <strings.h>
 # include <string.h>
-
+# include <iostream>
 
 typedef struct protoent     t_protocol;
 typedef struct sockaddr_in  t_sock;
 
 class Client;
-class Channel;
+// class Channel;
 
 class Server {
 	private:
-		std::map<std::string, Channel>	_channels;
-		std::vector<int>	connections;
-		int		server_fd;
+		// std::map<std::string, Channel>	_channels;
+		std::vector<struct pollfd> 		_clients;
 		t_sock	_sock;
-		fd_set	request_set;
-		fd_set	client_set;
 		bool	_online;
 
 		void	updateChannels(void);
@@ -58,7 +56,11 @@ class Server {
 
 		Server& operator=(const Server& tocopy);
 
-		void	setup(void);
+		void	incomingConnections(void);
+		void	printClients(void);
+
 		void	online(void);
+		void	run(void);
+		bool	setup(char **init);
 		void	offline(void);
 } ;

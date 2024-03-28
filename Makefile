@@ -20,7 +20,7 @@ RM			= 	rm -f
 
 INCLUDES	= 	-Iheaders/
 
-SRCS		=	src/main/irc.cpp
+SRCS		=	src/main/irc.cpp src/server/Server.cpp
 
 OBJS		= 	$(SRCS:.cpp=.o)
 

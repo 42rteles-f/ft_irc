@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include <ft_irc.hpp>
+#include "Server.hpp"
 
 Server::Server()
 {}
@@ -30,58 +31,47 @@ Server& Server::operator=(const Server& tocopy) {
 	return (*this);
 }
 
-bool	setup(char **init) {
-    int         port;
+bool	Server::setup(char **init) {
+    int         	port;
+	struct pollfd	new_server;
+    t_protocol  	*tcp;
 
-    if (ac != 2)
-        return (write(2, "Usage: ./program <port number>\n", 32));
-
-	FD_ZERO(&request_set);
-    port = atoi(args[1]);
+    port = atoi(init[1]);
     tcp = getprotobyname("tcp");
     _sock.sin_family = AF_INET;
     _sock.sin_addr.s_addr = INADDR_ANY;	
     _sock.sin_port = htons(port);
-	if ((server_fd = socket(AF_INET, SOCK_STREAM, tcp->p_proto)) < 0 ||
-		bind(server_fd, (struct sockaddr*)&_sock, sizeof(_sock)) != 0 ||
-		listen(server_fd, 0) < 0)
+	if ((new_server.fd = socket(AF_INET, SOCK_STREAM, tcp->p_proto)) < 0 ||
+		bind(new_server.fd, (struct sockaddr*)&_sock, sizeof(_sock)) != 0 ||
+		listen(new_server.fd, 0) < 0)
 	{
 		std::cout << "Error SetingUp Server" << std::endl;
 	}
-	FD_SET(_sock, &request_set);
+	new_server.events = POLLIN;
+	_clients.push_back(new_server);
 	_online = true;
+	return (_online);
 }
 
 void	Server::incomingConnections(void) {
 	
-	struct timeval time;
-	int	value, connection, size, count;
+	struct pollfd		new_client;
+	long unsigned int	time_out = sizeof(_sock);
 
-	count = 0;
-	bzero(time, sizeof(struct timeval));
-	do {
-		value = select(server_socket, &request_set, NULL, NULL, &time);
-		if (value < 0)
-			std::cout << "Error" << std::endl;
-		else if (value) {
-			size = sizeof(struct sockaddr_in);
-			connection = accept(server_socket, (sockaddr *)&sock, (socklen_t *)&size);
-		}
-		count++;
-	} while (value)
-}
-
-std::list<Client>	Server::getChannel(int channel) {
-	
-	return ()
+	if (_clients[0].revents & POLLIN) {
+		new_client.fd = accept(_clients[0].fd, (sockaddr *)&_sock, (socklen_t*)&time_out);
+		new_client.events = POLLIN;
+		_clients.push_back(new_client);
+	}
 }
 
 void	Server::online(void) {
 
 	while (_online)
 	{
-		this->incomingConnections();
-		connections.update();
+		poll(_clients.data(), _clients.size(), -1);
+		incomingConnections();
+		printClients();
 	}
 }
 
@@ -89,14 +79,19 @@ void	Server::offline(void){
 
 }
 
-void	changeChannel() {
+void	Server::printClients(void) {
 
-}
-
-void	Server::updateChannels(void) {
-	std::map<std::string, std::list<Channel>>::iterator	it;
-
-	for (it = _channels.begin(); it != _channels.end(); it++) {
-		channel.update();
+	for (size_t i = 1; i < _clients.size(); i++) {
+		char	buffer[1024] = {0};
+		if (_clients[i].revents & POLLIN)
+		{
+			if (!recv(_clients[i].fd, (void *)buffer, 1024, MSG_DONTWAIT)) {
+				std::vector<struct pollfd>::const_iterator	it = _clients.begin();
+				std::advance(it, i);
+				_clients.erase(it);
+			}
+			else
+				printf("Client %lu: %s\n", i, buffer);
+		}
 	}
 }
