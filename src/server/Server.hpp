@@ -34,16 +34,18 @@
 # include <string.h>
 # include <iostream>
 
-typedef struct protoent     t_protocol;
+#define READSIZE 1024
+
 typedef struct sockaddr_in  t_sock;
 
-class Client;
+// class Client;
 // class Channel;
 
 class Server {
 	private:
 		// std::map<std::string, Channel>	_channels;
-		std::vector<struct pollfd> 		_clients;
+		std::vector<struct pollfd> 	_clients;
+		struct pollfd				_server;
 		t_sock	_sock;
 		bool	_online;
 
@@ -57,6 +59,7 @@ class Server {
 		Server& operator=(const Server& tocopy);
 
 		void	incomingConnections(void);
+		void	incomingMessages(void);
 		void	printClients(void);
 
 		void	online(void);

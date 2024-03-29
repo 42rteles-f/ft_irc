@@ -32,36 +32,61 @@ Server& Server::operator=(const Server& tocopy) {
 }
 
 bool	Server::setup(char **init) {
-    int         	port;
 	struct pollfd	new_server;
-    t_protocol  	*tcp;
 
-    port = atoi(init[1]);
-    tcp = getprotobyname("tcp");
     _sock.sin_family = AF_INET;
-    _sock.sin_addr.s_addr = INADDR_ANY;	
-    _sock.sin_port = htons(port);
-	if ((new_server.fd = socket(AF_INET, SOCK_STREAM, tcp->p_proto)) < 0 ||
+    _sock.sin_addr.s_addr = INADDR_ANY;
+    _sock.sin_port = htons(atoi(init[1]));
+	new_server.events = POLLIN;
+	if ((new_server.fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0 ||
 		bind(new_server.fd, (struct sockaddr*)&_sock, sizeof(_sock)) != 0 ||
 		listen(new_server.fd, 0) < 0)
 	{
 		std::cout << "Error SetingUp Server" << std::endl;
+		return (false);
 	}
-	new_server.events = POLLIN;
 	_clients.push_back(new_server);
 	_online = true;
 	return (_online);
 }
 
+void	Server::incomingMessages(void) {
+	std::string	input;
+	char		buffer[READSIZE];
+	int			length;
+
+	for (size_t i = 1; i < _clients.size(); ++i)
+	{
+		if (!(_clients[i].revents & POLLIN))
+			continue;
+		input.clear();
+		while ((length = recv(_clients[i].fd, (void *)buffer, READSIZE, MSG_DONTWAIT)) > 0)
+			input.append(buffer, length);
+		if (!length)
+			_clients.erase(_clients.begin() + i--);
+		else {
+			std::cout << input << std::endl;
+			if (input.find("JOIN") != input.npos) {
+				send(_clients[i].fd, ":Red!RedRubens@client_host JOIN #3\r\n", 36, 0);
+				// send(_clients[i].fd, "JOIN #3\r\n", 9, 0);
+				// send(_clients[i].fd, "332 username #3 :This is the topic for channel #3\r\n", 51, 0);
+				// send(_clients[i].fd, "353 username = #3 :username @username2\r\n", 40, 0);
+				// send(_clients[i].fd, "366 username #3 :End of /NAMES list.\r\n", 38, 0);
+			}
+		}
+	}
+}
+
 void	Server::incomingConnections(void) {
-	
-	struct pollfd		new_client;
-	long unsigned int	time_out = sizeof(_sock);
+
+	struct pollfd	new_client;
+	socklen_t		sock_len = sizeof(_sock);
 
 	if (_clients[0].revents & POLLIN) {
-		new_client.fd = accept(_clients[0].fd, (sockaddr *)&_sock, (socklen_t*)&time_out);
+		new_client.fd = accept(_clients[0].fd, (sockaddr *)&_sock, &sock_len);
 		new_client.events = POLLIN;
 		_clients.push_back(new_client);
+		std::cout << "Connect" << std::endl;
 	}
 }
 
@@ -71,7 +96,7 @@ void	Server::online(void) {
 	{
 		poll(_clients.data(), _clients.size(), -1);
 		incomingConnections();
-		printClients();
+		incomingMessages();
 	}
 }
 
@@ -81,7 +106,8 @@ void	Server::offline(void){
 
 void	Server::printClients(void) {
 
-	for (size_t i = 1; i < _clients.size(); i++) {
+	for (size_t i = 1; i < _clients.size(); i++)
+	{
 		char	buffer[1024] = {0};
 		if (_clients[i].revents & POLLIN)
 		{
