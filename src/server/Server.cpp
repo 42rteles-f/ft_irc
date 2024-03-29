@@ -76,6 +76,8 @@ void	Server::incomingMessages(void) {
 		}
 	}
 }
+// setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) < 0
+// makes the socket reusable for next try;
 
 void	Server::incomingConnections(void) {
 
