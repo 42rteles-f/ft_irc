@@ -52,6 +52,18 @@ bool	Server::setup(char **init) {
 	return (_online);
 }
 
+void	Server::fowardMessage(std::string input, int fd) {
+	for (size_t i = 1; i < _clients.size(); ++i)
+	{
+		if (_clients[i].fd == fd)
+			continue;
+		std::string	remade(":sender_nick!user@host PRIVMSG #3 :" + input);
+		send(_clients[i].fd, remade.c_str(), remade.size(), 0);
+		std::cout << _clients[i].fd << std::endl;
+	}
+}
+
+
 void	Server::incomingMessages(void) {
 	std::string	input;
 	char		buffer[READSIZE];
@@ -70,11 +82,8 @@ void	Server::incomingMessages(void) {
 			std::cout << input << std::endl;
 			if (input.find("JOIN") != input.npos) {
 				send(_clients[i].fd, ":Red!RedRubens@client_host JOIN #3\r\n", 36, 0);
-				// send(_clients[i].fd, "JOIN #3\r\n", 9, 0);
-				// send(_clients[i].fd, "332 username #3 :This is the topic for channel #3\r\n", 51, 0);
-				// send(_clients[i].fd, "353 username = #3 :username @username2\r\n", 40, 0);
-				// send(_clients[i].fd, "366 username #3 :End of /NAMES list.\r\n", 38, 0);
 			}
+			fowardMessage(input, _clients[i].fd);
 		}
 	}
 }

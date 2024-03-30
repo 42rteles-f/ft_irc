@@ -54,8 +54,10 @@ class Server {
 		struct pollfd				_server;
 		t_sock	_sock;
 		bool	_online;
+		static void	invalidCommand(std::string);
 
 		void	updateChannels(void);
+		void	fowardMessage(std::string input, int fd);
 
 	public:
 		Server();
@@ -72,5 +74,4 @@ class Server {
 		void	run(void);
 		bool	setup(char **init);
 		void	offline(void);
-		void	invalidCommand(std::string);
 } ;
