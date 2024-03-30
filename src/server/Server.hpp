@@ -36,14 +36,20 @@
 
 #define READSIZE 1024
 
+class Server;
+
+typedef void	(Server::*t_exe)();
 typedef struct sockaddr_in  t_sock;
 
 // class Client;
 // class Channel;
 
+
+
 class Server {
 	private:
 		// std::map<std::string, Channel>	_channels;
+		std::map<std::string, t_exe>	commands;
 		std::vector<struct pollfd> 	_clients;
 		struct pollfd				_server;
 		t_sock	_sock;
@@ -66,4 +72,5 @@ class Server {
 		void	run(void);
 		bool	setup(char **init);
 		void	offline(void);
+		void	invalidCommand(std::string);
 } ;

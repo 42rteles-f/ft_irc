@@ -13,6 +13,22 @@
 #include <ft_irc.hpp>
 #include "../server/Server.hpp"
 
+struct test1 {
+	int	first;
+	int	second;
+} ;
+
+struct	test {
+	struct test1	a;
+	void			*b;
+} ;
+
+struct test2 {
+	int		a;
+	int		b;
+	void	*c;
+} ;
+
 int main(int ac, char **args)
 {
 	Server	server;
@@ -22,4 +38,5 @@ int main(int ac, char **args)
 		return (1);
 	}
 	server.online();
+	server.offline();
 }

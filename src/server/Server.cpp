@@ -14,7 +14,9 @@
 #include "Server.hpp"
 
 Server::Server()
-{}
+{
+	commands.default_value = &Server::invalidCommand;
+}
 
 Server::Server(const Server& tocopy)
 {}
@@ -123,3 +125,8 @@ void	Server::printClients(void) {
 		}
 	}
 }
+
+void	Server::invalidCommand(std::string command) {
+	std::cout << command << ": Not a valid Command in this Server." << std::endl;
+}
+
