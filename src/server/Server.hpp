@@ -6,57 +6,34 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/03/27 20:55:22 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/03 00:43:53 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 # include <ft_irc.hpp>
-# include <iostream>
-# include <vector>
-# include <list>
-# include <map>
-# include <poll.h>
 
-# include <stdio.h>
-# include <stdlib.h>
-# include <unistd.h>
-# include <fcntl.h>
-# include <sys/socket.h>
-# include <sys/select.h>
-# include <stdlib.h>
-# include <netdb.h>
-# include <netinet/in.h>
-# include <stdio.h>
-# include <unistd.h>
-# include <strings.h>
-# include <string.h>
-# include <iostream>
+typedef struct  protoent     t_protocol;
+typedef struct  sockaddr_in  t_sock;
+typedef void    (Server::*t_exe)();
 
 #define READSIZE 1024
 
 class Server;
-
-typedef void	(Server::*t_exe)();
-typedef struct sockaddr_in  t_sock;
-
-// class Client;
-// class Channel;
-
-
+class Connections;
 
 class Server {
 	private:
 		// std::map<std::string, Channel>	_channels;
-		std::map<std::string, t_exe>	commands;
-		std::vector<struct pollfd> 	_clients;
-		struct pollfd				_server;
+		// std::map<std::string, t_exe>		commands;
+		Connections					_clients;
 		t_sock	_sock;
 		bool	_online;
 		static void	invalidCommand(std::string);
 
 		void	updateChannels(void);
+		void	executeClient(Client& client);
 		void	fowardMessage(std::string input, int fd);
 
 	public:

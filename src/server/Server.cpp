@@ -6,17 +6,16 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/03/27 20:55:14 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/03 00:42:37 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft_irc.hpp>
 #include "Server.hpp"
 
-Server::Server()
-{
-	commands.default_value = &Server::invalidCommand;
-}
+Server::Server():
+_online(false)
+{}
 
 Server::Server(const Server& tocopy)
 {}
@@ -47,25 +46,24 @@ bool	Server::setup(char **init) {
 		std::cout << "Error SetingUp Server" << std::endl;
 		return (false);
 	}
-	_clients.push_back(new_server);
+	_clients.add(new_server);
 	_online = true;
 	return (_online);
 }
 
-void	Server::fowardMessage(std::string input, int fd) {
-	for (size_t i = 1; i < _clients.size(); ++i)
-	{
-		if (_clients[i].fd == fd)
-			continue;
-		std::string	remade(":sender_nick!user@host PRIVMSG #3 :" + input);
-		send(_clients[i].fd, remade.c_str(), remade.size(), 0);
-		std::cout << _clients[i].fd << std::endl;
-	}
-}
+// void	Server::fowardMessage(std::string input, int fd) {
+// 	for (size_t i = 1; i < _sockets.size(); ++i)
+// 	{
+// 		if (_sockets[i].fd == fd)
+// 			continue;
+// 		std::string	remade(":sender_nick!user@host PRIVMSG #3 :" + input);
+// 		send(_sockets[i].fd, remade.c_str(), remade.size(), 0);
+// 		std::cout << _sockets[i].fd << std::endl;
+// 	}
+// }
 
-
-void	Server::incomingMessages(void) {
-	std::string	input;
+void	Server::incomingMessages(void)
+{
 	char		buffer[READSIZE];
 	int			length;
 
@@ -73,32 +71,24 @@ void	Server::incomingMessages(void) {
 	{
 		if (!(_clients[i].revents & POLLIN))
 			continue;
-		input.clear();
 		while ((length = recv(_clients[i].fd, (void *)buffer, READSIZE, MSG_DONTWAIT)) > 0)
-			input.append(buffer, length);
+			_clients[i].addInput(buffer, length);
 		if (!length)
-			_clients.erase(_clients.begin() + i--);
-		else {
-			std::cout << input << std::endl;
-			if (input.find("JOIN") != input.npos) {
-				send(_clients[i].fd, ":Red!RedRubens@client_host JOIN #3\r\n", 36, 0);
-			}
-			fowardMessage(input, _clients[i].fd);
-		}
+			_clients.erase(i--);
+		// else if (_clients[i].hasCommand())
+		// 	this->executeClient(_clients[i]);
 	}
 }
-// setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) < 0
-// makes the socket reusable for next try;
 
 void	Server::incomingConnections(void) {
 
-	struct pollfd	new_client;
+	struct pollfd	new_socket;
 	socklen_t		sock_len = sizeof(_sock);
 
 	if (_clients[0].revents & POLLIN) {
-		new_client.fd = accept(_clients[0].fd, (sockaddr *)&_sock, &sock_len);
-		new_client.events = POLLIN;
-		_clients.push_back(new_client);
+		new_socket.fd = accept(_clients[0].fd, (sockaddr *)&_sock, &sock_len);
+		new_socket.events = POLLIN;
+		_clients->add(new_socket);
 		std::cout << "Connect" << std::endl;
 	}
 }
@@ -117,25 +107,29 @@ void	Server::offline(void){
 
 }
 
-void	Server::printClients(void) {
+// void	Server::printClients(void) {
 
-	for (size_t i = 1; i < _clients.size(); i++)
-	{
-		char	buffer[1024] = {0};
-		if (_clients[i].revents & POLLIN)
-		{
-			if (!recv(_clients[i].fd, (void *)buffer, 1024, MSG_DONTWAIT)) {
-				std::vector<struct pollfd>::const_iterator	it = _clients.begin();
-				std::advance(it, i);
-				_clients.erase(it);
-			}
-			else
-				printf("Client %lu: %s\n", i, buffer);
-		}
-	}
-}
+// 	for (size_t i = 1; i < _sockets.size(); i++)
+// 	{
+// 		char	buffer[1024] = {0};
+// 		if (_sockets[i].revents & POLLIN)
+// 		{
+// 			if (!recv(_sockets[i].fd, (void *)buffer, 1024, MSG_DONTWAIT))
+// 				_sockets.erase(_sockets.begin() + i);
+// 			else
+// 				printf("Client %lu: %s\n", i, buffer);
+// 		}
+// 	}
+// }
 
 void	Server::invalidCommand(std::string command) {
 	std::cout << command << ": Not a valid Command in this Server." << std::endl;
 }
 
+
+
+void	Server::executeClient(Client& client) {
+}
+
+// setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) < 0
+// makes the socket reusable for next try;

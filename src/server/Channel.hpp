@@ -6,17 +6,13 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/02/20 16:37:39 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/03 00:39:46 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CHANNEL_HPP
-# define CHANNEL_HPP
+#pragma once
 
 # include <ft_irc.hpp>
-# include <iostream>
-# include <list>
-# include <map>
 
 class Client;
 class Server;
@@ -24,7 +20,7 @@ class Server;
 class Channel {
 	private:
 		Server	*observer;
-		std::list<Client> _clients;
+		std::list<Client> _sockets;
 
 	public:
 		Channel();
@@ -32,12 +28,4 @@ class Channel {
 		~Channel();
 
 		Channel& operator=(const Channel& tocopy);
-		std::list<Client>	getChannel(int socket);
-		void	update(void);
-		void	notifyObserver() {
-			observer.
-		}
-
 } ;
-
-#endif
