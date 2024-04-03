@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/03 01:47:17 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/03 02:29:46 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ void	Server::incomingMessages(void)
 {
 	for (size_t i = 1; i < _connection.size(); ++i)
 	{
+		std::cout << "loop " << i << std::endl;
 		_connection[i].update();
 		if (_connection[i].isClosed())
 			_connection.erase(i--);
@@ -82,6 +83,7 @@ void	Server::incomingConnections(void) {
 		new_socket.fd = _connection.serverAccept((sockaddr *)&_sock);
 		new_socket.events = POLLIN;
 		_connection.add(new_socket);
+		std::cout << new_socket.fd << std::endl;
 		std::cout << "Connect" << std::endl;
 	}
 }
@@ -91,6 +93,10 @@ void	Server::online(void) {
 	while (_online)
 	{
 		poll(_connection.data(), _connection.size(), -1);
+		std::cout << "connections ";
+		for (size_t i = 0; i < _connection.size(); i++)
+			std::cout << _connection[i].socket.fd << "-" << _connection._sockets[i].fd << " " << std::endl;
+		std::cout << _connection.size() << std::endl;
 		incomingConnections();
 		incomingMessages();
 	}

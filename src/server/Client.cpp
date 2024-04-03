@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:37:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/03 01:54:43 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/03 02:29:29 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,5 +50,6 @@ bool	Client::update(void) {
 		this->input.clear();
 		return (false);
 	}
+	std::cout << this->input << std::endl;
 	return (true);
 }

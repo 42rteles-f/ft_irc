@@ -6,12 +6,11 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 18:05:27 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/03 01:05:21 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/03 01:56:45 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft_irc.hpp>
-// #include "../server/Server.hpp"
 
 int main(int ac, char **args)
 {
