@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/03 02:29:46 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/03 19:00:00 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ Server::Server(const Server& tocopy)
 {}
 
 Server::~Server()
-{}
+{
+}
 
 Server& Server::operator=(const Server& tocopy) {
 	if (this == &tocopy)
@@ -46,7 +47,10 @@ bool	Server::setup(char **init) {
 		std::cout << "Error SetingUp Server" << std::endl;
 		return (false);
 	}
-	_connection.add(new_server);
+	// this->addConnection(new_server);
+	_sockets.push_back(new_server);
+	// _clients.push_back(Client());
+	// this->push_back(new_server);
 	_online = true;
 	return (_online);
 }
@@ -62,29 +66,65 @@ bool	Server::setup(char **init) {
 // 	}
 // }
 
-void	Server::incomingMessages(void)
-{
-	for (size_t i = 1; i < _connection.size(); ++i)
+// void	Server::incomingMessages(void)
+// {
+// 	Client	*client;
+	
+// 	for (size_t i = 1; i < _sockets.size(); ++i)
+// 	{
+// 		client = getClient(i);
+// 		client->update();
+// 		if (client->isClosed())
+// 			this->eraseConnection(i--);
+// 		else
+// 			this->executeClient(client);
+// 	}
+// }
+
+void	Server::incomingMessages(void) {
+	std::string	input;
+	char		buffer[READSIZE];
+	int			length;
+
+	for (size_t i = 1; i < _sockets.size(); ++i)
 	{
-		std::cout << "loop " << i << std::endl;
-		_connection[i].update();
-		if (_connection[i].isClosed())
-			_connection.erase(i--);
-		else
-			this->executeClient(_connection[i]);
+		if (!(_sockets[i].revents & POLLIN))
+			continue;
+		input.clear();
+		while ((length = recv(_sockets[i].fd, (void *)buffer, READSIZE, MSG_DONTWAIT)) > 0)
+			input.append(buffer, length);
+		if (!length) {
+			_sockets.erase(_sockets.begin() + i--);
+		}
+		else {
+			std::cout << input << std::endl;
+		}
 	}
 }
 
+// void	Server::incomingConnections(void) {
+
+// 	struct pollfd	new_client;
+// 	socklen_t		sock_len = sizeof(_sock);
+
+// 	if (_connection[0].revents & POLLIN) {
+// 		new_client.fd = accept(_connection[0].fd, (sockaddr *)&_sock, &sock_len);
+// 		new_client.events = POLLIN;
+// 		this->push_back(new_client);
+// 		std::cout << "Connect" << std::endl;
+// 	}
+// }
+
 void	Server::incomingConnections(void) {
 
-	struct pollfd	new_socket;
+	struct pollfd	new_client;
+	socklen_t		sock_len = sizeof(_sock);
 
-	if (_connection.serverRequest()) {
-		new_socket.fd = _connection.serverAccept((sockaddr *)&_sock);
-		new_socket.events = POLLIN;
-		_connection.add(new_socket);
-		std::cout << new_socket.fd << std::endl;
-		std::cout << "Connect" << std::endl;
+	if (_sockets[0].fd & POLLIN) {
+		new_client.fd = accept(_sockets[0].fd, (sockaddr *)&_sock, &sock_len);
+		new_client.events = POLLIN;
+		_sockets.push_back(new_client);
+		// std::cout << "Connected " << new_client.fd << std::endl;
 	}
 }
 
@@ -92,19 +132,37 @@ void	Server::online(void) {
 
 	while (_online)
 	{
-		poll(_connection.data(), _connection.size(), -1);
-		std::cout << "connections ";
-		for (size_t i = 0; i < _connection.size(); i++)
-			std::cout << _connection[i].socket.fd << "-" << _connection._sockets[i].fd << " " << std::endl;
-		std::cout << _connection.size() << std::endl;
+		poll(_sockets.data(), _sockets.size(), -1);
 		incomingConnections();
 		incomingMessages();
 	}
 }
 
-void	Server::offline(void){
+void	Server::offline(void) {}
 
+void	Server::executeClient(Client* client) {}
+
+void	Server::invalidCommand(std::string command) {
+	std::cout << command << ": Not a valid Command in this Server." << std::endl;
 }
+
+// void	Server::addConnection(struct pollfd& socket) {
+// 	if (socket.fd < 0) {
+// 		return ;
+// 	}
+// 	_sockets.push_back(socket);
+// 	_clients.push_back(Client());
+// }
+
+// void	Server::eraseConnection(size_t position) {
+// 	_sockets.erase(_sockets.begin() + position);
+// 	_clients.erase(_clients.begin() + position);
+// }
+
+// Client	*Server::getClient(size_t position) {
+// 	_clients[position].socket = &_sockets[position];
+// 	return (&_clients[position]);
+// }
 
 // void	Server::printClients(void) {
 
@@ -120,14 +178,5 @@ void	Server::offline(void){
 // 		}
 // 	}
 // }
-
-void	Server::invalidCommand(std::string command) {
-	std::cout << command << ": Not a valid Command in this Server." << std::endl;
-}
-
-
-
-void	Server::executeClient(Client& client) {}
-
 // setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) < 0
 // makes the socket reusable for next try;

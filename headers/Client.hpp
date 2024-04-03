@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/03 02:37:27 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/03 15:30:21 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,10 @@ class Client {
 		bool					closed;
 
 	public:
-		struct pollfd&			socket;
-		Client(struct pollfd& socket);
+		struct pollfd			*socket;
+
+		Client();
+		Client(struct pollfd* socket);
 		Client(const Client& tocopy);
 		~Client();
 

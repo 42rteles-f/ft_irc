@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/03 02:38:43 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/03 18:28:47 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,12 @@ Connections& Connections::operator=(const Connections& tocopy) {
 	return (*this);
 }
 
-void	Connections::add(struct pollfd socket) {
+void	Connections::add(struct pollfd& socket) {
 	if (socket.fd < 0) {
 		return ;
 	}
 	_sockets.push_back(socket);
-	_clients.push_back(Client(_sockets.back()));
+	_clients.push_back(Client());
 }
 
 void	Connections::erase(size_t position) {
@@ -54,7 +54,7 @@ size_t	Connections::size(void) {
 }
 
 Client& Connections::operator[](size_t position) {
-	_clients[position]
+	_clients[position].socket = &_sockets[position];
 	return (_clients[position]);
 }
 
@@ -64,7 +64,7 @@ bool	Connections::serverRequest(void) {
 
 int		Connections::serverAccept(sockaddr *sock)
 {
-	socklen_t	sock_len = sizeof(sock);
+	socklen_t	sock_len = sizeof(sockaddr_in);
 
 	return (accept(_sockets[0].fd, sock, &sock_len));
 }
