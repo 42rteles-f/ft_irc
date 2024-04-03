@@ -6,12 +6,12 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/03 00:42:37 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/03 01:47:17 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft_irc.hpp>
-#include "Server.hpp"
+#include <Server.hpp>
 
 Server::Server():
 _online(false)
@@ -46,7 +46,7 @@ bool	Server::setup(char **init) {
 		std::cout << "Error SetingUp Server" << std::endl;
 		return (false);
 	}
-	_clients.add(new_server);
+	_connection.add(new_server);
 	_online = true;
 	return (_online);
 }
@@ -64,31 +64,24 @@ bool	Server::setup(char **init) {
 
 void	Server::incomingMessages(void)
 {
-	char		buffer[READSIZE];
-	int			length;
-
-	for (size_t i = 1; i < _clients.size(); ++i)
+	for (size_t i = 1; i < _connection.size(); ++i)
 	{
-		if (!(_clients[i].revents & POLLIN))
-			continue;
-		while ((length = recv(_clients[i].fd, (void *)buffer, READSIZE, MSG_DONTWAIT)) > 0)
-			_clients[i].addInput(buffer, length);
-		if (!length)
-			_clients.erase(i--);
-		// else if (_clients[i].hasCommand())
-		// 	this->executeClient(_clients[i]);
+		_connection[i].update();
+		if (_connection[i].isClosed())
+			_connection.erase(i--);
+		else
+			this->executeClient(_connection[i]);
 	}
 }
 
 void	Server::incomingConnections(void) {
 
 	struct pollfd	new_socket;
-	socklen_t		sock_len = sizeof(_sock);
 
-	if (_clients[0].revents & POLLIN) {
-		new_socket.fd = accept(_clients[0].fd, (sockaddr *)&_sock, &sock_len);
+	if (_connection.serverRequest()) {
+		new_socket.fd = _connection.serverAccept((sockaddr *)&_sock);
 		new_socket.events = POLLIN;
-		_clients->add(new_socket);
+		_connection.add(new_socket);
 		std::cout << "Connect" << std::endl;
 	}
 }
@@ -97,7 +90,7 @@ void	Server::online(void) {
 
 	while (_online)
 	{
-		poll(_clients.data(), _clients.size(), -1);
+		poll(_connection.data(), _connection.size(), -1);
 		incomingConnections();
 		incomingMessages();
 	}
@@ -128,8 +121,7 @@ void	Server::invalidCommand(std::string command) {
 
 
 
-void	Server::executeClient(Client& client) {
-}
+void	Server::executeClient(Client& client) {}
 
 // setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) < 0
 // makes the socket reusable for next try;

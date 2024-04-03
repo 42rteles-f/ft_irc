@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/03 00:43:53 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/03 01:36:25 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,21 +20,18 @@ typedef void    (Server::*t_exe)();
 
 #define READSIZE 1024
 
-class Server;
-class Connections;
-
 class Server {
 	private:
 		// std::map<std::string, Channel>	_channels;
 		// std::map<std::string, t_exe>		commands;
-		Connections					_clients;
+		Connections					_connection;
 		t_sock	_sock;
 		bool	_online;
 		static void	invalidCommand(std::string);
 
 		void	updateChannels(void);
-		void	executeClient(Client& client);
 		void	fowardMessage(std::string input, int fd);
+		void	executeClient(Client& client);
 
 	public:
 		Server();

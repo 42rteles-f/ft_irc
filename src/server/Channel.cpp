@@ -6,12 +6,12 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/03 00:42:51 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/03 00:46:51 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft_irc.hpp>
-#include "Channel.hpp"
+#include <Channel.hpp>
 
 Channel::Channel()
 {}

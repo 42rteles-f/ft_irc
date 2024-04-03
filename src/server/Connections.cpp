@@ -6,12 +6,12 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/03 00:42:42 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/03 01:47:32 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft_irc.hpp>
-#include "Connections.hpp"
+#include <Connections.hpp>
 
 Connections::Connections()
 {}
@@ -32,20 +32,20 @@ Connections& Connections::operator=(const Connections& tocopy) {
 	return (*this);
 }
 
-void	Server::add(struct pollfd socket) {
-	if (socket < 0) {
+void	Connections::add(struct pollfd socket) {
+	if (socket.fd < 0) {
 		return ;
 	}
 	_sockets.push_back(socket);
 	_clients.push_back(Client(_sockets.back()));
 }
 
-void	Server::erase(size_t position) {
+void	Connections::erase(size_t position) {
 	_sockets.erase(_sockets.begin() + position);
 	_clients.erase(_clients.begin() + position);
 }
 
-struct pollfd	*Connections::Data(void) {
+struct pollfd	*Connections::data(void) {
 	return (_sockets.data());
 }
 
@@ -57,3 +57,13 @@ Client& Connections::operator[](size_t position) {
 	return (_clients[position]);
 }
 
+bool	Connections::serverRequest(void) {
+	return (_sockets[0].fd & POLLIN ? true : false);
+}
+
+int		Connections::serverAccept(sockaddr *sock)
+{
+	socklen_t	sock_len = sizeof(sock);
+
+	return (accept(_sockets[0].fd, sock, &sock_len));
+}
