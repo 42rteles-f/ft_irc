@@ -10,37 +10,46 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME		= 	ft_irc
+NAME	=	ft_irc
 
-CXX			= 	c++ #-g -fsanitize=address
+CXX		=	c++
 
-CXXFLAGS		= 	#-Wall -Wextra -Werror -std=c++98
+SRCS = src/Channel.cpp src/Client.cpp src/Connections.cpp src/Server.cpp src/main.cpp
 
-RM			= 	rm -f
+OBJS_PATH = obj/
+SRC_PATH = src/
 
-INCLUDES	= 	-Iheaders/
+CXXFLAGS	=	-I ./headers #-Wall -Wextra -Werror -std=c++98 -g -fsanitize=address
 
-SRCS		=	src/server/*.cpp src/main.cpp
+RM			= 	rm -fr
 
-OBJS		= 	$(SRCS:.cpp=.o)
+$(OBJS): 	$(OBJS_PATH)
+
+OBJS	=	$(SRCS:$(SRC_PATH)%.cpp=$(OBJS_PATH)%.o)
 
 all: 		$(NAME)
 
-$(NAME):	$(SRCS) 
-			@$(CXX) $(INCLUDES) $(CXXFLAGS) $(SRCS) -o $(NAME)
+$(OBJS_PATH)%.o: $(SRC_PATH)%.cpp | $(OBJS_PATH)
+			@$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# %.o: %.cpp
-# 			$(CXX) $(INCLUDES) $(CXXFLAGS) -c -o $@ $<
+$(OBJS_PATH):
+	@mkdir -p $(OBJS_PATH)
 
-clean:
-			@$(RM) $(OBJS)
+$(NAME):	$(OBJS)
+			@$(CXX) $(CXXFLAGS) $(OBJS) -o $(NAME)
 
-fclean: 	clean
+clean:			
+				@$(RM) $(OBJS_PATH)	
+
+fclean:			clean
 				@$(RM) $(NAME)
 
-re:			fclean all
+re:				fclean att all
 
-norm :
-			@norminette -R CheckForbiddenSourceHeader $(SRCS) headers/
+att:
+				@sed -i "17s,.*,SRCS = $$(echo src/*.cpp)," Makefile
+
+r:				re
+				@valgrind ./$(NAME)
 
 .PHONY: 	all clean fclean re norm
