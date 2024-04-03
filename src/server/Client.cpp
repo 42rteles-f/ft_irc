@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:37:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/03 21:34:11 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/03 22:35:48 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,18 @@ bool	Client::update(void) {
 		this->_input.clear();
 		return (false);
 	}
-	std::cout << this->_input << std::endl;
+	if (_input.find("\n") != _input.npos)
+		_command = true;
 	return (true);
+}
+
+void	Client::execute(const Server& server) {
+	(void)server;
+	if (!_command)
+		return ;
+	std::cout << _input << std::endl;
+	_command = false;
+	_input.clear();
+	// t_exe	execution = server.commands[_input];
+	// execution((*this));
 }

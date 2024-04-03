@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/03 21:55:52 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/03 22:19:37 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,9 @@ Server& Server::operator=(const Server& tocopy) {
 bool	Server::setup(char **init) {
 	struct pollfd	new_server;
 
-    _sock.sin_family = AF_INET;
-    _sock.sin_addr.s_addr = INADDR_ANY;
-    _sock.sin_port = htons(atoi(init[1]));
+	_sock.sin_family = AF_INET;
+	_sock.sin_addr.s_addr = INADDR_ANY;
+	_sock.sin_port = htons(atoi(init[1]));
 	new_server.events = POLLIN;
 	if ((new_server.fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0 ||
 		bind(new_server.fd, (struct sockaddr*)&_sock, sizeof(_sock)) != 0 ||
@@ -61,9 +61,10 @@ void	Server::incomingMessages(void)
 			std::cout << "closed" << std::endl;	
 		}
 		else
-			this->executeClient(_connection[i]);
+			_connection[i].execute(*this);
 	}
 }
+			// this->executeClient(_connection[i]);
 
 void	Server::incomingConnections(void) {
 
