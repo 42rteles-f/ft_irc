@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:37:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/03 15:29:48 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/03 19:48:55 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,10 @@ Client::~Client() {}
 Client& Client::operator=(const Client& tocopy) {
 	if (this == &tocopy)
 		return (*this);
+	this->socket = tocopy.socket;
 	this->input = tocopy.input;
 	this->_command = tocopy._command;
+	this->closed = tocopy.closed;
 	return (*this);
 }
 
@@ -45,7 +47,7 @@ bool	Client::update(void) {
 	char		buffer[READSIZE];
 	int			length;
 
-	if (!(socket->fd & POLLIN)) {
+	if (!(socket->revents & POLLIN)) {
 		std::cout << "here" << std::endl;
 		return (false);
 	}
