@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/03 21:36:09 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/03 21:52:09 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	Server::incomingMessages(void)
 			std::cout << "closed" << std::endl;	
 		}
 		else
-			this->executeClient(&_connection[i]);
+			this->executeClient(_connection[i]);
 	}
 }
 
@@ -89,7 +89,7 @@ void	Server::online(void) {
 
 void	Server::offline(void) {}
 
-void	Server::executeClient(Client* client) {}
+void	Server::executeClient(Client& client) {}
 
 // void	Server::invalidCommand(std::string command) {
 // 	std::cout << command << ": Not a valid Command in this Server." << std::endl;
