@@ -6,7 +6,7 @@
 #    By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/02 20:08:19 by rteles-f          #+#    #+#              #
-#    Updated: 2024/04/03 00:50:06 by rteles-f         ###   ########.fr        #
+#    Updated: 2024/04/03 21:59:08 by rteles-f         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ RM			= 	rm -f
 
 INCLUDES	= 	-Iheaders/
 
-SRCS		=	src/server/*.cpp src/main/irc.cpp
+SRCS		=	src/server/*.cpp src/main.cpp
 
 OBJS		= 	$(SRCS:.cpp=.o)
 
