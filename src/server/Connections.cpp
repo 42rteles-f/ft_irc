@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/03 19:24:19 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/03 21:34:52 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ size_t	Connections::size(void) {
 }
 
 Client& Connections::operator[](size_t position) {
-	_clients[position].socket = &_sockets[position];
+	_clients[position]._socket = &_sockets[position];
 	return (_clients[position]);
 }
 

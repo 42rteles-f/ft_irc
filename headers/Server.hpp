@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/03 19:19:11 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/03 21:33:03 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,20 +25,15 @@ class Server {
 	private:
 		// std::map<std::string, Channel>	_channels;
 		// std::map<std::string, t_exe>		commands;
-		Connections					_connection;
-		// std::vector<struct pollfd>	_sockets;
-		// std::vector<Client>			_clients;
-		t_sock	_sock;
-		bool	_online;
-		static void	invalidCommand(std::string);
+		Connections	_connection;
+		t_sock		_sock;
+		bool		_online;
 
-		void	fowardMessage(std::string input, int fd);
-		void	executeClient(Client* client);
-		void	eraseConnection(size_t position);
-		void	addConnection(struct pollfd& socket);
-		Client	*getClient(size_t position);
-		
+		void	executeClient(Client* client);		
+		void	incomingConnections(void);
+		void	incomingMessages(void);
 
+		void	printClients(void);
 	public:
 		Server();
 		Server(const Server& tocopy);
@@ -46,12 +41,9 @@ class Server {
 
 		Server& operator=(const Server& tocopy);
 
-		void	incomingConnections(void);
-		void	incomingMessages(void);
-		void	printClients(void);
 
-		void	online(void);
-		void	run(void);
 		bool	setup(char **init);
+		void	run(void);
+		void	online(void);
 		void	offline(void);
 } ;

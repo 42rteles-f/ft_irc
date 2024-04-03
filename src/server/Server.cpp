@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/03 19:46:23 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/03 21:36:09 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,15 +53,12 @@ bool	Server::setup(char **init) {
 
 void	Server::incomingMessages(void)
 {
-	Client	*client;
-	
 	for (size_t i = 1; i < _connection.size(); ++i)
 	{
 		_connection[i].update();
 		if (_connection[i].isClosed()) {
 			_connection.erase(i--);
 			std::cout << "closed" << std::endl;	
-			// std::cout << & << std::endl;	
 		}
 		else
 			this->executeClient(&_connection[i]);
@@ -76,7 +73,7 @@ void	Server::incomingConnections(void) {
 		new_client.fd = _connection.serverAccept((sockaddr *)&_sock);
 		new_client.events = POLLIN;
 		_connection.add(new_client);
-		std::cout << "Connected " << new_client.fd << std::endl;
+		std::cout << "Connected: " << new_client.fd << std::endl;
 	}
 }
 
@@ -94,9 +91,9 @@ void	Server::offline(void) {}
 
 void	Server::executeClient(Client* client) {}
 
-void	Server::invalidCommand(std::string command) {
-	std::cout << command << ": Not a valid Command in this Server." << std::endl;
-}
+// void	Server::invalidCommand(std::string command) {
+// 	std::cout << command << ": Not a valid Command in this Server." << std::endl;
+// }
 
 // void	Server::printClients(void) {
 
