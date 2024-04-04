@@ -13,6 +13,10 @@
 #include <ft_irc.hpp>
 #include <Client.hpp>
 
+const std::map<std::string, Server::t_exe> Server::commands = {
+    {"first", NULL}
+};
+
 Client::Client():
 _socket(NULL), _input(""), _command(false), _closed(false)
 {}
@@ -47,10 +51,8 @@ bool	Client::update(void) {
 	char		buffer[READSIZE];
 	int			length;
 
-	if (!(_socket->revents & POLLIN)) {
-		std::cout << "here" << std::endl;
+	if (!(_socket->revents & POLLIN))
 		return (false);
-	}
 	while ((length = recv(_socket->fd, (void *)buffer, READSIZE, MSG_DONTWAIT)) > 0)
 		this->_input.append(buffer, length);
 	if (!length) {
@@ -70,6 +72,6 @@ void	Client::execute(const Server& server) {
 	std::cout << _input << std::endl;
 	_command = false;
 	_input.clear();
-	// t_exe	execution = server.commands[_input];
-	// execution((*this));
+	Server::commands.at(_input);
+	Server::requests.find(_input);
 }

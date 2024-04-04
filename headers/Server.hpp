@@ -16,7 +16,6 @@
 
 typedef struct  protoent     t_protocol;
 typedef struct  sockaddr_in  t_sock;
-typedef void    (Server::*t_exe)();
 
 #define READSIZE	1024
 
@@ -38,9 +37,10 @@ class Server {
 		Server(const Server& tocopy);
 		~Server();
 
+		typedef void    (Server::*t_exe)();
 		Server& operator=(const Server& tocopy);
 
-		const std::map<std::string, t_exe>	commands;
+		static const std::map<std::string, t_exe>	commands;
 
 		bool	setup(char **init);
 		void	run(void);

@@ -41,6 +41,7 @@ void	Connections::add(struct pollfd& socket) {
 }
 
 void	Connections::erase(size_t position) {
+	close(_sockets[position].fd);
 	_sockets.erase(_sockets.begin() + position);
 	_clients.erase(_clients.begin() + position);
 }
