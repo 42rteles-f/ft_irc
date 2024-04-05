@@ -20,6 +20,7 @@
 # include <sys/socket.h>
 # include <netdb.h>
 # include <netinet/in.h>
+# include <unistd.h>
 # include "Client.hpp"
 # include "Channel.hpp"
 # include "Connections.hpp"

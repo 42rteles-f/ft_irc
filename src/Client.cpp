@@ -13,16 +13,12 @@
 #include <ft_irc.hpp>
 #include <Client.hpp>
 
-const std::map<std::string, Server::t_exe> Server::commands = {
-    {"first", NULL}
-};
-
 Client::Client():
 _socket(NULL), _input(""), _command(false), _closed(false)
 {}
 
 Client::Client(struct pollfd* socket):
-_socket(NULL), _input(""), _command(false), _closed(false)
+_socket(socket), _input(""), _command(false), _closed(false)
 {}
 
 Client::Client(const Client& tocopy):
@@ -65,13 +61,16 @@ bool	Client::update(void) {
 	return (true);
 }
 
-void	Client::execute(const Server& server) {
-	(void)server;
+void	Client::makeRequest(void) {
+	std::stringstream	ss(_input);
+	std::string			command;
+
 	if (!_command)
 		return ;
-	std::cout << _input << std::endl;
+	ss >> command;
+	// Server::t_exe	execute = Server::requests.find(command);
+	// if (execute != Server::requests.end())
+	// 	(*execute)(*this);
 	_command = false;
 	_input.clear();
-	Server::commands.at(_input);
-	Server::requests.find(_input);
 }

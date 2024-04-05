@@ -37,6 +37,7 @@ class Client {
 
 		bool	update(void);
 		bool	isClosed(void);
-		void	execute(const Server& server);
+		void	makeRequest(const Server& server);
+		void	makeRequest(void);
 
 } ;

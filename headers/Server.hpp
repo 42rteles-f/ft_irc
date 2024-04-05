@@ -40,7 +40,7 @@ class Server {
 		typedef void    (Server::*t_exe)();
 		Server& operator=(const Server& tocopy);
 
-		static const std::map<std::string, t_exe>	commands;
+		static const std::map<std::string, t_exe>	requests;
 
 		bool	setup(char **init);
 		void	run(void);

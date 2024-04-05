@@ -13,6 +13,10 @@
 #include <ft_irc.hpp>
 #include <Server.hpp>
 
+const std::map<std::string, Server::t_exe> Server::requests = {
+    {"first", NULL}
+};
+
 Server::Server():
 _online(false)
 {}
@@ -58,12 +62,13 @@ void	Server::incomingMessages(void)
 		_connection[i].update();
 		if (_connection[i].isClosed()) {
 			_connection.erase(i--);
-			std::cout << "closed" << std::endl;	
+			std::cout << "closed" << std::endl;
 		}
 		else
-			_connection[i].execute(*this);
+			_connection[i].makeRequest();
 	}
 }
+			// this->executeRequests(_connection[i]);
 			// this->executeClient(_connection[i]);
 
 void	Server::incomingConnections(void) {
