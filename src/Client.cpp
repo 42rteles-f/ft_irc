@@ -40,7 +40,11 @@ Client& Client::operator=(const Client& tocopy) {
 }
 
 bool	Client::isClosed(void) {
-	return (this->_closed ? true : false);
+	return (this->_closed);
+}
+
+bool	Client::hasRequest(void) {
+	return (this->_command);
 }
 
 bool	Client::update(void) {
@@ -61,16 +65,23 @@ bool	Client::update(void) {
 	return (true);
 }
 
-void	Client::makeRequest(void) {
-	std::stringstream	ss(_input);
+std::string	Client::input(void) {
+	return (_input);
+}
+
+
+void	Client::makeRequest(Server& server) {
+	std::istringstream	iss;
 	std::string			command;
+	Server::t_exe		handler;
 
 	if (!_command)
 		return ;
-	ss >> command;
-	// Server::t_exe	execute = Server::requests.find(command);
-	// if (execute != Server::requests.end())
-	// 	(*execute)(*this);
+	iss.str(_input);
+	iss >> command;
+	handler = server.requestHandler(command);
+	(server.*handler)(*this);
 	_command = false;
 	_input.clear();
 }
+	// (server.*server.requestHandler(command))(*this);

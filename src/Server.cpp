@@ -13,10 +13,6 @@
 #include <ft_irc.hpp>
 #include <Server.hpp>
 
-const std::map<std::string, Server::t_exe> Server::requests = {
-    {"first", NULL}
-};
-
 Server::Server():
 _online(false)
 {}
@@ -65,11 +61,9 @@ void	Server::incomingMessages(void)
 			std::cout << "closed" << std::endl;
 		}
 		else
-			_connection[i].makeRequest();
+			_connection[i].makeRequest(*this);
 	}
 }
-			// this->executeRequests(_connection[i]);
-			// this->executeClient(_connection[i]);
 
 void	Server::incomingConnections(void) {
 
@@ -95,11 +89,26 @@ void	Server::online(void) {
 
 void	Server::offline(void) {}
 
-void	Server::executeClient(Client& client) {}
+// void	Server::executeClient(Client& client) {}
 
-// void	Server::invalidCommand(std::string command) {
-// 	std::cout << command << ": Not a valid Command in this Server." << std::endl;
-// }
+Server::t_exe	Server::requestHandler(std::string target)
+{
+	std::map<std::string, t_exe>::const_iterator	found = _functions.find(target);
+
+	if (found != _functions.end())
+		return (found->second);
+	return (&Server::invalidCommand);
+}
+
+void	Server::invalidCommand(Client& client) {
+	std::istringstream	iss(client.input());
+	std::string			command;
+
+	iss >> command;
+	std::cout << command << ": Not a valid Command in this Server." << std::endl;
+}
+
+
 
 // void	Server::printClients(void) {
 

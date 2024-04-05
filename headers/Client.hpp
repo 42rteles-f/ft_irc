@@ -19,6 +19,7 @@ class Server;
 class Client {
 	private:
 		std::string				_input;
+		std::string				_request;
 		std::string				_nick;
 		std::string				_user;
 		std::string				_real;
@@ -37,7 +38,10 @@ class Client {
 
 		bool	update(void);
 		bool	isClosed(void);
-		void	makeRequest(const Server& server);
-		void	makeRequest(void);
+		bool	hasRequest(void);
+		void	makeRequest(Server& server);
+
+		std::string	input(void);
+
 
 } ;
