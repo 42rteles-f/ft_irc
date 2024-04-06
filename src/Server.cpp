@@ -89,8 +89,6 @@ void	Server::online(void) {
 
 void	Server::offline(void) {}
 
-// void	Server::executeClient(Client& client) {}
-
 Server::t_exe	Server::requestHandler(std::string target)
 {
 	std::map<std::string, t_exe>::const_iterator	found = _functions.find(target);
