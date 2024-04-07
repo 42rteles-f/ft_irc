@@ -39,6 +39,10 @@ Client& Client::operator=(const Client& tocopy) {
 	return (*this);
 }
 
+bool	Client::operator==(const Client& compare) {
+		return (this.socket.fd == compare.socket.fd ? true : false)
+}
+
 bool	Client::isClosed(void) {
 	return (this->_closed);
 }
@@ -60,6 +64,7 @@ bool	Client::update(void) {
 		this->_input.clear();
 		return (false);
 	}
+	std::cout << _input << std::endl;
 	if (_input.find("\n") != _input.npos)
 		_command = true;
 	return (true);
@@ -68,7 +73,6 @@ bool	Client::update(void) {
 std::string	Client::input(void) {
 	return (_input);
 }
-
 
 void	Client::makeRequest(Server& server) {
 	std::istringstream	iss;

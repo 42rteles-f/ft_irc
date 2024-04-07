@@ -35,6 +35,7 @@ class Client {
 		~Client();
 
 		Client& operator=(const Client& tocopy);
+		bool	operator==(const Client& compare);
 
 		bool	update(void);
 		bool	isClosed(void);

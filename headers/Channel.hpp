@@ -27,4 +27,6 @@ class Channel {
 		~Channel();
 
 		Channel& operator=(const Channel& tocopy);
+		bool	Client::operator==(const Client& compare);
+
 } ;

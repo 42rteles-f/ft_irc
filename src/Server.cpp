@@ -60,8 +60,10 @@ void	Server::incomingMessages(void)
 			_connection.erase(i--);
 			std::cout << "closed" << std::endl;
 		}
-		else
+		else {
+			// send(_connection[i]._socket.fd, "")
 			_connection[i].makeRequest(*this);
+		}
 	}
 }
 
