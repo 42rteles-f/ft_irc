@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/03 22:22:20 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/07 00:54:53 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,14 @@ class Client {
 
 		Client& operator=(const Client& tocopy);
 
+		std::string	getInput();
+		std::string getNick();
+		std::string getUser();
+		std::string getRequest();
 		bool	update(void);
 		bool	isClosed(void);
 		bool	hasRequest(void);
 		void	makeRequest(Server& server);
 
 		std::string	input(void);
-
-
 } ;

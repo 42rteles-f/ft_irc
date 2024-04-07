@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:37:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/03 22:35:48 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/07 13:16:50 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <Client.hpp>
 
 Client::Client():
-_socket(NULL), _input(""), _command(false), _closed(false)
+_socket(NULL), _input(""), _command(false), _closed(false), _nick(""), _user(""), _real("")
 {}
 
 Client::Client(struct pollfd* socket):
@@ -69,6 +69,22 @@ std::string	Client::input(void) {
 	return (_input);
 }
 
+std::string	Client::getInput(void) {
+	std::cout << _input << std::endl;
+	return _input;
+}
+
+std::string Client::getNick() {
+	return _nick;
+}
+
+std::string Client::getRequest() {
+	return _request;
+}
+
+std::string Client::getUser() {
+	return _user;
+}
 
 void	Client::makeRequest(Server& server) {
 	std::istringstream	iss;

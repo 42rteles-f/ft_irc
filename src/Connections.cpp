@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Connections.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/03 22:06:10 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/07 11:38:10 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,3 +69,8 @@ int		Connections::serverAccept(sockaddr *sock)
 
 	return (accept(_sockets[0].fd, sock, &sock_len));
 }
+
+// void Connections::fillClientData(struct pollfd& new_client) {
+// 	_clients[new_client.fd].
+// }
+

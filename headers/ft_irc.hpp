@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_irc.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 18:04:14 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/03 22:05:32 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/06 18:41:47 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <map>
 # include <list>
 # include <sstream>
+# include <string>
 # include <unistd.h>
 # include <poll.h>
 # include <sys/socket.h>

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/03 22:19:37 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/07 13:43:15 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,11 @@
 
 Server::Server():
 _online(false)
-{}
+{
+	_functions["JOIN"] = &Server::joinRequest;
+	_functions["NICK"] = &Server::nickRequest;
+
+}
 
 Server::Server(const Server& tocopy)
 {}
@@ -32,9 +36,15 @@ Server& Server::operator=(const Server& tocopy) {
 	return (*this);
 }
 
+void	Server::setHostName(std::string name) {
+	hostName = name;
+}
+
+
 bool	Server::setup(char **init) {
 	struct pollfd	new_server;
 
+	setHostName("irc.example.com");
 	_sock.sin_family = AF_INET;
 	_sock.sin_addr.s_addr = INADDR_ANY;
 	_sock.sin_port = htons(atoi(init[1]));
@@ -53,8 +63,9 @@ bool	Server::setup(char **init) {
 
 void	Server::incomingMessages(void)
 {
+	
 	for (size_t i = 1; i < _connection.size(); ++i)
-	{
+	{	
 		_connection[i].update();
 		if (_connection[i].isClosed()) {
 			_connection.erase(i--);
@@ -68,6 +79,10 @@ void	Server::incomingMessages(void)
 void	Server::incomingConnections(void) {
 
 	struct pollfd	new_client;
+	char			buffer[READSIZE];
+	std::string		info;
+	int 			size;
+
 
 	if (_connection.serverRequest()) {
 		new_client.fd = _connection.serverAccept((sockaddr *)&_sock);
@@ -76,6 +91,48 @@ void	Server::incomingConnections(void) {
 		std::cout << "Connected: " << new_client.fd << std::endl;
 	}
 }
+
+void Server::messageToClient(Client& client, std::string message) {
+	message = message + "\r\n";
+
+	if (send(client._socket->fd, message.c_str(), message.size(), 0) < 0)
+		std::cerr << "Error sending message to the client." << std::endl;
+}
+
+// /join #1,#2,#3,#4,#5
+// /join #first #second #third - the HexChat by default will 
+
+// ":" + hostName + " " + message + " " + client.getNickName()
+//":sender_nick!user@host PRIVMSG #3 :" + input
+std::string Server::format(Client& client) {
+	return (":" + client.getNick() + "!" + client.getUser() + "@" + hostName);
+}
+
+void	Server::joinRequest(Client& client) {
+	//Estamos a fazer join de Um channel por vez
+	std::istringstream iss(client.getInput());
+	std::vector<std::string> input;
+	std::string channel;
+
+	iss >> channel; //Ignoring the Command in the input
+	iss >> channel; //Get the Channel's name
+	if (channel[0] == '#')
+		channel.erase(0, 1);
+	if (channel.empty())
+		return messageToClient(client, "Please use '/join #channel' to join a channel.");
+	_channels[channel];
+	std::string clientNick = "luis";
+	std::string clientUser = "lliberal";
+	messageToClient(client, ":" + clientNick + "!" + clientUser + "@" + hostName + " JOIN :" + channel);
+	if (_channels[channel].NumberOfClients() == 1)
+		_channels[channel].changeOp(client);
+	_channels[channel].printOPName();
+}
+
+void	Server::nickRequest(Client& client) {
+	messageToClient(client, ":lliberal!lliberal@" + hostName + " NICK lliberal");
+}
+
 
 void	Server::online(void) {
 
@@ -94,7 +151,7 @@ void	Server::offline(void) {}
 Server::t_exe	Server::requestHandler(std::string target)
 {
 	std::map<std::string, t_exe>::const_iterator	found = _functions.find(target);
-
+	std::cout << target << std::endl;
 	if (found != _functions.end())
 		return (found->second);
 	return (&Server::invalidCommand);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/03 22:17:11 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/07 12:57:04 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,15 @@ typedef struct  protoent     t_protocol;
 typedef struct  sockaddr_in  t_sock;
 
 #define READSIZE	1024
+#define CLIENT_ADDED "Client was added successfully"
+#define ERROR_JOIN "Error: fail to join."
 
 class Server {
 	public:
 		typedef void    (Server::*t_exe)(Client&);
 
 	private:
+		std::string	hostName;
 		Connections	_connection;
 		t_sock		_sock;
 		bool		_online;
@@ -34,6 +37,10 @@ class Server {
 		void	incomingMessages(void);
 		void	invalidCommand(Client& client);
 		// void	printClients(void);
+		// void	whoIsRequest(Client& client);
+		void	joinRequest(Client& client);
+		void	nickRequest(Client& client);
+		
 
 	public:
 		Server();
@@ -41,10 +48,12 @@ class Server {
 		~Server();
 
 		Server& operator=(const Server& tocopy);
-
+		void messageToClient(Client& client, std::string message);
 		t_exe	requestHandler(std::string target);
 		bool	setup(char **init);
 		void	run(void);
 		void	online(void);
 		void	offline(void);
+		void	setHostName(std::string name);
+		std::string format(Client& client);
 } ;
