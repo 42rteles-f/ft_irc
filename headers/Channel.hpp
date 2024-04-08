@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/03 22:06:41 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/08 19:57:30 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ class Server;
 
 class Channel {
 	private:
-		std::vector<Client> _sockets;
+		std::vector<Client> _clients;
 		std::vector<Client> _op;
 
 	public:
@@ -31,4 +31,6 @@ class Channel {
 
 		void	addClient(Client& add);
 		void	removeClient(Client& remove);
+		void	broadcast(Client& client);
+
 } ;

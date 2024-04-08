@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/08 19:07:42 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/08 21:28:46 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,9 @@ Server::Server():
 _online(false)
 {
 	// _functions["CAP"] = ;
-	// _functions["NICK"] = ;
 	_functions["NICK"] = &Server::nickRequest;
 	_functions["USER"] = &Server::userRequest;
-	// _functions["PRIVMSG"] = ;
+	_functions["PRIVMSG"] = &Server::privmsgRequest;
 }
 
 Server::Server(const Server& tocopy)
@@ -67,7 +66,7 @@ void	Server::incomingMessages(void)
 			std::cout << "closed" << std::endl;
 		}
 		else {
-			// send(_connection[i]._socket.fd, "")
+			// sendAN-A795207B.226.108.93.rev.vodafone.pt(_connection[i]._socket.fd, "")
 			_connection[i].makeRequest(*this);
 	}
 	}
@@ -118,21 +117,23 @@ void	Server::invalidCommand(Client& client) {
 
 // }
 
-// void	Server::privmsgRequest(Client& client) {
-// 	std::istringstream	iss(client.input());
-// 	std::string			destiny;
+void	Server::privmsgRequest(Client& sender) {
+	std::istringstream	iss(sender.input());
+	std::string			recipient;
+	std::vector<Client>::iterator	found;
 
-// 	iss >> destiny;
-// 	iss >> destiny;
-// 	if (_channels.find(destiny) != _channels.end())
-// 		_channels[destiny].brodcast(client.makeMessage());
-// 	else if (_connection.find(destiny) != _connection.end()) {
-// 		_connection[destiny].send(client.makeMessage());
-// 	}
-// 	else 
-// 		client.send(this->makeMessage("No such nick"));
-
-// }
+	std::cout << sender.input() << std::endl;
+	std::cout << sender.makeMessage() << std::endl;
+	iss >> recipient;
+	iss >> recipient;
+	if (_channels.find(recipient) != _channels.end()) {
+		_channels[recipient].broadcast(sender);
+		std::cout << "found channel" << std::endl;
+	}
+	else if ((found = _connection.find(recipient)) != _connection.end()) {
+		(*found).sendMessage(sender.makeMessage());
+	}
+}
 
 void	Server::nickRequest(Client& client) {
 	std::istringstream	iss(client.input());
@@ -140,8 +141,10 @@ void	Server::nickRequest(Client& client) {
 
 	iss >> nick;
 	iss >> nick;
-	if (_connection.find(nick) == _connection.end())
+	if (_connection.find(nick) == _connection.end()) {
 		client.setNick(nick);
+		client.sendMessage(client.makeMessage());
+	}
 	// else
 	// 	client.send(this->makeMessage("Not a valid nick"));
 }
@@ -152,9 +155,16 @@ void	Server::userRequest(Client& client) {
 
 	iss >> nick;
 	iss >> nick;
-	std::cout << "request:" << nick << std::endl;
 	client.setUser(nick);
 }
+
+
+// << NICK Rubens2
+// << NICK Rubens3
+// >> :Rubens3!teles :NICK Rubens3
+
+// << NICK rteles-f2
+// >> :rteles-f!rteles-f@AN-A795207B.226.108.93.rev.vodafone.pt NICK :rteles-f2
 
 // void	Server::printClients(void) {
 

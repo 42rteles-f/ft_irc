@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/03 22:06:00 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/08 20:06:59 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,9 @@ void	Channel::addClient(Client& add)
 {
 	std::vector<Client>::iterator find;
 
-	find = std::find(_sockets.begin(), _sockets.end(), add);
-	if (find == _sockets.end())
-		_sockets.push_back(add);
+	find = std::find(_clients.begin(), _clients.end(), add);
+	if (find == _clients.end())
+		_clients.push_back(add);
 	if (_op.size() == 0)
 		_op.push_back(add);
 }
@@ -49,9 +49,20 @@ void	Channel::removeClient(Client& remove)
 	find = std::find(_op.begin(), _op.end(), remove);
 	if (find != _op.end())
 		_op.erase(find);
-	find = std::find(_sockets.begin(), _sockets.end(), remove);
+	find = std::find(_clients.begin(), _clients.end(), remove);
 	if (find != _op.end())
-		_sockets.erase(find);
-	if (_sockets.size() && _op.size() == 0)
-		_op.push_back(_sockets[0]);
+		_clients.erase(find);
+	if (_clients.size() && _op.size() == 0)
+		_op.push_back(_clients[0]);
+}
+
+void	Channel::broadcast(Client& sender)
+{
+	std::string	message = sender.makeMessage();
+
+	for (size_t i = 0; i < _clients.size(); i++)
+	{
+		if (sender.socket->fd != _clients[i].socket->fd)
+			send(_clients[i].socket->fd, message.c_str(), message.size(), 0);
+	}
 }
