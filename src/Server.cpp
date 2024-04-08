@@ -6,7 +6,7 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/07 21:37:22 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/08 20:03:11 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ Server::Server():
 _online(false)
 {
 	_functions["JOIN"] = &Server::joinRequest;
-	_functions["NICK"] = &Server::nickRequest;
 
 }
 
@@ -61,9 +60,7 @@ bool	Server::setup(char **init) {
 	return (_online);
 }
 
-void	Server::incomingMessages(void)
-{
-	
+void	Server::incomingMessages(void) {
 	for (size_t i = 1; i < _connection.size(); ++i)
 	{	
 		_connection[i].update();
@@ -77,7 +74,6 @@ void	Server::incomingMessages(void)
 }
 
 void	Server::incomingConnections(void) {
-
 	struct pollfd	new_client;
 	char			buffer[READSIZE];
 	std::string		info;
@@ -98,9 +94,6 @@ void Server::messageToClient(Client& client, std::string message) {
 		std::cerr << "Error sending message to the client." << std::endl;
 }
 
-// /join #1,#2,#3,#4,#5
-// /join #first #second #third - the HexChat by default will 
-
 // ":" + hostName + " " + message + " " + client.getNickName()
 //":sender_nick!user@host PRIVMSG #3 :" + input
 std::string Server::format(Client& client) {
@@ -110,27 +103,19 @@ std::string Server::format(Client& client) {
 void	Server::joinRequest(Client& client) {
 	std::string input = client.getInput();
 	std::replace(input.begin(), input.end(), ',', ' ');
-	std::cout << "test input: "<< input << std::endl;
 	std::istringstream iss(input);
 	std::string channel;
 
-	std::string clientNick = "luis";
-	std::string clientUser = "lliberal";
 	iss >> channel; //Ignoring the Command in the input
 	while (iss >> channel) {
 		_channels[channel];
-		messageToClient(client, ":" + clientNick + " JOIN :" + channel);
+		messageToClient(client, ":" + client.getNick() + " JOIN :" + channel);
 	}
-	messageToClient(client, ":" + clientNick + " JOIN :" + channel);
+	// messageToClient(client, ":" + client.getNick() + " JOIN :" + channel);
 	if (_channels[channel].NumberOfClients() == 1)
 		_channels[channel].changeOp(client);
 	_channels[channel].printOPName();
 }
-
-void	Server::nickRequest(Client& client) {
-	messageToClient(client, ":lliberal!lliberal@" + hostName + " NICK lliberal");
-}
-
 
 void	Server::online(void) {
 
@@ -164,6 +149,10 @@ void	Server::invalidCommand(Client& client) {
 }
 
 
+// setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) < 0
+
+// makes the socket reusable for next try;
+
 
 // void	Server::printClients(void) {
 
@@ -179,8 +168,6 @@ void	Server::invalidCommand(Client& client) {
 // 		}
 // 	}
 // }
-// setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) < 0
-// makes the socket reusable for next try;
 
 
 // void	Server::fowardMessage(std::string input, int fd) {

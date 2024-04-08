@@ -6,7 +6,7 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/07 12:57:04 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/08 19:52:17 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ class Server {
 		// void	printClients(void);
 		// void	whoIsRequest(Client& client);
 		void	joinRequest(Client& client);
-		void	nickRequest(Client& client);
 		
 
 	public:

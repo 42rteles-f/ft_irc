@@ -6,18 +6,20 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/07 00:41:03 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/08 20:04:20 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft_irc.hpp>
 #include <Channel.hpp>
 
-Channel::Channel() : _op()
+Channel::Channel() : _op(), _topic("")
 {}
 
 Channel::Channel(const Channel& tocopy)
-{}
+{
+	*this = tocopy;
+}
 
 Channel::~Channel()
 {}
@@ -32,7 +34,7 @@ Channel& Channel::operator=(const Channel& tocopy) {
 }
 
 size_t Channel::NumberOfClients() {
-	return _sockets.size();
+	return _clients.size();
 }
 
 void	Channel::printOPName() {
