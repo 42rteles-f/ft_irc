@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:37:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/03 22:35:48 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/05 20:58:01 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	Client::makeRequest(Server& server) {
 	iss >> command;
 	handler = server.requestHandler(command);
 	(server.*handler)(*this);
+	(server.*server.requestHandler(command))(*this);
 	_command = false;
 	_input.clear();
 }
-	// (server.*server.requestHandler(command))(*this);

@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/03 22:19:37 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/05 20:55:11 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,9 @@
 
 Server::Server():
 _online(false)
-{}
+{
+	_function["JOIN"] = &Server::joinRequest;
+}
 
 Server::Server(const Server& tocopy)
 {}
@@ -63,6 +65,10 @@ void	Server::incomingMessages(void)
 		else
 			_connection[i].makeRequest(*this);
 	}
+}
+
+void	Server::joinRequest(Client& client){
+	
 }
 
 void	Server::incomingConnections(void) {
