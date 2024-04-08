@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/08 20:12:15 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/08 21:36:29 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ class Client {
 		Client& operator=(const Client& tocopy);
 		bool	operator==(const Client& compare);
 
+		std::string	getInput();
+		std::string getRequest();
 		bool	update(void);
 		bool	isClosed(void);
 		bool	hasRequest(void);

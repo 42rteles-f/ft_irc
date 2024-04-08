@@ -6,14 +6,14 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/08 20:06:59 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/08 21:32:07 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft_irc.hpp>
 #include <Channel.hpp>
 
-Channel::Channel()
+Channel::Channel() : _op()
 {}
 
 Channel::Channel(const Channel& tocopy)

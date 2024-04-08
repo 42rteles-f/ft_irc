@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:37:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/08 20:49:21 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/08 21:34:01 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <Client.hpp>
 
 Client::Client():
-socket(NULL), _input(""), _command(false), _closed(false)
+socket(NULL), _input(""), _command(false), _closed(false), _nick(""), _user(""), _real("")
 {}
 
 Client::Client(struct pollfd* socket):
@@ -58,7 +58,7 @@ bool	Client::update(void) {
 	if (!(socket->revents & POLLIN))
 		return (false);
 	while ((length = recv(socket->fd, (void *)buffer, READSIZE, MSG_DONTWAIT)) > 0)
-		this->_read.append(buffer, length);
+		this->_input.append(buffer, length);
 	if (!length) {
 		this->_closed = true;
 		this->_read.clear();
@@ -72,6 +72,7 @@ bool	Client::update(void) {
 const std::string&	Client::input(void) const {
 	return (_input);
 }
+
 
 void	Client::makeRequest(Server& server) {
 	std::istringstream	iss;

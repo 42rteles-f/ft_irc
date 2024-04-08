@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/08 20:51:49 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/08 21:36:04 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,15 @@ typedef struct  protoent     t_protocol;
 typedef struct  sockaddr_in  t_sock;
 
 #define READSIZE	1024
+#define CLIENT_ADDED "Client was added successfully"
+#define ERROR_JOIN "Error: fail to join."
 
 class Server {
 	public:
 		typedef void    (Server::*t_exe)(Client&);
 
 	private:
+		std::string	hostName;
 		Connections	_connection;
 		t_sock		_sock;
 		bool		_online;
@@ -34,6 +37,7 @@ class Server {
 		void	incomingMessages(void);
 		void	invalidCommand(Client& client);
 		// void	printClients(void);
+		// void	whoIsRequest(Client& client);		
 
 	public:
 		Server();
@@ -41,17 +45,19 @@ class Server {
 		~Server();
 
 		Server& operator=(const Server& tocopy);
-
+		void messageToClient(Client& client, std::string message);
 		t_exe	requestHandler(std::string target);
 
 		void	privmsgRequest(Client& client);
 		void	nickRequest(Client& client);
 		void	userRequest(Client& client);
-		void	joinRequest(Client& client);
+		// void	joinRequest(Client& client);
 		void	capLsRequest(Client& client);
 
 		bool	setup(char **init);
 		void	run(void);
 		void	online(void);
 		void	offline(void);
+		void	setHostName(std::string name);
+		std::string format(Client& client);
 } ;
