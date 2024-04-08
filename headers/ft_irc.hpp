@@ -6,7 +6,7 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 18:04:14 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/06 18:41:47 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/07 21:19:50 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,3 +27,4 @@
 # include "Channel.hpp"
 # include "Connections.hpp"
 # include "Server.hpp"
+# include <algorithm>

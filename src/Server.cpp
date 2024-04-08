@@ -6,7 +6,7 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/07 13:43:15 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/07 21:37:22 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,6 @@ void	Server::incomingConnections(void) {
 	std::string		info;
 	int 			size;
 
-
 	if (_connection.serverRequest()) {
 		new_client.fd = _connection.serverAccept((sockaddr *)&_sock);
 		new_client.events = POLLIN;
@@ -109,21 +108,20 @@ std::string Server::format(Client& client) {
 }
 
 void	Server::joinRequest(Client& client) {
-	//Estamos a fazer join de Um channel por vez
-	std::istringstream iss(client.getInput());
-	std::vector<std::string> input;
+	std::string input = client.getInput();
+	std::replace(input.begin(), input.end(), ',', ' ');
+	std::cout << "test input: "<< input << std::endl;
+	std::istringstream iss(input);
 	std::string channel;
 
-	iss >> channel; //Ignoring the Command in the input
-	iss >> channel; //Get the Channel's name
-	if (channel[0] == '#')
-		channel.erase(0, 1);
-	if (channel.empty())
-		return messageToClient(client, "Please use '/join #channel' to join a channel.");
-	_channels[channel];
 	std::string clientNick = "luis";
 	std::string clientUser = "lliberal";
-	messageToClient(client, ":" + clientNick + "!" + clientUser + "@" + hostName + " JOIN :" + channel);
+	iss >> channel; //Ignoring the Command in the input
+	while (iss >> channel) {
+		_channels[channel];
+		messageToClient(client, ":" + clientNick + " JOIN :" + channel);
+	}
+	messageToClient(client, ":" + clientNick + " JOIN :" + channel);
 	if (_channels[channel].NumberOfClients() == 1)
 		_channels[channel].changeOp(client);
 	_channels[channel].printOPName();

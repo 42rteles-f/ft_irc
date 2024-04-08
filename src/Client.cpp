@@ -6,7 +6,7 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:37:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/07 13:16:50 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/07 20:58:24 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ bool	Client::update(void) {
 		return (false);
 	while ((length = recv(_socket->fd, (void *)buffer, READSIZE, MSG_DONTWAIT)) > 0)
 		this->_input.append(buffer, length);
+	std::cout << _input << std::endl;
 	if (!length) {
 		this->_closed = true;
 		this->_input.clear();
