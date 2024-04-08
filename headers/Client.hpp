@@ -6,7 +6,7 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/08 20:43:20 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/08 21:45:08 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,9 @@ class Client {
 		bool	isClosed(void);
 		bool	hasRequest(void);
 		void	makeRequest(Server& server);
+		std::string	makeMessage(void) const;
+		void	sendMessage(std::string user) const;
+
 
 		std::string getRequest();
 		const std::string&	input(void) const;

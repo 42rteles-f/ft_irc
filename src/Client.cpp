@@ -6,7 +6,7 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:37:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/08 20:40:36 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/08 21:46:48 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,13 @@ bool	Client::update(void) {
 	if (!(socket->revents & POLLIN))
 		return (false);
 	while ((length = recv(socket->fd, (void *)buffer, READSIZE, MSG_DONTWAIT)) > 0)
+	while ((length = recv(socket->fd, (void *)buffer, READSIZE, MSG_DONTWAIT)) > 0)
 		this->_input.append(buffer, length);
 	if (!length) {
 		this->_closed = true;
 		this->_read.clear();
 		return (false);
 	}
-	std::cout << _read << std::endl;
 	if (_read.find("\n") != _read.npos)
 		_command = true;
 	return (true);
@@ -75,19 +75,20 @@ void	Client::makeRequest(Server& server) {
 	std::istringstream	iss;
 	std::string			command;
 	Server::t_exe		handler;
+	size_t				breakline;
 
 	if (!_command)
 		return ;
 	iss.str(_read);
-	while (std::getline(iss, _input)) {
+	while (std::getline(iss, _input) && _read.find("\n") != _read.npos) {
 		command = _input.substr(0, _input.find(" "));
 		handler = server.requestHandler(command);
 		(server.*handler)(*this);
+		breakline = _read.find("\n");
+		_read = (breakline != _read.npos) ? _read.substr(++breakline) : "";
 	}
 	_command = false;
 	_input.clear();
-	_read.clear();
-	std::cout << _nick << " | " << _user << std::endl;
 }
 
 void	Client::setNick(std::string nick) {
@@ -102,10 +103,18 @@ void	Client::setUser(std::string user) {
 	this->_user = user;
 }
 
+const std::string&	Client::input(void) const{
+	return (_input);
+}
+
 const std::string&	Client::getUser(void) const {
 	return (this->_user);
 }
 
-const std::string&	Client::input(void) const {
-	return (_input);
+std::string	Client::makeMessage(void) const {
+	return (":" + _nick + "!" + _user + " " + _input + "\r\n");
+}
+
+void	Client::sendMessage(std::string message) const {
+	send(socket->fd, message.c_str(), message.size(), 0);
 }

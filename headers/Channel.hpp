@@ -6,7 +6,7 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/08 20:14:55 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/08 21:40:36 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ class Channel {
 		// Server	*observer;
 		std::string	_topic;
 		std::vector<Client> _clients;
-		std::vector<Client>	_op; 
+		std::vector<Client>	_op; //the first Client is the operator
 
 	public:
 		Channel();
@@ -29,9 +29,11 @@ class Channel {
 		~Channel();
 
 		Channel& operator=(const Channel& tocopy);
+		bool	operator==(const Client& compare);
 
 		void	addClient(Client& add);
 		void	removeClient(Client& remove);
+		void	broadcast(Client& client);
 
 		void			changeOp(Client &client);
 		std::string		getTopic();
