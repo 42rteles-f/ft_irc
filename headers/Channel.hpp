@@ -6,7 +6,7 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/07 00:40:42 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/08 19:18:25 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,4 @@ class Channel {
 		~Channel();
 
 		Channel& operator=(const Channel& tocopy);
-
-		size_t 	NumberOfClients();
-		void	changeOp(Client &client);
-		std::string		getTopic();
-		void		setTopic(std::string newTopic);
-		void		printOPName();
 } ;

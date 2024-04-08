@@ -6,7 +6,7 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/07 00:41:03 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/08 19:24:19 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,26 +31,27 @@ Channel& Channel::operator=(const Channel& tocopy) {
 	return (*this);
 }
 
-size_t Channel::NumberOfClients() {
-	return _sockets.size();
+void	Channel::addClient(Client& add)
+{
+	std::vector<Client>::iterator find;
+
+	find = std::find(_sockets.begin(), _sockets.end(), add);
+	if (find == _sockets.end())
+		_sockets.push_back(add);
+	if (_op.size() == 0)
+		_op.push_back(add);
 }
 
-void	Channel::printOPName() {
-	std::vector<Client>::iterator it = _op.begin();
-	for (; it != _op.end(); it++) {
-		std::cout << it->getNick() << std::endl;
-	}
-}
+void	Channel::removeClient(Client& remove)
+{
+	std::vector<Client>::iterator find;
 
-void Channel::changeOp(Client &client) {
-	this->_op.push_back(client);
+	find = std::find(_op.begin(), _op.end(), remove);
+	if (find != _op.end())
+		_op.erase(find);
+	find = std::find(_sockets.begin(), _sockets.end(), remove);
+	if (find != _op.end())
+		_sockets.erase(find);
+	if (_sockets.size() && _op.size() == 0)
+		_op.push_back(_sockets[0]);
 }
-
-std::string		Channel::getTopic() {
-	return _topic;
-}
-
-void		Channel::setTopic(std::string newTopic) {
-	_topic = newTopic;
-}
-

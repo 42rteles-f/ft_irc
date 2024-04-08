@@ -6,7 +6,7 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/07 21:37:22 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/08 19:16:44 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,11 @@
 Server::Server():
 _online(false)
 {
-	_functions["JOIN"] = &Server::joinRequest;
+	// _functions["CAP"] = ;
+	// _functions["NICK"] = ;
 	_functions["NICK"] = &Server::nickRequest;
-
+	_functions["USER"] = &Server::userRequest;
+	// _functions["PRIVMSG"] = ;
 }
 
 Server::Server(const Server& tocopy)
@@ -71,8 +73,10 @@ void	Server::incomingMessages(void)
 			_connection.erase(i--);
 			std::cout << "closed" << std::endl;
 		}
-		else
+		else {
+			// send(_connection[i]._socket.fd, "")
 			_connection[i].makeRequest(*this);
+		}
 	}
 }
 
@@ -144,8 +148,6 @@ void	Server::online(void) {
 
 void	Server::offline(void) {}
 
-// void	Server::executeClient(Client& client) {}
-
 Server::t_exe	Server::requestHandler(std::string target)
 {
 	std::map<std::string, t_exe>::const_iterator	found = _functions.find(target);
@@ -163,7 +165,47 @@ void	Server::invalidCommand(Client& client) {
 	std::cout << command << ": Not a valid Command in this Server." << std::endl;
 }
 
+// std::string	Server::formatRequest(std::string input) {
 
+// }
+
+// void	Server::privmsgRequest(Client& client) {
+// 	std::istringstream	iss(client.input());
+// 	std::string			destiny;
+
+// 	iss >> destiny;
+// 	iss >> destiny;
+// 	if (_channels.find(destiny) != _channels.end())
+// 		_channels[destiny].brodcast(client.makeMessage());
+// 	else if (_connection.find(destiny) != _connection.end()) {
+// 		_connection[destiny].send(client.makeMessage());
+// 	}
+// 	else 
+// 		client.send(this->makeMessage("No such nick"));
+
+// }
+
+void	Server::nickRequest(Client& client) {
+	std::istringstream	iss(client.input());
+	std::string			nick;
+
+	iss >> nick;
+	iss >> nick;
+	if (_connection.find(nick) == _connection.end())
+		client.setNick(nick);
+	// else
+	// 	client.send(this->makeMessage("Not a valid nick"));
+}
+
+void	Server::userRequest(Client& client) {
+	std::istringstream	iss(client.input());
+	std::string			nick;
+
+	iss >> nick;
+	iss >> nick;
+	std::cout << "request:" << nick << std::endl;
+	client.setUser(nick);
+}
 
 // void	Server::printClients(void) {
 
