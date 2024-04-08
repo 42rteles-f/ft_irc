@@ -6,7 +6,7 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/07 11:38:10 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/08 19:20:28 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ size_t	Connections::size(void) {
 }
 
 Client& Connections::operator[](size_t position) {
-	_clients[position]._socket = &_sockets[position];
+	_clients[position].socket = &_sockets[position];
 	return (_clients[position]);
 }
 
@@ -70,7 +70,18 @@ int		Connections::serverAccept(sockaddr *sock)
 	return (accept(_sockets[0].fd, sock, &sock_len));
 }
 
-// void Connections::fillClientData(struct pollfd& new_client) {
-// 	_clients[new_client.fd].
-// }
+std::vector<Client>::iterator	Connections::find(std::string nick) {
+	std::vector<Client>::iterator	find = _clients.begin();
 
+	while (find != _clients.end() && find->getNick() != nick)
+		find++;
+	return (find);
+}
+
+std::vector<Client>::iterator	Connections::end(void) {
+	return (_clients.end());
+}
+
+// void	Connections::send(std::string message) {
+
+// }

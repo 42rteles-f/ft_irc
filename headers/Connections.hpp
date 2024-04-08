@@ -32,6 +32,8 @@ class Connections {
 		struct pollfd	*data(void);
 		size_t			size(void);
 		bool			serverRequest(void);
+		std::vector<Client>::iterator	find(std::string nick);
+		std::vector<Client>::iterator	end(void);
 		int				serverAccept(sockaddr *sock);
 
 		Connections&	operator=(const Connections& tocopy);

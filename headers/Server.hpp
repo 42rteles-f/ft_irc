@@ -6,7 +6,7 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/08 19:52:17 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/08 20:51:38 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,6 @@ class Server {
 		void	incomingConnections(void);
 		void	incomingMessages(void);
 		void	invalidCommand(Client& client);
-		// void	printClients(void);
-		// void	whoIsRequest(Client& client);
-		void	joinRequest(Client& client);
-		
 
 	public:
 		Server();
@@ -49,6 +45,15 @@ class Server {
 		Server& operator=(const Server& tocopy);
 		void messageToClient(Client& client, std::string message);
 		t_exe	requestHandler(std::string target);
+
+		void	privmsgRequest(Client& client);
+		void	nickRequest(Client& client);
+		void	userRequest(Client& client);
+		void	capLsRequest(Client& client);
+		void	joinRequest(Client& client);
+		void	kickRequest(Client& client);
+
+
 		bool	setup(char **init);
 		void	run(void);
 		void	online(void);

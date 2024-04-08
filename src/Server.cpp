@@ -6,18 +6,25 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/08 20:03:11 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/08 21:27:56 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft_irc.hpp>
+# include "Client.hpp"
+# include "Channel.hpp"
+# include "Connections.hpp"
 #include <Server.hpp>
 
 Server::Server():
 _online(false)
 {
-	_functions["JOIN"] = &Server::joinRequest;
-
+	// _functions["CAP"] = ;
+	// _functions["NICK"] = ;
+	_functions["NICK"] = &Server::nickRequest;
+	_functions["USER"] = &Server::userRequest;
+	_functions["KICK"] = &Server::kickRequest;
+	// _functions["PRIVMSG"] = ;
 }
 
 Server::Server(const Server& tocopy)
@@ -35,15 +42,10 @@ Server& Server::operator=(const Server& tocopy) {
 	return (*this);
 }
 
-void	Server::setHostName(std::string name) {
-	hostName = name;
-}
-
-
 bool	Server::setup(char **init) {
 	struct pollfd	new_server;
 
-	setHostName("irc.example.com");
+	hostName = "irc.example.com";
 	_sock.sin_family = AF_INET;
 	_sock.sin_addr.s_addr = INADDR_ANY;
 	_sock.sin_port = htons(atoi(init[1]));
@@ -68,8 +70,10 @@ void	Server::incomingMessages(void) {
 			_connection.erase(i--);
 			std::cout << "closed" << std::endl;
 		}
-		else
+		else {
+			// send(_connection[i]._socket.fd, "")
 			_connection[i].makeRequest(*this);
+		}
 	}
 }
 
@@ -90,7 +94,7 @@ void	Server::incomingConnections(void) {
 void Server::messageToClient(Client& client, std::string message) {
 	message = message + "\r\n";
 
-	if (send(client._socket->fd, message.c_str(), message.size(), 0) < 0)
+	if (send(client.socket->fd, message.c_str(), message.size(), 0) < 0)
 		std::cerr << "Error sending message to the client." << std::endl;
 }
 
@@ -101,7 +105,7 @@ std::string Server::format(Client& client) {
 }
 
 void	Server::joinRequest(Client& client) {
-	std::string input = client.getInput();
+	std::string input = client.input();
 	std::replace(input.begin(), input.end(), ',', ' ');
 	std::istringstream iss(input);
 	std::string channel;
@@ -111,7 +115,7 @@ void	Server::joinRequest(Client& client) {
 		_channels[channel];
 		messageToClient(client, ":" + client.getNick() + " JOIN :" + channel);
 	}
-	// messageToClient(client, ":" + client.getNick() + " JOIN :" + channel);
+	messageToClient(client, ":" + client.getNick() + " JOIN :" + channel);
 	if (_channels[channel].NumberOfClients() == 1)
 		_channels[channel].changeOp(client);
 	_channels[channel].printOPName();
@@ -128,8 +132,6 @@ void	Server::online(void) {
 }
 
 void	Server::offline(void) {}
-
-// void	Server::executeClient(Client& client) {}
 
 Server::t_exe	Server::requestHandler(std::string target)
 {
@@ -148,10 +150,52 @@ void	Server::invalidCommand(Client& client) {
 	std::cout << command << ": Not a valid Command in this Server." << std::endl;
 }
 
+// std::string	Server::formatRequest(std::string input) {
 
-// setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) < 0
+// }
 
-// makes the socket reusable for next try;
+// void	Server::privmsgRequest(Client& client) {
+// 	std::istringstream	iss(client.input());
+// 	std::string			destiny;
+
+// 	iss >> destiny;
+// 	iss >> destiny;
+// 	if (_channels.find(destiny) != _channels.end())
+// 		_channels[destiny].brodcast(client.makeMessage());
+// 	else if (_connection.find(destiny) != _connection.end()) {
+// 		_connection[destiny].send(client.makeMessage());
+// 	}
+// 	else 
+// 		client.send(this->makeMessage("No such nick"));
+
+// }
+
+void	Server::nickRequest(Client& client) {
+	std::istringstream	iss(client.input());
+	std::string			nick;
+
+	iss >> nick;
+	iss >> nick;
+	if (_connection.find(nick) == _connection.end())
+		client.setNick(nick);
+	// else
+	// 	client.send(this->makeMessage("Not a valid nick"));
+}
+
+void	Server::userRequest(Client& client) {
+	std::istringstream	iss(client.input());
+	std::string			nick;
+
+	iss >> nick;
+	iss >> nick;
+	std::cout << "request:" << nick << std::endl;
+	client.setUser(nick);
+}
+
+// /KICK #example user123 Spamming is not allowed!
+void	Server::kickRequest(Client& client) {
+	// client.input().;
+}
 
 
 // void	Server::printClients(void) {
