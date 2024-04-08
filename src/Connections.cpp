@@ -55,7 +55,7 @@ size_t	Connections::size(void) {
 }
 
 Client& Connections::operator[](size_t position) {
-	_clients[position]._socket = &_sockets[position];
+	_clients[position].socket = &_sockets[position];
 	return (_clients[position]);
 }
 
@@ -69,3 +69,19 @@ int		Connections::serverAccept(sockaddr *sock)
 
 	return (accept(_sockets[0].fd, sock, &sock_len));
 }
+
+std::vector<Client>::iterator	Connections::find(std::string nick) {
+	std::vector<Client>::iterator	find = _clients.begin();
+
+	while (find != _clients.end() && find->getNick() != nick)
+		find++;
+	return (find);
+}
+
+std::vector<Client>::iterator	Connections::end(void) {
+	return (_clients.end());
+}
+
+// void	Connections::send(std::string message) {
+
+// }

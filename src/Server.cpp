@@ -15,7 +15,13 @@
 
 Server::Server():
 _online(false)
-{}
+{
+	// _functions["CAP"] = ;
+	// _functions["NICK"] = ;
+	_functions["NICK"] = &Server::nickRequest;
+	_functions["USER"] = &Server::userRequest;
+	// _functions["PRIVMSG"] = ;
+}
 
 Server::Server(const Server& tocopy)
 {}
@@ -108,7 +114,47 @@ void	Server::invalidCommand(Client& client) {
 	std::cout << command << ": Not a valid Command in this Server." << std::endl;
 }
 
+// std::string	Server::formatRequest(std::string input) {
 
+// }
+
+// void	Server::privmsgRequest(Client& client) {
+// 	std::istringstream	iss(client.input());
+// 	std::string			destiny;
+
+// 	iss >> destiny;
+// 	iss >> destiny;
+// 	if (_channels.find(destiny) != _channels.end())
+// 		_channels[destiny].brodcast(client.makeMessage());
+// 	else if (_connection.find(destiny) != _connection.end()) {
+// 		_connection[destiny].send(client.makeMessage());
+// 	}
+// 	else 
+// 		client.send(this->makeMessage("No such nick"));
+
+// }
+
+void	Server::nickRequest(Client& client) {
+	std::istringstream	iss(client.input());
+	std::string			nick;
+
+	iss >> nick;
+	iss >> nick;
+	if (_connection.find(nick) == _connection.end())
+		client.setNick(nick);
+	// else
+	// 	client.send(this->makeMessage("Not a valid nick"));
+}
+
+void	Server::userRequest(Client& client) {
+	std::istringstream	iss(client.input());
+	std::string			nick;
+
+	iss >> nick;
+	iss >> nick;
+	std::cout << "request:" << nick << std::endl;
+	client.setUser(nick);
+}
 
 // void	Server::printClients(void) {
 

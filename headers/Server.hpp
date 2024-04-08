@@ -43,6 +43,12 @@ class Server {
 		Server& operator=(const Server& tocopy);
 
 		t_exe	requestHandler(std::string target);
+
+		void	privmsgRequest(Client& client);
+		void	nickRequest(Client& client);
+		void	userRequest(Client& client);
+		void	capLsRequest(Client& client);
+
 		bool	setup(char **init);
 		void	run(void);
 		void	online(void);

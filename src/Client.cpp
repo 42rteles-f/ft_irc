@@ -14,15 +14,15 @@
 #include <Client.hpp>
 
 Client::Client():
-_socket(NULL), _input(""), _command(false), _closed(false)
+socket(NULL), _input(""), _command(false), _closed(false)
 {}
 
 Client::Client(struct pollfd* socket):
-_socket(socket), _input(""), _command(false), _closed(false)
+socket(socket), _input(""), _command(false), _closed(false)
 {}
 
 Client::Client(const Client& tocopy):
-_socket(tocopy._socket)
+socket(tocopy.socket)
 {
 	*this = tocopy;
 }
@@ -32,7 +32,7 @@ Client::~Client() {}
 Client& Client::operator=(const Client& tocopy) {
 	if (this == &tocopy)
 		return (*this);
-	this->_socket = tocopy._socket;
+	this->socket = tocopy.socket;
 	this->_input = tocopy._input;
 	this->_command = tocopy._command;
 	this->_closed = tocopy._closed;
@@ -40,7 +40,7 @@ Client& Client::operator=(const Client& tocopy) {
 }
 
 bool	Client::operator==(const Client& compare) {
-		return (this.socket.fd == compare.socket.fd ? true : false)
+		return (this->socket->fd == compare.socket->fd ? true : false);
 }
 
 bool	Client::isClosed(void) {
@@ -55,22 +55,22 @@ bool	Client::update(void) {
 	char		buffer[READSIZE];
 	int			length;
 
-	if (!(_socket->revents & POLLIN))
+	if (!(socket->revents & POLLIN))
 		return (false);
-	while ((length = recv(_socket->fd, (void *)buffer, READSIZE, MSG_DONTWAIT)) > 0)
-		this->_input.append(buffer, length);
+	while ((length = recv(socket->fd, (void *)buffer, READSIZE, MSG_DONTWAIT)) > 0)
+		this->_read.append(buffer, length);
 	if (!length) {
 		this->_closed = true;
-		this->_input.clear();
+		this->_read.clear();
 		return (false);
 	}
-	std::cout << _input << std::endl;
-	if (_input.find("\n") != _input.npos)
+	std::cout << _read << std::endl;
+	if (_read.find("\n") != _read.npos)
 		_command = true;
 	return (true);
 }
 
-std::string	Client::input(void) {
+const std::string&	Client::input(void) const {
 	return (_input);
 }
 
@@ -81,11 +81,30 @@ void	Client::makeRequest(Server& server) {
 
 	if (!_command)
 		return ;
-	iss.str(_input);
-	iss >> command;
-	handler = server.requestHandler(command);
-	(server.*handler)(*this);
+	iss.str(_read);
+	while (std::getline(iss, _input)) {
+		command = _input.substr(0, _input.find(" "));
+		handler = server.requestHandler(command);
+		(server.*handler)(*this);
+	}
 	_command = false;
 	_input.clear();
+	_read.clear();
+	std::cout << _nick << " | " << _user << std::endl;
 }
-	// (server.*server.requestHandler(command))(*this);
+
+void	Client::setNick(std::string nick) {
+	this->_nick = nick;
+}
+
+const std::string&	Client::getNick(void) const {
+	return (this->_nick);
+}
+
+void	Client::setUser(std::string user) {
+	this->_user = user;
+}
+
+const std::string&	Client::getUser(void) const {
+	return (this->_user);
+}

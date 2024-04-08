@@ -17,6 +17,7 @@
 # include <map>
 # include <list>
 # include <sstream>
+# include <algorithm>
 # include <unistd.h>
 # include <poll.h>
 # include <sys/socket.h>

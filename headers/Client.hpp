@@ -18,6 +18,7 @@ class Server;
 
 class Client {
 	private:
+		std::string				_read;
 		std::string				_input;
 		std::string				_request;
 		std::string				_nick;
@@ -27,7 +28,7 @@ class Client {
 		bool					_closed;
 
 	public:
-		struct pollfd			*_socket;
+		struct pollfd			*socket;
 
 		Client();
 		Client(struct pollfd* socket);
@@ -42,7 +43,10 @@ class Client {
 		bool	hasRequest(void);
 		void	makeRequest(Server& server);
 
-		std::string	input(void);
-
+		const std::string&	input(void) const;
+		void	setNick(std::string);
+		const std::string&	getNick(void) const;
+		void	setUser(std::string);
+		const std::string&	getUser(void) const;
 
 } ;
