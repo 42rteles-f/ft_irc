@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/08 19:06:41 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/08 19:07:42 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ void	Server::incomingMessages(void)
 		else {
 			// send(_connection[i]._socket.fd, "")
 			_connection[i].makeRequest(*this);
+	}
 	}
 }
 
