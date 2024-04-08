@@ -18,8 +18,8 @@ class Server;
 
 class Channel {
 	private:
-		Server	*observer;
-		std::list<Client> _sockets;
+		std::vector<Client> _sockets;
+		std::vector<Client> _op;
 
 	public:
 		Channel();
@@ -27,4 +27,8 @@ class Channel {
 		~Channel();
 
 		Channel& operator=(const Channel& tocopy);
+		bool	operator==(const Client& compare);
+
+		void	addClient(Client& add);
+		void	removeClient(Client& remove);
 } ;
