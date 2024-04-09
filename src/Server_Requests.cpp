@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 10:02:13 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 10:04:35 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/09 10:38:48 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,9 @@ void	Server::nickRequest(Client& client) {
 	iss >> nick;
 	iss >> nick;
 	if (_connection.find(nick) == _connection.end()) {
-		client.sendMessage(client.makeMessage());
-		client.setNick(nick);
+        if (client.getNick().empty()) client.setNick(nick);
+        client.sendMessage(client.makeMessage());
+        client.setNick(nick);
 	}
 	// else
 	// 	client.send(this->makeMessage("Not a valid nick"));

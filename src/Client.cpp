@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:37:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 10:09:57 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/09 10:35:31 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,7 @@ bool	Client::update(void) {
 	if (!(socket->revents & POLLIN))
 		return (false);
 	while ((length = recv(socket->fd, (void *)buffer, READSIZE, MSG_DONTWAIT)) > 0)
-	while ((length = recv(socket->fd, (void *)buffer, READSIZE, MSG_DONTWAIT)) > 0)
-		this->_input.append(buffer, length);
+		this->_read.append(buffer, length);
 	if (!length) {
 		this->_closed = true;
 		this->_read.clear();
@@ -90,7 +89,7 @@ void	Client::makeRequest(Server& server) {
 	_command = false;
 	_input.clear();
 }
-
+ 
 void	Client::setNick(std::string nick) {
 	this->_nick = nick;
 }
