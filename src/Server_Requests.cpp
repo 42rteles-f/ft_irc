@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 10:02:13 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 19:02:34 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/09 19:57:07 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,10 @@ void Server::topicRequest(Client& client) {
 	std::string channel;
 	std::string topic;
 
+	std::pair<int, int> test = {3, 4}; 
+	test.first;
+	test.second;
+	
 	iss >> channel; //Ignoring the Command in the input
 	iss >> channel;
 	iss >> topic;
