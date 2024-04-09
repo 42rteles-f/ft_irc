@@ -41,6 +41,7 @@ void	Channel::addClient(Client& add) {
 		_clients.push_back(add);
 	if (_op.size() == 0)
 		_op.push_back(add);
+	broadcast(add);
 }
 
 void	Channel::removeClient(Client& remove) {

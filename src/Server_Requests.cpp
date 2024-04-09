@@ -124,7 +124,7 @@ void Server::whoRequest(Client& client) {
 	iss >> channel; //Ignoring the Command in the input
 	iss >> channel;
 	if (_channels.find(channel) != _channels.end()) {
-		client.sendMessage(this->makeMessage(" 332 " + client.getNick() + " " + channel + " :" + _channels[channel].getTopic()));
+		client.sendMessage(this->makeMessage(" 332 " + client.getNick() + " " + channel + " " + _channels[channel].getTopic()));
 		std::vector<Client>::iterator it = _channels[channel].getClients().begin();
 		std::string message;
 		for (; it != _channels[channel].getClients().end(); it++) {
