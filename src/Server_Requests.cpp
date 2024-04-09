@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 10:02:13 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 14:47:40 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/09 16:19:28 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,8 @@ void	Server::nickRequest(Client& client) {
         client.setNick(nick);
 	}
 	else {
-		client.sendMessage(
-            ":" + hostName + " 433 " + client.getNick() + " "
-			+ nick + " Already in use." + "\r\n"
-		);
-    }
+		client.sendMessage(this->makeMessage("433 " + client.getNick() + " " + nick));
+	}
 }
 
 void	Server::userRequest(Client& client) {
