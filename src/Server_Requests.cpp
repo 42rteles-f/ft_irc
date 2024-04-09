@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server_Requests.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 10:02:13 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 18:14:49 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/09 20:23:52 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,25 @@ void	Server::userRequest(Client& client) {
 	client.setRealName(client.input().substr(client.input().find(":")));
 }
 
+//check if the client who sent the message is a op
+//check if the client who will be kicked is in the channel
+//
+
 // /KICK #example user123 Spamming is not allowed!
 void	Server::kickRequest(Client& client) {
-	// client.input().;
+	std::istringstream	iss(client.input());
+	std::string			channel;
+	std::string			remove;
+
+	iss >> channel;
+	iss >> channel;
+	iss >> remove;
+	std::map<const std::string, Channel>::iterator it = _channels.find(channel);
+	if (it != _channels.end() && it->second.isOp(remove)) {
+		// _channels[channel].removeClient(_channels[channel].findClient(remove));
+		_channels[channel].removeClient(*(_connection.find(remove)));
+		client.sendMessage(client.makeMessage("KICK :" + channel));
+	}
 }
 
 void	Server::joinRequest(Client& client) {
@@ -68,12 +84,16 @@ void	Server::joinRequest(Client& client) {
 	std::string channel;
 
 	std::replace(input.begin(), input.end(), ',', ' ');
-	iss >> channel; //Ignoring the Command in the input
+	iss >> channel;
 	while (iss >> channel) {
-		_channels[channel].addClient(client);
-		messageToClient(client, ":" + client.getNick() + " JOIN :" + channel);
+		if (channel[0] == '#')
+			_channels[channel].addClient(client);
+		else {
+			//foi o xaleira
+			client.sendMessage(client.makeMessage(channel + ": Channel not found"));
+		}
+		client.sendMessage(client.makeMessage("JOIN :" + channel));
 	}
-	// messageToClient(client, ":" + client.getNick() + " JOIN :" + channel);
 	if (_channels[channel].NumberOfClients() == 1)
 		_channels[channel].changeOp(client);
 	_channels[channel].printOPName();
@@ -86,7 +106,7 @@ void Server::topicRequest(Client& client) {
 	std::string channel;
 	std::string topic;
 
-	iss >> channel; //Ignoring the Command in the input
+	iss >> channel;
 	iss >> channel;
 	iss >> topic;
 	if (_channels.find(channel) != _channels.end() && _channels[channel].isOp(client)) {

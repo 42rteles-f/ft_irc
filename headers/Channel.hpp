@@ -6,7 +6,7 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/08 21:40:36 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/09 20:02:06 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ class Channel {
 		void	broadcast(std::string message);
 
 		bool 			isOp(Client &client);
+		bool			isOp(std::string clientName);
 
 		void			changeOp(Client &client);
 		std::string		getTopic();
