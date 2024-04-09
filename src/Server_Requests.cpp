@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 10:02:13 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 19:57:07 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/09 21:49:06 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,29 @@ void	Server::userRequest(Client& client) {
 	client.setRealName(client.input().substr(client.input().find(":")));
 }
 
+//check if the client who sent the message is a op
+//check if the client who will be kicked is in the channel
+//
+// >> :lliberal_!lliberal KICK #3 lliberal :pqsim
 // /KICK #example user123 Spamming is not allowed!
 void	Server::kickRequest(Client& client) {
-	// client.input().;
+	std::istringstream	iss(client.input());
+	std::string			channel;
+	std::string			remove;
+	std::string			message;
+	
+	iss >> channel;
+	iss >> channel;
+	iss >> remove;
+	iss >> message;
+	std::map<const std::string, Channel>::iterator it = _channels.find(channel);
+	if (it != _channels.end() && it->second.isOp(remove)) {
+		// _channels[channel].removeClient(_channels[channel].findClient(remove));
+		_channels[channel].broadcast(client.makeMessage("KICK " + channel + " " + remove + message));
+		_channels[channel].removeClient(*(_connection.find(remove)));
+		std::cout << "here" << std::endl;
+		// client.sendMessage(client.makeMessage("KICK :" + channel));
+	}
 }
 
 void	Server::joinRequest(Client& client) {
@@ -68,13 +88,17 @@ void	Server::joinRequest(Client& client) {
 	std::string channel;
 
 	std::replace(input.begin(), input.end(), ',', ' ');
-	iss >> channel; //Ignoring the Command in the input
+	iss >> channel;
 	while (iss >> channel) {
-		client.addChannel(channel);
-		_channels[channel].addClient(client);
-		messageToClient(client, ":" + client.getNick() + " JOIN :" + channel);
+		if (channel[0] == '#') {
+			_channels[channel].addClient(client);
+			// client.sendMessage(client.makeMessage("JOIN :" + channel));
+		}
+		else {
+			//foi o xaleira
+			client.sendMessage(client.makeMessage(channel + ": Channel not found"));
+		}
 	}
-	// messageToClient(client, ":" + client.getNick() + " JOIN :" + channel);
 	if (_channels[channel].NumberOfClients() == 1)
 		_channels[channel].changeOp(client);
 	_channels[channel].printOPName();
@@ -87,11 +111,7 @@ void Server::topicRequest(Client& client) {
 	std::string channel;
 	std::string topic;
 
-	std::pair<int, int> test = {3, 4}; 
-	test.first;
-	test.second;
-	
-	iss >> channel; //Ignoring the Command in the input
+	iss >> channel;
 	iss >> channel;
 	iss >> topic;
 	if (_channels.find(channel) != _channels.end() && _channels[channel].isOp(client)) {
@@ -122,18 +142,22 @@ void	Server::invalidCommand(Client& client) {
 }
 
 void Server::whoRequest(Client& client) {
-	std::string input = client.input();
-	std::replace(input.begin(), input.end(), ',', ' ');
-	std::istringstream iss(input);
+	std::istringstream iss(client.input());
 	std::string channel;
 
 	iss >> channel; //Ignoring the Command in the input
 	iss >> channel;
 	if (_channels.find(channel) != _channels.end()) {
-		_channels[channel].broadcast(client.makeMessage());
+		client.sendMessage(this->makeMessage(" 332 " + client.getNick() + " " + channel + " " + _channels[channel].getTopic()));
+		std::vector<Client>::iterator it = _channels[channel].getClients().begin();
+		std::string message;
+		for (; it != _channels[channel].getClients().end(); it++) {
+			message += it->getNick() + " ";
+		}
+		client.sendMessage(this->makeMessage(" 353 " + client.getNick() + " = " + channel + " :" + message));
 	}
+	client.sendMessage(this->makeMessage(" 366 " + client.getNick() + " " + channel + " :End of /WHO list."));
 }
-
 void	Server::quitRequest(Client& client) {
 	std::vector<std::string>&	channels = client.getChannels();
 	

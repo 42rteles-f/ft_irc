@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 19:30:28 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/09 21:05:00 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ void	Channel::addClient(Client& add) {
 		_clients.push_back(add);
 	if (_op.size() == 0)
 		_op.push_back(add);
+	broadcast(add.makeMessage());
 }
 
 void	Channel::removeClient(Client& remove) {
@@ -50,10 +51,13 @@ void	Channel::removeClient(Client& remove) {
 	if (find != _op.end())
 		_op.erase(find);
 	find = std::find(_clients.begin(), _clients.end(), remove);
+	//pra deixar o xaleira feliz
+	// broadcast(remove.makeMessage());
 	if (find != _clients.end())
 		_clients.erase(find);
 	if (_clients.size() && _op.size() == 0)
 		_op.push_back(_clients[0]);
+
 }
 
 size_t Channel::NumberOfClients() {
@@ -73,6 +77,8 @@ void Channel::changeOp(Client &client) {
 
 void	Channel::broadcast(Client& sender)
 {
+	if (std::find(_clients.begin(), _clients.end(), sender) != _clients.end())
+		return ;
 	std::string	message = sender.makeMessage();
 
 	for (size_t i = 0; i < _clients.size(); i++)
@@ -105,4 +111,35 @@ bool Channel::isOp(Client& client) {
 	if (find != _op.end())
 		return true;
 	return false;
+}
+
+bool Channel::isOp(std::string clientName) {
+	std::vector<Client>::iterator find;
+
+	find = _op.begin();
+	for (;find != _op.end(); ++find) {
+		if (clientName.compare(find->getNick()) == 0)
+			return true;
+	}
+	return false;
+}
+
+// Client Channel::findClient(std::string clientName) {
+// 	std::vector<Client>::iterator find;
+
+// 	find = _clients.begin();
+// 	for (;find != _clients.end(); ++find) {
+// 		if (clientName.compare(find->getNick()) == 0)
+// 			return *find;
+// 	}
+// 	return (NULL);
+// }
+
+
+Client& Channel::getClient(size_t index){
+	return _clients[index];
+}
+
+std::vector<Client>& Channel::getClients() {
+	return _clients;
 }
