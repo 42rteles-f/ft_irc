@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:37:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 13:44:12 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/09 19:28:55 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,25 @@ Client::~Client() {}
 Client& Client::operator=(const Client& tocopy) {
 	if (this == &tocopy)
 		return (*this);
-	this->socket = tocopy.socket;
+	this->_read = tocopy._read;
 	this->_input = tocopy._input;
+	this->_request = tocopy._request;
+	this->_nick = tocopy._nick;
+	this->_user = tocopy._user;
+	this->_real = tocopy._real;
 	this->_command = tocopy._command;
 	this->_closed = tocopy._closed;
+	this->_myChannels = tocopy._myChannels;
+	this->socket = tocopy.socket;
 	return (*this);
 }
 
 bool	Client::operator==(const Client& compare) {
 		return (this->socket->fd == compare.socket->fd ? true : false);
+}
+
+bool	Client::operator!=(const Client& compare) {
+		return (this->socket->fd != compare.socket->fd ? true : false);
 }
 
 bool	Client::isClosed(void) {
@@ -81,6 +91,7 @@ void	Client::makeRequest(Server& server) {
 	iss.str(_read);
 	while (std::getline(iss, _input) && _read.find("\n") != _read.npos) {
 		command = _input.substr(0, _input.find(" "));
+		std::cout << "input: " << _input << std::endl;
 		handler = server.requestHandler(command);
 		(server.*handler)(*this);
 		breakline = _read.find("\n");
@@ -110,6 +121,14 @@ const std::string&	Client::getUser(void) const {
 	return (this->_user);
 }
 
+void	Client::setRealName(std::string real) {
+	this->_real = real;
+}
+
+const std::string&	Client::getRealName(void) const {
+	return (this->_real);
+}
+
 std::string	Client::makeMessage(void) const {
 	return (":" + _nick + "!" + _user + " " + _input + "\r\n");
 }
@@ -121,3 +140,12 @@ std::string	Client::makeMessage(const std::string message) const {
 void	Client::sendMessage(std::string message) const {
 	send(socket->fd, message.c_str(), message.size(), 0);
 }
+
+void	Client::addChannel(std::string channel) {
+	_myChannels.push_back(channel);
+}
+
+std::vector<std::string>&	Client::getChannels(void)  {
+	return (_myChannels);
+}
+

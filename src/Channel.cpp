@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 14:54:47 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/09 19:30:28 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@ Channel::~Channel()
 Channel& Channel::operator=(const Channel& tocopy) {
 	if (this == &tocopy)
 		return (*this);
-	/*
-	to do;
-	*/
+	this->_topic = tocopy._topic;
+	this->_clients = tocopy._clients;
+	this->_op = tocopy._op;
 	return (*this);
 }
 

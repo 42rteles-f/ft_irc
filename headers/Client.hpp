@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 10:53:16 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/09 18:44:22 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ class Client {
 		std::string				_real;
 		bool					_command;
 		bool					_closed;
+		std::vector<std::string>	_myChannels;
 
 	public:
 		struct pollfd			*socket;
@@ -37,6 +38,7 @@ class Client {
 
 		Client& operator=(const Client& tocopy);
 		bool	operator==(const Client& compare);
+		bool	operator!=(const Client& compare);
 
 		bool	update(void);
 		bool	isClosed(void);
@@ -45,7 +47,8 @@ class Client {
 		void	sendMessage(std::string user) const;
 		std::string	makeMessage(void) const;
 		std::string	makeMessage(const std::string) const;
-
+		void	addChannel(std::string channel);
+		std::vector<std::string>&	getChannels(void);
 
 		std::string getRequest();
 		const std::string&	input(void) const;
@@ -53,5 +56,6 @@ class Client {
 		const std::string&	getNick(void) const;
 		void	setUser(std::string);
 		const std::string&	getUser(void) const;
-
+		void	setRealName(std::string);
+		const std::string&	getRealName(void) const;
 } ;
