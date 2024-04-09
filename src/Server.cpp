@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 10:08:53 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/09 10:39:37 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 Server::Server():
 _online(false)
 {
-	// _functions["CAP"] = ;
+	_functions["JOIN"] = &Server::joinRequest;
 	_functions["NICK"] = &Server::nickRequest;
 	_functions["USER"] = &Server::userRequest;
 	_functions["KICK"] = &Server::kickRequest;
@@ -66,10 +66,8 @@ void	Server::incomingMessages(void) {
 			_connection.erase(i--);
 			std::cout << "closed" << std::endl;
 		}
-		else {
-			// sendAN-A795207B.226.108.93.rev.vodafone.pt(_connection[i]._socket.fd, "")
+		else
 			_connection[i].makeRequest(*this);
-	}
 	}
 }
 
