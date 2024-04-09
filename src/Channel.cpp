@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 19:30:28 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/09 20:29:15 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,29 @@ bool Channel::isOp(Client& client) {
 		return true;
 	return false;
 }
+
+bool Channel::isOp(std::string clientName) {
+	std::vector<Client>::iterator find;
+
+	find = _op.begin();
+	for (;find != _op.end(); ++find) {
+		if (clientName.compare(find->getNick()) == 0)
+			return true;
+	}
+	return false;
+}
+
+// Client Channel::findClient(std::string clientName) {
+// 	std::vector<Client>::iterator find;
+
+// 	find = _clients.begin();
+// 	for (;find != _clients.end(); ++find) {
+// 		if (clientName.compare(find->getNick()) == 0)
+// 			return *find;
+// 	}
+// 	return (NULL);
+// }
+
 
 Client& Channel::getClient(size_t index){
 	return _clients[index];
