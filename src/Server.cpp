@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 12:20:19 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/09 14:37:29 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ Server::Server():
 _online(false)
 {
 	_functions["JOIN"] = &Server::joinRequest;
+	_functions["PART"] = &Server::partRequest;
 	_functions["NICK"] = &Server::nickRequest;
 	_functions["USER"] = &Server::userRequest;
 	_functions["KICK"] = &Server::kickRequest;
@@ -39,6 +40,15 @@ Server& Server::operator=(const Server& tocopy) {
 	return (*this);
 }
 
+Server::t_exe	Server::requestHandler(std::string target)
+{
+	std::map<std::string, t_exe>::const_iterator	found = _functions.find(target);
+	std::cout << target << std::endl;
+	if (found != _functions.end())
+		return (found->second);
+	return (&Server::invalidCommand);
+}
+
 bool	Server::setup(char **init) {
 	struct pollfd	new_server;
 
@@ -51,6 +61,7 @@ bool	Server::setup(char **init) {
 		bind(new_server.fd, (struct sockaddr*)&_sock, sizeof(_sock)) != 0 ||
 		listen(new_server.fd, 0) < 0)
 	{
+		setsockopt(new_server.fd, SOL_SOCKET, SO_REUSEADDR, &new_server.events, sizeof(new_server.events));
 		std::cout << "Error SetingUp Server" << std::endl;
 		return (false);
 	}

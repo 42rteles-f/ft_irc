@@ -6,29 +6,12 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 10:02:13 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 12:15:27 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/09 14:47:40 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft_irc.hpp>
 #include <Server.hpp>
-
-Server::t_exe	Server::requestHandler(std::string target)
-{
-	std::map<std::string, t_exe>::const_iterator	found = _functions.find(target);
-	std::cout << target << std::endl;
-	if (found != _functions.end())
-		return (found->second);
-	return (&Server::invalidCommand);
-}
-
-void	Server::invalidCommand(Client& client) {
-	std::istringstream	iss(client.input());
-	std::string			command;
-
-	iss >> command;
-	std::cout << command << ": Not a valid Command in this Server." << std::endl;
-}
 
 void	Server::privmsgRequest(Client& sender) {
 	std::istringstream	iss(sender.input());
@@ -40,7 +23,7 @@ void	Server::privmsgRequest(Client& sender) {
 	if (_channels.find(recipient) != _channels.end())
 		_channels[recipient].broadcast(sender);
 	else if ((found = _connection.find(recipient)) != _connection.end()) {
-		(*found).sendMessage(sender.makeMessage());
+		found->sendMessage(sender.makeMessage());
     }
 }
 
@@ -56,8 +39,10 @@ void	Server::nickRequest(Client& client) {
         client.setNick(nick);
 	}
 	else {
-		client.sendMessage(this->makeMessage(
-            "433", client.getNick() + " " + client.input() + " Already in use."));
+		client.sendMessage(
+            ":" + hostName + " 433 " + client.getNick() + " "
+			+ nick + " Already in use." + "\r\n"
+		);
     }
 }
 
@@ -77,17 +62,35 @@ void	Server::kickRequest(Client& client) {
 
 void	Server::joinRequest(Client& client) {
 	std::string input = client.input();
-	std::replace(input.begin(), input.end(), ',', ' ');
 	std::istringstream iss(input);
 	std::string channel;
 
+	std::replace(input.begin(), input.end(), ',', ' ');
 	iss >> channel; //Ignoring the Command in the input
 	while (iss >> channel) {
 		_channels[channel].addClient(client);
 		messageToClient(client, ":" + client.getNick() + " JOIN :" + channel);
 	}
-	messageToClient(client, ":" + client.getNick() + " JOIN :" + channel);
+	// messageToClient(client, ":" + client.getNick() + " JOIN :" + channel);
 	if (_channels[channel].NumberOfClients() == 1)
 		_channels[channel].changeOp(client);
 	_channels[channel].printOPName();
+}
+
+void	Server::partRequest(Client& client) {
+	std::istringstream	iss(client.input());
+	std::string			channel;
+
+	iss >> channel;
+	iss >> channel;
+	if (_channels.find(channel) != _channels.end())
+		_channels[channel].removeClient(client);
+}
+
+void	Server::invalidCommand(Client& client) {
+	std::istringstream	iss(client.input());
+	std::string			command;
+
+	iss >> command;
+	std::cout << command << ": Not a valid Command in this Server." << std::endl;
 }

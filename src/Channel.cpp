@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/08 21:41:53 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/09 14:54:47 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,6 @@ void	Channel::addClient(Client& add) {
 	find = std::find(_clients.begin(), _clients.end(), add);
 	if (find == _clients.end())
 		_clients.push_back(add);
-	find = std::find(_clients.begin(), _clients.end(), add);
-	if (find == _clients.end())
-		_clients.push_back(add);
 	if (_op.size() == 0)
 		_op.push_back(add);
 }
@@ -53,7 +50,7 @@ void	Channel::removeClient(Client& remove) {
 	if (find != _op.end())
 		_op.erase(find);
 	find = std::find(_clients.begin(), _clients.end(), remove);
-	if (find != _op.end())
+	if (find != _clients.end())
 		_clients.erase(find);
 	if (_clients.size() && _op.size() == 0)
 		_op.push_back(_clients[0]);

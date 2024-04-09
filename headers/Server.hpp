@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 12:05:35 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/09 14:47:29 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ class Server {
 		void	capLsRequest(Client& client);
 		void	joinRequest(Client& client);
 		void	kickRequest(Client& client);
+		void	partRequest(Client& client);
 		void	invalidCommand(Client& client);
 
 		std::string	makeMessage(const std::string) const;
