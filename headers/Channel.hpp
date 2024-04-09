@@ -34,6 +34,9 @@ class Channel {
 		void	addClient(Client& add);
 		void	removeClient(Client& remove);
 		void	broadcast(Client& client);
+		void	broadcast(std::string message);
+
+		bool 			isOp(Client &client);
 
 		void			changeOp(Client &client);
 		std::string		getTopic();

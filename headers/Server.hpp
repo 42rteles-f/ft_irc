@@ -42,6 +42,7 @@ class Server {
 		void	capLsRequest(Client& client);
 		void	joinRequest(Client& client);
 		void	kickRequest(Client& client);
+		void	topicRequest(Client& client);
 		void	invalidCommand(Client& client);
 
 		std::string	makeMessage(const std::string) const;

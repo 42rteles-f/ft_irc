@@ -91,3 +91,19 @@ void	Server::joinRequest(Client& client) {
 		_channels[channel].changeOp(client);
 	_channels[channel].printOPName();
 }
+
+void Server::topicRequest(Client& client) {
+	std::string input = client.input();
+	std::replace(input.begin(), input.end(), ',', ' ');
+	std::istringstream iss(input);
+	std::string channel;
+	std::string topic;
+
+	iss >> channel; //Ignoring the Command in the input
+	iss >> channel;
+	iss >> topic;
+	if (_channels.find(channel) != _channels.end() && _channels[channel].isOp(client)) {
+		_channels[channel].setTopic(topic);
+		_channels[channel].broadcast(client.makeMessage());
+	}
+}

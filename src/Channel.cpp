@@ -84,3 +84,28 @@ void	Channel::broadcast(Client& sender)
 			send(_clients[i].socket->fd, message.c_str(), message.size(), 0);
 	}
 }
+
+void	Channel::broadcast(std::string message)
+{
+	for (size_t i = 0; i < _clients.size(); i++)
+	{
+		send(_clients[i].socket->fd, message.c_str(), message.size(), 0);
+	}
+}
+
+void	Channel::setTopic(std::string topic) {
+	this->_topic = topic;
+}
+
+std::string	Channel::getTopic(void) {
+	return (this->_topic);
+}
+
+bool Channel::isOp(Client& client) {
+	std::vector<Client>::iterator find;
+
+	find = std::find(_op.begin(), _op.end(), client);
+	if (find != _op.end())
+		return true;
+	return false;
+}

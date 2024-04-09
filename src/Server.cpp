@@ -22,6 +22,7 @@ _online(false)
 	_functions["KICK"] = &Server::kickRequest;
 	_functions["PRIVMSG"] = &Server::privmsgRequest;
 	_functions["privmsg"] = &Server::privmsgRequest;
+	_functions["TOPIC"] = &Server::topicRequest;
 }
 
 Server::Server(const Server& tocopy)
