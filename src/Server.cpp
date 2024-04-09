@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 11:40:05 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/09 12:02:08 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,15 +110,22 @@ void	Server::online(void) {
 	}
 }
 
-void	Server::offline(void) {}
+void	Server::offline(void) {
+	int reuse = 1;
 
+	this->_online = false;
+	for (size_t i = 1; i < _connection.size(); i++) {
+		_connection[i].sendMessage(this->makeMessage("Server Closing Down."));
+		close(_connection[i].socket->fd);
+	}
+	close(_connection[0].socket->fd);
+	setsockopt(_connection[0].socket->fd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse));
+}
 
 std::string	Server::makeMessage(const std::string message) const {
-	return (":" + hostName + "\r\n");
+	return (":" + hostName + " " + message + "\r\n");
 }
 
 std::string	Server::makeMessage(std::string code, const std::string message) const {
 	return (":" + hostName + " " + code + " " + message + "\r\n");
 }
-
-

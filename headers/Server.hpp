@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 11:20:00 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/09 12:05:35 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ class Server {
 		t_exe	requestHandler(std::string target);
 
 		bool	setup(char **init);
-		void	run(void);
 		void	online(void);
 		void	offline(void);
 		
