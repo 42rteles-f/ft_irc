@@ -106,3 +106,11 @@ bool Channel::isOp(Client& client) {
 		return true;
 	return false;
 }
+
+Client& Channel::getClient(size_t index){
+	return _clients[index];
+}
+
+std::vector<Client>& Channel::getClients() {
+	return _clients;
+}

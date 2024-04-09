@@ -40,6 +40,8 @@ class Channel {
 
 		void			changeOp(Client &client);
 		std::string		getTopic();
+		Client&			getClient(size_t index);
+		std::vector<Client>&	getClients();
 		size_t 			NumberOfClients();
 		void			setTopic(std::string newTopic);
 		void			printOPName();

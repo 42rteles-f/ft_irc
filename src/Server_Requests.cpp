@@ -112,14 +112,19 @@ void	Server::invalidCommand(Client& client) {
 }
 
 void Server::whoRequest(Client& client) {
-	std::string input = client.input();
-	std::replace(input.begin(), input.end(), ',', ' ');
-	std::istringstream iss(input);
+	std::istringstream iss(client.input());
 	std::string channel;
 
 	iss >> channel; //Ignoring the Command in the input
 	iss >> channel;
 	if (_channels.find(channel) != _channels.end()) {
-		_channels[channel].broadcast(client.makeMessage());
+		client.sendMessage(this->makeMessage(" 332 " + client.getNick() + " " + channel + " :" + _channels[channel].getTopic()));
+		std::vector<Client>::iterator it = _channels[channel].getClients().begin();
+		std::string message;
+		for (; it != _channels[channel].getClients().end(); it++) {
+			message += it->getNick() + " ";
+		}
+		client.sendMessage(this->makeMessage(" 353 " + client.getNick() + " = " + channel + " :" + message));
 	}
+	client.sendMessage(this->makeMessage(" 366 " + client.getNick() + " " + channel + " :End of /WHO list."));
 }
