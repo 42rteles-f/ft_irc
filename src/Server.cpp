@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 12:02:08 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/09 12:20:19 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ _online(false)
 	_functions["USER"] = &Server::userRequest;
 	_functions["KICK"] = &Server::kickRequest;
 	_functions["PRIVMSG"] = &Server::privmsgRequest;
+	_functions["privmsg"] = &Server::privmsgRequest;
 }
 
 Server::Server(const Server& tocopy)

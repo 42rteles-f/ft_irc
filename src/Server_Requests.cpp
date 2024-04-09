@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 10:02:13 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 11:37:10 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/09 12:15:27 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,17 +35,13 @@ void	Server::privmsgRequest(Client& sender) {
 	std::string			recipient;
 	std::vector<Client>::iterator	found;
 
-	std::cout << sender.input() << std::endl;
-	std::cout << sender.makeMessage() << std::endl;
 	iss >> recipient;
 	iss >> recipient;
-	if (_channels.find(recipient) != _channels.end()) {
+	if (_channels.find(recipient) != _channels.end())
 		_channels[recipient].broadcast(sender);
-		std::cout << "found channel" << std::endl;
-	}
 	else if ((found = _connection.find(recipient)) != _connection.end()) {
 		(*found).sendMessage(sender.makeMessage());
-	}
+    }
 }
 
 void	Server::nickRequest(Client& client) {
@@ -60,20 +56,18 @@ void	Server::nickRequest(Client& client) {
         client.setNick(nick);
 	}
 	else {
-        std::cout << "same nick" << std::endl; 
 		client.sendMessage(this->makeMessage(
             "433", client.getNick() + " " + client.input() + " Already in use."));
-        
     }
 }
 
 void	Server::userRequest(Client& client) {
 	std::istringstream	iss(client.input());
-	std::string			nick;
+	std::string			user;
 
-	iss >> nick;
-	iss >> nick;
-	client.setUser(nick);
+	iss >> user;
+	iss >> user;
+	client.setUser(user);
 }
 
 // /KICK #example user123 Spamming is not allowed!
