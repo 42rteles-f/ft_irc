@@ -6,7 +6,7 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 10:02:13 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 20:31:04 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/09 21:06:33 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,21 +60,25 @@ void	Server::userRequest(Client& client) {
 //check if the client who sent the message is a op
 //check if the client who will be kicked is in the channel
 //
-
+// >> :lliberal_!lliberal KICK #3 lliberal :pqsim
 // /KICK #example user123 Spamming is not allowed!
 void	Server::kickRequest(Client& client) {
 	std::istringstream	iss(client.input());
 	std::string			channel;
 	std::string			remove;
-
+	std::string			message;
+	
 	iss >> channel;
 	iss >> channel;
 	iss >> remove;
+	iss >> message;
 	std::map<const std::string, Channel>::iterator it = _channels.find(channel);
 	if (it != _channels.end() && it->second.isOp(remove)) {
 		// _channels[channel].removeClient(_channels[channel].findClient(remove));
+		_channels[channel].broadcast(client.makeMessage("KICK " + channel + " " + remove + message));
 		_channels[channel].removeClient(*(_connection.find(remove)));
-		client.sendMessage(client.makeMessage("KICK :" + channel));
+		std::cout << "here" << std::endl;
+		// client.sendMessage(client.makeMessage("KICK :" + channel));
 	}
 }
 
@@ -88,7 +92,7 @@ void	Server::joinRequest(Client& client) {
 	while (iss >> channel) {
 		if (channel[0] == '#') {
 			_channels[channel].addClient(client);
-			client.sendMessage(client.makeMessage("JOIN :" + channel));
+			// client.sendMessage(client.makeMessage("JOIN :" + channel));
 		}
 		else {
 			//foi o xaleira
