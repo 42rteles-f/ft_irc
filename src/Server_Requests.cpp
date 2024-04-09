@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 10:02:13 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 16:22:45 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/09 18:14:49 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,17 @@ void	Server::nickRequest(Client& client) {
 
 	iss >> nick;
 	iss >> nick;
+	// if (_connection.size())
+	// 	std::cout << "end: " + _connection.end()->getNick() << std::endl;
 	if (_connection.find(nick) == _connection.end()) {
         if (client.getNick().empty()) client.setNick(nick);
         client.sendMessage(client.makeMessage());
         client.setNick(nick);
 	}
 	else {
-		client.sendMessage(this->makeMessage("433 " + client.getNick() + " " + nick));
-		client.sendMessage(":" + hostName + " 433 " + client.getNick() + " " + nick);
+		client.setNick(nick);
+		client.sendMessage(this->makeMessage(
+			"433 " + client.getNick() + " " + nick));
 	}
 }
 
@@ -51,6 +54,7 @@ void	Server::userRequest(Client& client) {
 	iss >> user;
 	iss >> user;
 	client.setUser(user);
+	client.setRealName(client.input().substr(client.input().find(":")));
 }
 
 // /KICK #example user123 Spamming is not allowed!

@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:37:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 13:44:12 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/09 18:07:31 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,14 @@ const std::string&	Client::getUser(void) const {
 	return (this->_user);
 }
 
+void	Client::setRealName(std::string real) {
+	this->_real = real;
+}
+
+const std::string&	Client::getRealName(void) const {
+	return (this->_real);
+}
+
 std::string	Client::makeMessage(void) const {
 	return (":" + _nick + "!" + _user + " " + _input + "\r\n");
 }
@@ -120,4 +128,8 @@ std::string	Client::makeMessage(const std::string message) const {
 
 void	Client::sendMessage(std::string message) const {
 	send(socket->fd, message.c_str(), message.size(), 0);
+}
+
+void	Client::addChannel(std::string channel) {
+	_myChannels.push_back(channel);
 }
