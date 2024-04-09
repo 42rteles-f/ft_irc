@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 14:37:29 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/09 16:20:36 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,10 @@ std::string	Server::makeMessage(const std::string message) const {
 	return (":" + hostName + " " + message + "\r\n");
 }
 
-std::string	Server::makeMessage(std::string code, const std::string message) const {
-	return (":" + hostName + " " + code + " " + message + "\r\n");
+std::string	Server::makeMessage(std::string code, std::string message) const {
+	return (":" + hostName + " " + message + "\r\n");
+}
+
+std::string	Server::makeMessage(std::string code, std::string client, std::string message) const {
+	return (":" + hostName + " " + code + " " + client + " " + message + "\r\n");
 }
