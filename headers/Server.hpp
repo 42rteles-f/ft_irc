@@ -41,6 +41,7 @@ class Server {
 		void	userRequest(Client& client);
 		void	capLsRequest(Client& client);
 		void	joinRequest(Client& client);
+		void 	whoRequest(Client& client);
 		void	kickRequest(Client& client);
 		void	partRequest(Client& client);
 		void	topicRequest(Client& client);

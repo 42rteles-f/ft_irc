@@ -91,6 +91,9 @@ void Server::topicRequest(Client& client) {
 		_channels[channel].setTopic(topic);
 		_channels[channel].broadcast(client.makeMessage());
 	}
+	else
+		client.sendMessage(":" + hostName + " 482 " + client.getNick() + " "
+							+ channel + " :You're not channel operator" + "\r\n");
 }
 
 void	Server::partRequest(Client& client) {
@@ -109,4 +112,17 @@ void	Server::invalidCommand(Client& client) {
 
 	iss >> command;
 	std::cout << command << ": Not a valid Command in this Server." << std::endl;
+}
+
+void Server::whoRequest(Client& client) {
+	std::string input = client.input();
+	std::replace(input.begin(), input.end(), ',', ' ');
+	std::istringstream iss(input);
+	std::string channel;
+
+	iss >> channel; //Ignoring the Command in the input
+	iss >> channel;
+	if (_channels.find(channel) != _channels.end()) {
+		_channels[channel].broadcast(client.makeMessage());
+	}
 }

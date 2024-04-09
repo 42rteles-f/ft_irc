@@ -23,6 +23,7 @@ _online(false)
 	_functions["KICK"] = &Server::kickRequest;
 	_functions["PRIVMSG"] = &Server::privmsgRequest;
 	_functions["privmsg"] = &Server::privmsgRequest;
+	_functions["WHO"] = &Server::whoRequest;
 	_functions["TOPIC"] = &Server::topicRequest;
 }
 
