@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:37:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/08 21:46:48 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/09 18:07:31 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,7 @@ bool	Client::update(void) {
 	if (!(socket->revents & POLLIN))
 		return (false);
 	while ((length = recv(socket->fd, (void *)buffer, READSIZE, MSG_DONTWAIT)) > 0)
-	while ((length = recv(socket->fd, (void *)buffer, READSIZE, MSG_DONTWAIT)) > 0)
-		this->_input.append(buffer, length);
+		this->_read.append(buffer, length);
 	if (!length) {
 		this->_closed = true;
 		this->_read.clear();
@@ -90,7 +89,7 @@ void	Client::makeRequest(Server& server) {
 	_command = false;
 	_input.clear();
 }
-
+ 
 void	Client::setNick(std::string nick) {
 	this->_nick = nick;
 }
@@ -111,10 +110,26 @@ const std::string&	Client::getUser(void) const {
 	return (this->_user);
 }
 
+void	Client::setRealName(std::string real) {
+	this->_real = real;
+}
+
+const std::string&	Client::getRealName(void) const {
+	return (this->_real);
+}
+
 std::string	Client::makeMessage(void) const {
 	return (":" + _nick + "!" + _user + " " + _input + "\r\n");
 }
 
+std::string	Client::makeMessage(const std::string message) const {
+	return (":" + _nick + "!" + _user + " " + message + "\r\n");
+}
+
 void	Client::sendMessage(std::string message) const {
 	send(socket->fd, message.c_str(), message.size(), 0);
+}
+
+void	Client::addChannel(std::string channel) {
+	_myChannels.push_back(channel);
 }

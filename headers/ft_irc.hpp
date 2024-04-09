@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_irc.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 18:04:14 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/08 19:19:56 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/09 11:56:17 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <sys/socket.h>
 # include <netdb.h>
 # include <netinet/in.h>
+# include <signal.h>
 # include "Client.hpp"
 # include "Channel.hpp"
 # include "Connections.hpp"

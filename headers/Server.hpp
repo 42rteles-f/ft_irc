@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/08 21:41:18 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/09 16:19:23 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,22 @@ class Server {
 
 		void	incomingConnections(void);
 		void	incomingMessages(void);
+
+		void	privmsgRequest(Client& client);
+		void	nickRequest(Client& client);
+		void	userRequest(Client& client);
+		void	capLsRequest(Client& client);
+		void	joinRequest(Client& client);
+		void 	whoRequest(Client& client);
+		void	kickRequest(Client& client);
+		void	partRequest(Client& client);
+		void	topicRequest(Client& client);
 		void	invalidCommand(Client& client);
+
+		//Code -> client.nick -> message;
+		std::string	makeMessage(const std::string) const;
+		std::string	makeMessage(std::string code, std::string message) const;
+		std::string	makeMessage(std::string code, std::string client, std::string message) const;
 
 	public:
 		Server();
@@ -43,22 +58,12 @@ class Server {
 		~Server();
 
 		Server& operator=(const Server& tocopy);
-		void messageToClient(Client& client, std::string message);
+		void 	messageToClient(Client& client, std::string message);
 		t_exe	requestHandler(std::string target);
 
-		void	privmsgRequest(Client& client);
-		void	nickRequest(Client& client);
-		void	userRequest(Client& client);
-		// void	joinRequest(Client& client);
-		void	capLsRequest(Client& client);
-		void	joinRequest(Client& client);
-		void	kickRequest(Client& client);
-
-
 		bool	setup(char **init);
-		void	run(void);
 		void	online(void);
 		void	offline(void);
-		void	setHostName(std::string name);
+		
 		std::string format(Client& client);
 } ;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/08 21:41:53 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/09 18:10:35 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,9 @@ void	Channel::addClient(Client& add) {
 	find = std::find(_clients.begin(), _clients.end(), add);
 	if (find == _clients.end())
 		_clients.push_back(add);
-	find = std::find(_clients.begin(), _clients.end(), add);
-	if (find == _clients.end())
-		_clients.push_back(add);
 	if (_op.size() == 0)
 		_op.push_back(add);
+	// add.addChannel(this.);
 }
 
 void	Channel::removeClient(Client& remove) {
@@ -53,7 +51,7 @@ void	Channel::removeClient(Client& remove) {
 	if (find != _op.end())
 		_op.erase(find);
 	find = std::find(_clients.begin(), _clients.end(), remove);
-	if (find != _op.end())
+	if (find != _clients.end())
 		_clients.erase(find);
 	if (_clients.size() && _op.size() == 0)
 		_op.push_back(_clients[0]);
@@ -83,4 +81,29 @@ void	Channel::broadcast(Client& sender)
 		if (sender.socket->fd != _clients[i].socket->fd)
 			send(_clients[i].socket->fd, message.c_str(), message.size(), 0);
 	}
+}
+
+void	Channel::broadcast(std::string message)
+{
+	for (size_t i = 0; i < _clients.size(); i++)
+	{
+		send(_clients[i].socket->fd, message.c_str(), message.size(), 0);
+	}
+}
+
+void	Channel::setTopic(std::string topic) {
+	this->_topic = topic;
+}
+
+std::string	Channel::getTopic(void) {
+	return (this->_topic);
+}
+
+bool Channel::isOp(Client& client) {
+	std::vector<Client>::iterator find;
+
+	find = std::find(_op.begin(), _op.end(), client);
+	if (find != _op.end())
+		return true;
+	return false;
 }

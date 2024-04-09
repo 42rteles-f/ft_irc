@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/08 21:45:08 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/09 18:07:19 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ class Client {
 		std::string				_real;
 		bool					_command;
 		bool					_closed;
+		std::vector<std::string>	_myChannels;
 
 	public:
 		struct pollfd			*socket;
@@ -42,8 +43,10 @@ class Client {
 		bool	isClosed(void);
 		bool	hasRequest(void);
 		void	makeRequest(Server& server);
-		std::string	makeMessage(void) const;
 		void	sendMessage(std::string user) const;
+		std::string	makeMessage(void) const;
+		std::string	makeMessage(const std::string) const;
+		void	addChannel(std::string channel);
 
 
 		std::string getRequest();
@@ -52,5 +55,6 @@ class Client {
 		const std::string&	getNick(void) const;
 		void	setUser(std::string);
 		const std::string&	getUser(void) const;
-
+		void	setRealName(std::string);
+		const std::string&	getRealName(void) const;
 } ;
