@@ -6,7 +6,7 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 20:02:19 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/09 20:29:15 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@ Channel::~Channel()
 Channel& Channel::operator=(const Channel& tocopy) {
 	if (this == &tocopy)
 		return (*this);
-	/*
-	to do;
-	*/
+	this->_topic = tocopy._topic;
+	this->_clients = tocopy._clients;
+	this->_op = tocopy._op;
 	return (*this);
 }
 
@@ -41,7 +41,6 @@ void	Channel::addClient(Client& add) {
 		_clients.push_back(add);
 	if (_op.size() == 0)
 		_op.push_back(add);
-	// add.addChannel(this.);
 }
 
 void	Channel::removeClient(Client& remove) {
@@ -129,3 +128,12 @@ bool Channel::isOp(std::string clientName) {
 // 	}
 // 	return (NULL);
 // }
+
+
+Client& Channel::getClient(size_t index){
+	return _clients[index];
+}
+
+std::vector<Client>& Channel::getClients() {
+	return _clients;
+}

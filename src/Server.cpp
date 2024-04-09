@@ -6,7 +6,7 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 18:50:43 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/09 20:28:38 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 Server::Server():
 _online(false)
 {
+	_functions["QUIT"] = &Server::quitRequest;
 	_functions["JOIN"] = &Server::joinRequest;
 	_functions["PART"] = &Server::partRequest;
 	_functions["NICK"] = &Server::nickRequest;

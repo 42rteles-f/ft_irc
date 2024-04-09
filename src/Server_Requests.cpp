@@ -6,7 +6,7 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 10:02:13 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 20:23:52 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/09 20:31:04 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,13 +86,14 @@ void	Server::joinRequest(Client& client) {
 	std::replace(input.begin(), input.end(), ',', ' ');
 	iss >> channel;
 	while (iss >> channel) {
-		if (channel[0] == '#')
+		if (channel[0] == '#') {
 			_channels[channel].addClient(client);
+			client.sendMessage(client.makeMessage("JOIN :" + channel));
+		}
 		else {
 			//foi o xaleira
 			client.sendMessage(client.makeMessage(channel + ": Channel not found"));
 		}
-		client.sendMessage(client.makeMessage("JOIN :" + channel));
 	}
 	if (_channels[channel].NumberOfClients() == 1)
 		_channels[channel].changeOp(client);
@@ -137,14 +138,27 @@ void	Server::invalidCommand(Client& client) {
 }
 
 void Server::whoRequest(Client& client) {
-	std::string input = client.input();
-	std::replace(input.begin(), input.end(), ',', ' ');
-	std::istringstream iss(input);
+	std::istringstream iss(client.input());
 	std::string channel;
 
 	iss >> channel; //Ignoring the Command in the input
 	iss >> channel;
 	if (_channels.find(channel) != _channels.end()) {
-		_channels[channel].broadcast(client.makeMessage());
+		client.sendMessage(this->makeMessage(" 332 " + client.getNick() + " " + channel + " :" + _channels[channel].getTopic()));
+		std::vector<Client>::iterator it = _channels[channel].getClients().begin();
+		std::string message;
+		for (; it != _channels[channel].getClients().end(); it++) {
+			message += it->getNick() + " ";
+		}
+		client.sendMessage(this->makeMessage(" 353 " + client.getNick() + " = " + channel + " :" + message));
 	}
+	client.sendMessage(this->makeMessage(" 366 " + client.getNick() + " " + channel + " :End of /WHO list."));
+}
+void	Server::quitRequest(Client& client) {
+	std::vector<std::string>&	channels = client.getChannels();
+	
+	for (size_t i = 0; i < channels.size(); i++)
+		_channels[channels[i]].removeClient(client);
+	std::cout << "channells removed" << std::endl;
+	// _connection.erase(client);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Connections.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/06 23:16:05 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/09 18:46:03 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ class Connections {
 		
 		// void			fillClientData(struct pollfd& new_client);
 		void			erase(size_t position);
+		void			erase(Client& erase);
 		void			add(struct pollfd& new_client);
 
 		struct pollfd	*data(void);
