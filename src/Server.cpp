@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 10:39:37 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/09 11:40:05 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,31 +113,12 @@ void	Server::online(void) {
 void	Server::offline(void) {}
 
 
+std::string	Server::makeMessage(const std::string message) const {
+	return (":" + hostName + "\r\n");
+}
+
+std::string	Server::makeMessage(std::string code, const std::string message) const {
+	return (":" + hostName + " " + code + " " + message + "\r\n");
+}
 
 
-// void	Server::printClients(void) {
-
-// 	for (size_t i = 1; i < _sockets.size(); i++)
-// 	{
-// 		char	buffer[1024] = {0};
-// 		if (_sockets[i].revents & POLLIN)
-// 		{
-// 			if (!recv(_sockets[i].fd, (void *)buffer, 1024, MSG_DONTWAIT))
-// 				_sockets.erase(_sockets.begin() + i);
-// 			else
-// 				printf("Client %lu: %s\n", i, buffer);
-// 		}
-// 	}
-// }
-
-
-// void	Server::fowardMessage(std::string input, int fd) {
-// 	for (size_t i = 1; i < _sockets.size(); ++i)
-// 	{
-// 		if (_sockets[i].fd == fd)
-// 			continue;
-// 		std::string	remade(":sender_nick!user@host PRIVMSG #3 :" + input);
-// 		send(_sockets[i].fd, remade.c_str(), remade.size(), 0);
-// 		std::cout << _sockets[i].fd << std::endl;
-// 	}
-// }

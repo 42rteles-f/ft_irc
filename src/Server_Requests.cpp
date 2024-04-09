@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 10:02:13 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 10:38:48 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/09 11:37:10 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,12 @@ void	Server::nickRequest(Client& client) {
         client.sendMessage(client.makeMessage());
         client.setNick(nick);
 	}
-	// else
-	// 	client.send(this->makeMessage("Not a valid nick"));
+	else {
+        std::cout << "same nick" << std::endl; 
+		client.sendMessage(this->makeMessage(
+            "433", client.getNick() + " " + client.input() + " Already in use."));
+        
+    }
 }
 
 void	Server::userRequest(Client& client) {
@@ -85,7 +89,7 @@ void	Server::joinRequest(Client& client) {
 
 	iss >> channel; //Ignoring the Command in the input
 	while (iss >> channel) {
-		_channels[channel];
+		_channels[channel].addClient(client);
 		messageToClient(client, ":" + client.getNick() + " JOIN :" + channel);
 	}
 	messageToClient(client, ":" + client.getNick() + " JOIN :" + channel);
