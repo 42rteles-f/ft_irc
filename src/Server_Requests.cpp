@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 10:02:13 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 18:14:49 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/09 19:02:34 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ void	Server::joinRequest(Client& client) {
 	std::replace(input.begin(), input.end(), ',', ' ');
 	iss >> channel; //Ignoring the Command in the input
 	while (iss >> channel) {
+		client.addChannel(channel);
 		_channels[channel].addClient(client);
 		messageToClient(client, ":" + client.getNick() + " JOIN :" + channel);
 	}
@@ -127,4 +128,13 @@ void Server::whoRequest(Client& client) {
 	if (_channels.find(channel) != _channels.end()) {
 		_channels[channel].broadcast(client.makeMessage());
 	}
+}
+
+void	Server::quitRequest(Client& client) {
+	std::vector<std::string>&	channels = client.getChannels();
+	
+	for (size_t i = 0; i < channels.size(); i++)
+		_channels[channels[i]].removeClient(client);
+	std::cout << "channells removed" << std::endl;
+	// _connection.erase(client);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Connections.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/08 19:20:28 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/09 19:31:26 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,18 @@ void	Connections::add(struct pollfd& socket) {
 
 void	Connections::erase(size_t position) {
 	close(_sockets[position].fd);
+	_sockets.erase(_sockets.begin() + position);
+	_clients.erase(_clients.begin() + position);
+}
+
+void	Connections::erase(Client& erase) {
+	size_t	position = 0;
+
+	while (position < _clients.size() && operator[](position) != erase)
+		position++;
+	if (position >= _clients.size())
+		return ;
+	close(erase.socket->fd);
 	_sockets.erase(_sockets.begin() + position);
 	_clients.erase(_clients.begin() + position);
 }

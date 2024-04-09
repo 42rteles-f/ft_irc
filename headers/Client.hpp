@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 18:07:19 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/09 18:44:22 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ class Client {
 
 		Client& operator=(const Client& tocopy);
 		bool	operator==(const Client& compare);
+		bool	operator!=(const Client& compare);
 
 		bool	update(void);
 		bool	isClosed(void);
@@ -47,7 +48,7 @@ class Client {
 		std::string	makeMessage(void) const;
 		std::string	makeMessage(const std::string) const;
 		void	addChannel(std::string channel);
-
+		std::vector<std::string>&	getChannels(void);
 
 		std::string getRequest();
 		const std::string&	input(void) const;
