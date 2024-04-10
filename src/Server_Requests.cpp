@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 10:02:13 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/10 14:26:25 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/10 14:40:45 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	Server::kickRequest(Client& client) {
 	std::string			channel;
 	std::string			remove;
 	std::string			message;
-	
+
 	iss >> channel;
 	iss >> channel;
 	iss >> remove;
@@ -161,6 +161,7 @@ void Server::whoRequest(Client& client) {
 	}
 	client.sendMessage(this->makeMessage(" 366 " + client.getNick() + " " + channel + " :End of /WHO list."));
 }
+
 void	Server::quitRequest(Client& client) {
 	std::vector<Channel*>	channels = client.getChannels();
 	
