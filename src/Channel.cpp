@@ -77,8 +77,6 @@ void Channel::changeOp(Client &client) {
 
 void	Channel::broadcast(Client& sender)
 {
-	if (std::find(_clients.begin(), _clients.end(), sender) != _clients.end())
-		return ;
 	std::string	message = sender.makeMessage();
 
 	for (size_t i = 0; i < _clients.size(); i++)

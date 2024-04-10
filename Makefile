@@ -14,7 +14,7 @@ NAME	=	ft_irc
 
 CXX		=	c++
 
-SRCS = src/Channel.cpp src/Client.cpp src/Connections.cpp src/main.cpp src/Server.cpp src/Server_Requests.cpp
+SRCS = src/Channel.cpp src/Client.cpp src/Connections.cpp src/Server.cpp src/Server_Requests.cpp src/main.cpp
 
 OBJS_PATH = obj/
 SRC_PATH = src/

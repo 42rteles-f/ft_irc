@@ -152,7 +152,10 @@ void Server::whoRequest(Client& client) {
 		std::vector<Client>::iterator it = _channels[channel].getClients().begin();
 		std::string message;
 		for (; it != _channels[channel].getClients().end(); it++) {
-			message += it->getNick() + " ";
+			if (_channels[channel].isOp(*it))
+				message += "@" + it->getNick() + " ";
+			else
+				message += it->getNick() + " ";
 		}
 		client.sendMessage(this->makeMessage(" 353 " + client.getNick() + " = " + channel + " :" + message));
 	}
