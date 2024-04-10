@@ -129,10 +129,7 @@ void	Server::partRequest(Client& client) {
 	if (_channels.find(channel) != _channels.end()) {
 		_channels[channel].broadcast(client.makeMessage());
 		_channels[channel].removeClient(client);
-
-		std::vector<Client*> annouce = _channels[channel].getClients();
-		for (size_t j = 0; j < annouce.size(); j++)
-			this->whoUpdate(*(annouce[j]), _channels[channel]);
+		this->updateChannel(_channels[channel]);
 	}
 }
 
@@ -142,21 +139,6 @@ void	Server::invalidCommand(Client& client) {
 
 	iss >> command;
 	std::cout << command << ": Not a valid Command in this Server." << std::endl;
-}
-
-void Server::whoUpdate(Client& client, Channel &channel)
-{
-	client.sendMessage(this->makeMessage(" 332 " + client.getNick() + " " + channel.name() + " " + channel.getTopic()));
-	std::vector<Client*>::iterator it = channel.getClients().begin();
-	std::string message;
-	for (; it != channel.getClients().end(); it++) {
-		if (channel.isOp(**it))
-			message += "@" + (*it)->getNick() + " ";
-		else
-			message += (*it)->getNick() + " ";
-	}
-	client.sendMessage(this->makeMessage(" 353 " + client.getNick() + " = " + channel.name() + " :" + message));
-	client.sendMessage(this->makeMessage(" 366 " + client.getNick() + " " + channel.name() + " :End of /WHO list."));
 }
 
 void Server::whoRequest(Client& client) {
@@ -187,10 +169,7 @@ void	Server::quitRequest(Client& client) {
 	{
 		channels[i]->broadcast(client.makeMessage());
 		channels[i]->removeClient(client);
-
-		std::vector<Client*> annouce = channels[i]->getClients();
-		for (size_t j = 0; j < annouce.size(); j++)
-			this->whoUpdate(*(annouce[j]), *channels[i]);
+		this->updateChannel(*channels[i]);
 	}
 	std::cout << "channells removed" << std::endl;
 }

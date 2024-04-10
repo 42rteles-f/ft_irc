@@ -42,7 +42,7 @@ class Server {
 		void	capLsRequest(Client& client);
 		void	joinRequest(Client& client);
 		void 	whoRequest(Client& client);
-		void 	whoUpdate(Client& client, Channel &channel);
+		void 	updateChannel(Channel &channel);
 		void	kickRequest(Client& client);
 		void	partRequest(Client& client);
 		void	topicRequest(Client& client);

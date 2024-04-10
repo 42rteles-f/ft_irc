@@ -148,3 +148,23 @@ std::string	Server::makeMessage(std::string code, std::string message) const {
 std::string	Server::makeMessage(std::string code, std::string client, std::string message) const {
 	return (":" + hostName + " " + code + " " + client + " " + message + "\r\n");
 }
+
+void Server::updateChannel(Channel &channel)
+{
+	std::vector<Client*> annouce = channel.getClients();
+
+	for (size_t j = 0; j < annouce.size(); j++) {
+
+	annouce[j]->sendMessage(this->makeMessage(" 332 " + annouce[j]->getNick() + " " + channel.name() + " " + channel.getTopic()));
+	std::vector<Client*>::iterator it = channel.getClients().begin();
+	std::string message;
+	for (; it != channel.getClients().end(); it++) {
+		if (channel.isOp(**it))
+			message += "@" + (*it)->getNick() + " ";
+		else
+			message += (*it)->getNick() + " ";
+	}
+	annouce[j]->sendMessage(this->makeMessage(" 353 " + annouce[j]->getNick() + " = " + channel.name() + " :" + message));
+	annouce[j]->sendMessage(this->makeMessage(" 366 " + annouce[j]->getNick() + " " + channel.name() + " :End of /WHO list."));
+	}
+}
