@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 21:05:00 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/10 13:59:24 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ void	Channel::addClient(Client& add) {
 	if (_op.size() == 0)
 		_op.push_back(add);
 	broadcast(add.makeMessage());
+	add.addChannel(this);
 }
 
 void	Channel::removeClient(Client& remove) {
@@ -57,7 +58,7 @@ void	Channel::removeClient(Client& remove) {
 		_clients.erase(find);
 	if (_clients.size() && _op.size() == 0)
 		_op.push_back(_clients[0]);
-
+	remove.removeChannel(this);
 }
 
 size_t Channel::NumberOfClients() {
