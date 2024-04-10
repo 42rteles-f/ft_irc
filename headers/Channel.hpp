@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 20:02:06 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/10 17:41:23 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ class Channel {
 	private:
 		// Server	*observer;
 		std::string	_topic;
-		std::vector<Client> _clients;
-		std::vector<Client>	_op; //the first Client is the operator
+		std::vector<Client*>	_clients;
+		std::vector<Client*>	_op; //the first Client is the operator
 
 	public:
 		Channel();
@@ -43,7 +43,7 @@ class Channel {
 		void			changeOp(Client &client);
 		std::string		getTopic();
 		Client&			getClient(size_t index);
-		std::vector<Client>&	getClients();
+		std::vector<Client*>&	getClients();
 		size_t 			NumberOfClients();
 		void			setTopic(std::string newTopic);
 		void			printOPName();

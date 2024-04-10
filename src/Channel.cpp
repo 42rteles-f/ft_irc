@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/10 13:59:24 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/10 17:43:39 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,25 +34,25 @@ Channel& Channel::operator=(const Channel& tocopy) {
 }
 
 void	Channel::addClient(Client& add) {
-	std::vector<Client>::iterator find;
+	std::vector<Client*>::iterator find;
 
-	find = std::find(_clients.begin(), _clients.end(), add);
+	find = std::find(_clients.begin(), _clients.end(), &add);
 	if (find == _clients.end())
-		_clients.push_back(add);
+		_clients.push_back(&add);
 	if (_op.size() == 0)
-		_op.push_back(add);
+		_op.push_back(&add);
 	broadcast(add.makeMessage());
 	add.addChannel(this);
 }
 
 void	Channel::removeClient(Client& remove) {
-	std::vector<Client>::iterator find;
+	std::vector<Client*>::iterator find;
 
 	std::cout << "iside remocl" << std::endl;
-	find = std::find(_op.begin(), _op.end(), remove);
+	find = std::find(_op.begin(), _op.end(), &remove);
 	if (find != _op.end())
 		_op.erase(find);
-	find = std::find(_clients.begin(), _clients.end(), remove);
+	find = std::find(_clients.begin(), _clients.end(), &remove);
 	if (find != _clients.end())
 		_clients.erase(find);
 	if (_clients.size() && _op.size() == 0)
@@ -66,14 +66,14 @@ size_t Channel::NumberOfClients() {
 }
 
 void	Channel::printOPName() {
-	std::vector<Client>::iterator it = _op.begin();
+	std::vector<Client*>::iterator it = _op.begin();
 	for (; it != _op.end(); it++) {
-		std::cout << it->getNick() << std::endl;
+		std::cout << (*it)->getNick() << std::endl;
 	}
 }
 
 void Channel::changeOp(Client &client) {
-	this->_op.push_back(client);
+	this->_op.push_back(&client);
 }
 
 void	Channel::broadcast(Client& sender)
@@ -82,8 +82,8 @@ void	Channel::broadcast(Client& sender)
 
 	for (size_t i = 0; i < _clients.size(); i++)
 	{
-		if (sender.socket->fd != _clients[i].socket->fd)
-			send(_clients[i].socket->fd, message.c_str(), message.size(), 0);
+		if (sender.socket->fd != _clients[i]->socket->fd)
+			send(_clients[i]->socket->fd, message.c_str(), message.size(), 0);
 	}
 }
 
@@ -91,7 +91,7 @@ void	Channel::broadcast(std::string message)
 {
 	for (size_t i = 0; i < _clients.size(); i++)
 	{
-		send(_clients[i].socket->fd, message.c_str(), message.size(), 0);
+		send(_clients[i]->socket->fd, message.c_str(), message.size(), 0);
 	}
 }
 
@@ -104,39 +104,39 @@ std::string	Channel::getTopic(void) {
 }
 
 bool Channel::isOp(Client& client) {
-	std::vector<Client>::iterator find;
+	std::vector<Client*>::iterator find;
 
-	find = std::find(_op.begin(), _op.end(), client);
+	find = std::find(_op.begin(), _op.end(), &client);
 	if (find != _op.end())
 		return true;
 	return false;
 }
 
 bool Channel::isOp(std::string clientName) {
-	std::vector<Client>::iterator find;
+	std::vector<Client*>::iterator find;
 
 	find = _op.begin();
 	for (;find != _op.end(); ++find) {
-		if (clientName.compare(find->getNick()) == 0)
+		if (clientName.compare((*find)->getNick()) == 0)
 			return true;
 	}
 	return false;
 }
 
 void Channel::removeClient(std::string clientName) {
-	std::vector<Client>::iterator find = _clients.begin();
+	std::vector<Client*>::iterator find = _clients.begin();
 
 	std::cout << "start" << std::endl;
-	while (find != _clients.end() && clientName.compare(find->getNick()))
+	while (find != _clients.end() && clientName.compare((*find)->getNick()))
 		find++;
 	std::cout << "after loop" << std::endl;
 	if (find != _clients.end())
-		this->removeClient(*find);
+		this->removeClient(**find);
 	std::cout << "end func" << std::endl;
 }
 
 // Client Channel::findClient(std::string clientName) {
-// 	std::vector<Client>::iterator find;
+// 	std::vector<Client*>::iterator find;
 
 // 	find = _clients.begin();
 // 	for (;find != _clients.end(); ++find) {
@@ -148,9 +148,9 @@ void Channel::removeClient(std::string clientName) {
 
 
 Client& Channel::getClient(size_t index){
-	return _clients[index];
+	return (*(_clients[index]));
 }
 
-std::vector<Client>& Channel::getClients() {
-	return _clients;
+std::vector<Client*>& Channel::getClients() {
+	return (_clients);
 }

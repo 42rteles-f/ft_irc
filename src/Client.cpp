@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:37:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/10 14:26:11 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/10 17:47:37 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,8 +148,10 @@ void	Client::removeChannel(Channel *channel) {
 	std::cout << "removechan" << std::endl;
 	std::vector<Channel*>::iterator find = std::find(_myChannels.begin(), _myChannels.end(), channel);
 
-	if (find != _myChannels.end())
+	if (find != _myChannels.end()) {
+		std::cout << "removed" << std::endl;
 		_myChannels.erase(find);
+	}
 	std::cout << "true end" << std::endl;
 }
 

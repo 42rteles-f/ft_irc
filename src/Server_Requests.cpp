@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 10:02:13 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/10 14:40:45 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/10 17:44:41 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,14 @@
 void	Server::privmsgRequest(Client& sender) {
 	std::istringstream	iss(sender.input());
 	std::string			recipient;
-	std::vector<Client>::iterator	found;
+	std::vector<Client*>::iterator	found;
 
 	iss >> recipient;
 	iss >> recipient;
 	if (_channels.find(recipient) != _channels.end())
 		_channels[recipient].broadcast(sender);
 	else if ((found = _connection.find(recipient)) != _connection.end()) {
-		found->sendMessage(sender.makeMessage());
+		(*found)->sendMessage(sender.makeMessage());
     }
 }
 
@@ -148,13 +148,13 @@ void Server::whoRequest(Client& client) {
 	iss >> channel;
 	if (_channels.find(channel) != _channels.end()) {
 		client.sendMessage(this->makeMessage(" 332 " + client.getNick() + " " + channel + " " + _channels[channel].getTopic()));
-		std::vector<Client>::iterator it = _channels[channel].getClients().begin();
+		std::vector<Client*>::iterator it = _channels[channel].getClients().begin();
 		std::string message;
 		for (; it != _channels[channel].getClients().end(); it++) {
-			if (_channels[channel].isOp(*it))
-				message += "@" + it->getNick() + " ";
+			if (_channels[channel].isOp(**it))
+				message += "@" + (*it)->getNick() + " ";
 			else
-				message += it->getNick() + " ";
+				message += (*it)->getNick() + " ";
 		}
 		client.sendMessage(this->makeMessage(" 353 " + client.getNick() + " = " + channel + " :" + message));
 	}
@@ -164,7 +164,9 @@ void Server::whoRequest(Client& client) {
 void	Server::quitRequest(Client& client) {
 	std::vector<Channel*>	channels = client.getChannels();
 	
-	for (size_t i = 0; i < channels.size(); i++)
+	for (size_t i = 0; i < channels.size(); i++) {
+		std::cout << channels[i] << std::endl;
 		channels[i]->removeClient(client);
+	}
 	std::cout << "channells removed" << std::endl;
 }

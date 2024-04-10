@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 18:46:03 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/10 17:24:01 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 
 class Connections {
 	private:
-		std::vector<Client>			_clients;
+		std::vector<Client*>		_clients;
 
 	public:
-		std::vector<struct pollfd> 	_sockets;
+		std::vector<struct pollfd> _sockets;
 		Connections();
 		Connections(const Connections& tocopy);
 		~Connections();
@@ -33,8 +33,8 @@ class Connections {
 		struct pollfd	*data(void);
 		size_t			size(void);
 		bool			serverRequest(void);
-		std::vector<Client>::iterator	find(std::string nick);
-		std::vector<Client>::iterator	end(void);
+		std::vector<Client*>::iterator	find(std::string nick);
+		std::vector<Client*>::iterator	end(void);
 		int				serverAccept(sockaddr *sock);
 
 		Connections&	operator=(const Connections& tocopy);

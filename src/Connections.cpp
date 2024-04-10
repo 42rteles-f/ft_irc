@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 19:31:26 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/10 17:35:26 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,13 @@ Connections::Connections(const Connections& tocopy)
 }
 
 Connections::~Connections()
-{}
+{
+	std::vector<Client*>::iterator	find = _clients.begin();
+
+	for (std::vector<Client*>::iterator	find = _clients.begin();
+				find != _clients.end(); find++)
+		delete (*find);
+}
 
 Connections& Connections::operator=(const Connections& tocopy) {
 	if (this == &tocopy)
@@ -37,13 +43,14 @@ void	Connections::add(struct pollfd& socket) {
 		return ;
 	}
 	_sockets.push_back(socket);
-	_clients.push_back(Client());
+	_clients.push_back(new Client);
 }
 
 void	Connections::erase(size_t position) {
 	close(_sockets[position].fd);
-	_sockets.erase(_sockets.begin() + position);
+	delete (_clients[position]);
 	_clients.erase(_clients.begin() + position);
+	_sockets.erase(_sockets.begin() + position);
 }
 
 void	Connections::erase(Client& erase) {
@@ -54,6 +61,7 @@ void	Connections::erase(Client& erase) {
 	if (position >= _clients.size())
 		return ;
 	close(erase.socket->fd);
+	delete (_clients[position]);
 	_sockets.erase(_sockets.begin() + position);
 	_clients.erase(_clients.begin() + position);
 }
@@ -67,8 +75,8 @@ size_t	Connections::size(void) {
 }
 
 Client& Connections::operator[](size_t position) {
-	_clients[position].socket = &_sockets[position];
-	return (_clients[position]);
+	_clients[position]->socket = &_sockets[position];
+	return (*_clients[position]);
 }
 
 bool	Connections::serverRequest(void) {
@@ -82,15 +90,15 @@ int		Connections::serverAccept(sockaddr *sock)
 	return (accept(_sockets[0].fd, sock, &sock_len));
 }
 
-std::vector<Client>::iterator	Connections::find(std::string nick) {
-	std::vector<Client>::iterator	find = _clients.begin();
+std::vector<Client*>::iterator	Connections::find(std::string nick) {
+	std::vector<Client*>::iterator	find = _clients.begin();
 
-	while (find != _clients.end() && find->getNick() != nick)
+	while (find != _clients.end() && (*find)->getNick() != nick)
 		find++;
 	return (find);
 }
 
-std::vector<Client>::iterator	Connections::end(void) {
+std::vector<Client*>::iterator	Connections::end(void) {
 	return (_clients.end());
 }
 
