@@ -145,7 +145,12 @@ void	Client::addChannel(Channel *channel) {
 }
 
 void	Client::removeChannel(Channel *channel) {
-	_myChannels.erase(std::find(_myChannels.begin(), _myChannels.end(), channel));
+	std::cout << "removechan" << std::endl;
+	std::vector<Channel*>::iterator find = std::find(_myChannels.begin(), _myChannels.end(), channel);
+
+	if (find != _myChannels.end())
+		_myChannels.erase(find);
+	std::cout << "true end" << std::endl;
 }
 
 std::vector<Channel*>	Client::getChannels(void)  {
