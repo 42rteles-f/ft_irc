@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 10:02:13 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/10 17:44:41 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/10 20:34:01 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void	Server::joinRequest(Client& client) {
 	iss >> channel;
 	while (iss >> channel) {
 		if (channel[0] == '#') {
-			_channels[channel].addClient(client);
+			_channels[channel](channel).addClient(client);
 			// client.sendMessage(client.makeMessage("JOIN :" + channel));
 		}
 		else {
@@ -98,8 +98,6 @@ void	Server::joinRequest(Client& client) {
 			client.sendMessage(client.makeMessage(channel + ": Channel not found"));
 		}
 	}
-	if (_channels[channel].NumberOfClients() == 1)
-		_channels[channel].changeOp(client);
 	_channels[channel].printOPName();
 }
 
@@ -128,8 +126,14 @@ void	Server::partRequest(Client& client) {
 
 	iss >> channel;
 	iss >> channel;
-	if (_channels.find(channel) != _channels.end())
+	if (_channels.find(channel) != _channels.end()) {
+		_channels[channel].broadcast(client.makeMessage());
 		_channels[channel].removeClient(client);
+
+		std::vector<Client*> annouce = _channels[channel].getClients();
+		for (size_t j = 0; j < annouce.size(); j++)
+			this->whoUpdate(*(annouce[j]), _channels[channel]);
+	}
 }
 
 void	Server::invalidCommand(Client& client) {
@@ -138,6 +142,21 @@ void	Server::invalidCommand(Client& client) {
 
 	iss >> command;
 	std::cout << command << ": Not a valid Command in this Server." << std::endl;
+}
+
+void Server::whoUpdate(Client& client, Channel &channel)
+{
+	client.sendMessage(this->makeMessage(" 332 " + client.getNick() + " " + channel.name() + " " + channel.getTopic()));
+	std::vector<Client*>::iterator it = channel.getClients().begin();
+	std::string message;
+	for (; it != channel.getClients().end(); it++) {
+		if (channel.isOp(**it))
+			message += "@" + (*it)->getNick() + " ";
+		else
+			message += (*it)->getNick() + " ";
+	}
+	client.sendMessage(this->makeMessage(" 353 " + client.getNick() + " = " + channel.name() + " :" + message));
+	client.sendMessage(this->makeMessage(" 366 " + client.getNick() + " " + channel.name() + " :End of /WHO list."));
 }
 
 void Server::whoRequest(Client& client) {
@@ -164,9 +183,14 @@ void Server::whoRequest(Client& client) {
 void	Server::quitRequest(Client& client) {
 	std::vector<Channel*>	channels = client.getChannels();
 	
-	for (size_t i = 0; i < channels.size(); i++) {
-		std::cout << channels[i] << std::endl;
+	for (size_t i = 0; i < channels.size(); i++)
+	{
+		channels[i]->broadcast(client.makeMessage());
 		channels[i]->removeClient(client);
+
+		std::vector<Client*> annouce = channels[i]->getClients();
+		for (size_t j = 0; j < annouce.size(); j++)
+			this->whoUpdate(*(annouce[j]), *channels[i]);
 	}
 	std::cout << "channells removed" << std::endl;
 }

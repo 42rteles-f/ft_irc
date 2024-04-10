@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/10 14:26:02 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/10 19:17:03 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ void	Server::incomingConnections(void) {
 	if (_connection.serverRequest()) {
 		new_client.fd = _connection.serverAccept((sockaddr *)&_sock);
 		new_client.events = POLLIN;
+		new_client.revents = 0;
 		_connection.add(new_client);
 		std::cout << "Connected: " << new_client.fd << std::endl;
 	}

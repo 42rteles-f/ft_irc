@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/10 17:43:39 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/10 20:28:33 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@
 Channel::Channel() : _op(), _topic("")
 {}
 
+Channel::Channel(std::string name) : _op(), _topic("")
+{}
+
 Channel::Channel(const Channel& tocopy)
 {
 	*this = tocopy;
@@ -23,6 +26,15 @@ Channel::Channel(const Channel& tocopy)
 
 Channel::~Channel()
 {}
+
+Channel& Channel::operator()(const std::string name) {
+	_name = name;
+	return(*this);
+}
+
+const std::string& Channel::name(void) {
+	return (_name);
+}
 
 Channel& Channel::operator=(const Channel& tocopy) {
 	if (this == &tocopy)
@@ -41,24 +53,34 @@ void	Channel::addClient(Client& add) {
 		_clients.push_back(&add);
 	if (_op.size() == 0)
 		_op.push_back(&add);
-	broadcast(add.makeMessage());
+	this->broadcast(add.makeMessage());
 	add.addChannel(this);
 }
 
+//Remove doenst broadcast the client leaving due to the kick message being custom.
 void	Channel::removeClient(Client& remove) {
 	std::vector<Client*>::iterator find;
 
-	std::cout << "iside remocl" << std::endl;
 	find = std::find(_op.begin(), _op.end(), &remove);
 	if (find != _op.end())
 		_op.erase(find);
+
 	find = std::find(_clients.begin(), _clients.end(), &remove);
 	if (find != _clients.end())
 		_clients.erase(find);
+
 	if (_clients.size() && _op.size() == 0)
 		_op.push_back(_clients[0]);
-	std::cout << "end removcli" << std::endl;
 	remove.removeChannel(this);
+}
+
+void Channel::removeClient(std::string clientName) {
+	std::vector<Client*>::iterator find = _clients.begin();
+
+	while (find != _clients.end() && clientName.compare((*find)->getNick()))
+		find++;
+	if (find != _clients.end())
+		this->removeClient(**find);
 }
 
 size_t Channel::NumberOfClients() {
@@ -121,18 +143,6 @@ bool Channel::isOp(std::string clientName) {
 			return true;
 	}
 	return false;
-}
-
-void Channel::removeClient(std::string clientName) {
-	std::vector<Client*>::iterator find = _clients.begin();
-
-	std::cout << "start" << std::endl;
-	while (find != _clients.end() && clientName.compare((*find)->getNick()))
-		find++;
-	std::cout << "after loop" << std::endl;
-	if (find != _clients.end())
-		this->removeClient(**find);
-	std::cout << "end func" << std::endl;
 }
 
 // Client Channel::findClient(std::string clientName) {
