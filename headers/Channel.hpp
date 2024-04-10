@@ -33,6 +33,7 @@ class Channel {
 
 		void	addClient(Client& add);
 		void	removeClient(Client& remove);
+		void	removeClient(std::string remove);
 		void	broadcast(Client& client);
 		void	broadcast(std::string message);
 

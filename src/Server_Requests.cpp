@@ -72,13 +72,12 @@ void	Server::kickRequest(Client& client) {
 	iss >> channel;
 	iss >> remove;
 	iss >> message;
-	std::map<const std::string, Channel>::iterator it = _channels.find(channel);
-	if (it != _channels.end() && it->second.isOp(remove)) {
-		// _channels[channel].removeClient(_channels[channel].findClient(remove));
-		_channels[channel].broadcast(client.makeMessage("KICK " + channel + " " + remove + message));
-		_channels[channel].removeClient(*(_connection.find(remove)));
-		std::cout << "here" << std::endl;
-		// client.sendMessage(client.makeMessage("KICK :" + channel));
+	if (_channels.find(channel) != _channels.end() && _channels[channel].isOp(client)) {
+		if (!message.empty())
+			_channels[channel].broadcast(client.makeMessage("KICK " + channel + " " + remove + " " + message));
+		else
+			_channels[channel].broadcast(client.makeMessage("KICK " + channel + " " + remove + " :" + client.getNick()));
+		_channels[channel].removeClient(remove);
 	}
 }
 

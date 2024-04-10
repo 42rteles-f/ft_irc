@@ -48,16 +48,16 @@ void	Channel::addClient(Client& add) {
 void	Channel::removeClient(Client& remove) {
 	std::vector<Client>::iterator find;
 
+	std::cout << "iside remocl" << std::endl;
 	find = std::find(_op.begin(), _op.end(), remove);
 	if (find != _op.end())
 		_op.erase(find);
 	find = std::find(_clients.begin(), _clients.end(), remove);
-	//pra deixar o xaleira feliz
-	// broadcast(remove.makeMessage());
 	if (find != _clients.end())
 		_clients.erase(find);
 	if (_clients.size() && _op.size() == 0)
 		_op.push_back(_clients[0]);
+	std::cout << "end removcli" << std::endl;
 	remove.removeChannel(this);
 }
 
@@ -121,6 +121,18 @@ bool Channel::isOp(std::string clientName) {
 			return true;
 	}
 	return false;
+}
+
+void Channel::removeClient(std::string clientName) {
+	std::vector<Client>::iterator find = _clients.begin();
+
+	std::cout << "start" << std::endl;
+	while (find != _clients.end() && clientName.compare(find->getNick()))
+		find++;
+	std::cout << "after loop" << std::endl;
+	if (find != _clients.end())
+		this->removeClient(*find);
+	std::cout << "end func" << std::endl;
 }
 
 // Client Channel::findClient(std::string clientName) {
