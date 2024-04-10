@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 20:28:38 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/10 14:26:02 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,6 @@ void Server::messageToClient(Client& client, std::string message) {
 std::string Server::format(Client& client) {
 	return (":" + client.getNick() + "!" + client.getUser() + "@" + hostName);
 }
-
 
 void	Server::online(void) {
 

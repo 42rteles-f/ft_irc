@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:37:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 19:28:55 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/10 14:26:11 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,6 @@ void	Client::makeRequest(Server& server) {
 	iss.str(_read);
 	while (std::getline(iss, _input) && _read.find("\n") != _read.npos) {
 		command = _input.substr(0, _input.find(" "));
-		std::cout << "input: " << _input << std::endl;
 		handler = server.requestHandler(command);
 		(server.*handler)(*this);
 		breakline = _read.find("\n");
@@ -141,11 +140,15 @@ void	Client::sendMessage(std::string message) const {
 	send(socket->fd, message.c_str(), message.size(), 0);
 }
 
-void	Client::addChannel(std::string channel) {
+void	Client::addChannel(Channel *channel) {
 	_myChannels.push_back(channel);
 }
 
-std::vector<std::string>&	Client::getChannels(void)  {
+void	Client::removeChannel(Channel *channel) {
+	_myChannels.erase(std::find(_myChannels.begin(), _myChannels.end(), channel));
+}
+
+std::vector<Channel*>	Client::getChannels(void)  {
 	return (_myChannels);
 }
 

@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 10:02:13 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/09 21:49:06 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/10 14:26:25 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,10 @@ void	Server::nickRequest(Client& client) {
 	if (_connection.find(nick) == _connection.end()) {
         if (client.getNick().empty()) client.setNick(nick);
         client.sendMessage(client.makeMessage());
-        client.setNick(nick);
+		client.setNick(nick);
 	}
 	else {
-		client.setNick(nick);
+        if (client.getNick().empty()) client.setNick(nick);
 		client.sendMessage(this->makeMessage(
 			"433 " + client.getNick() + " " + nick));
 	}
@@ -159,10 +159,9 @@ void Server::whoRequest(Client& client) {
 	client.sendMessage(this->makeMessage(" 366 " + client.getNick() + " " + channel + " :End of /WHO list."));
 }
 void	Server::quitRequest(Client& client) {
-	std::vector<std::string>&	channels = client.getChannels();
+	std::vector<Channel*>	channels = client.getChannels();
 	
 	for (size_t i = 0; i < channels.size(); i++)
-		_channels[channels[i]].removeClient(client);
+		channels[i]->removeClient(client);
 	std::cout << "channells removed" << std::endl;
-	// _connection.erase(client);
 }
