@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:37:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/11 19:01:20 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/11 19:39:14 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ Client& Client::operator=(const Client& tocopy) {
 bool	Client::operator==(const Client& compare) {
 		return (this->socket->fd == compare.socket->fd ? true : false);
 }
+
 
 bool	Client::operator!=(const Client& compare) {
 		return (this->socket->fd != compare.socket->fd ? true : false);
