@@ -64,9 +64,7 @@ void	Server::userRequest(Client& client) {
 // /KICK #example user123 Spamming is not allowed!
 void	Server::kickRequest(Client& client) {
 	std::istringstream	iss(client.input());
-	std::string			channel;
-	std::string			remove;
-	std::string			message;
+	std::string			channel, remove, message;
 
 	iss >> channel;
 	iss >> channel;
@@ -82,9 +80,8 @@ void	Server::kickRequest(Client& client) {
 }
 
 void	Server::joinRequest(Client& client) {
-	std::string input = client.input();
+	std::string channel, input = client.input();
 	std::istringstream iss(input);
-	std::string channel;
 
 	std::replace(input.begin(), input.end(), ',', ' ');
 	iss >> channel;
@@ -102,11 +99,9 @@ void	Server::joinRequest(Client& client) {
 }
 
 void Server::topicRequest(Client& client) {
-	std::string input = client.input();
+	std::string channel, topic, input = client.input();
 	std::replace(input.begin(), input.end(), ',', ' ');
 	std::istringstream iss(input);
-	std::string channel;
-	std::string topic;
 
 	iss >> channel;
 	iss >> channel;
@@ -177,9 +172,7 @@ void	Server::quitRequest(Client& client) {
 void	Server::modeRequest(Client &client)
 {
 	std::istringstream	iss(client.input());
-	std::string			channel;
-	std::string			mode;
-	std::string			modeArg;
+	std::string			channel, mode, modeArg;
 
 	iss >> channel;
 	iss >> channel;
@@ -197,9 +190,9 @@ void	Server::modeRequest(Client &client)
 
 void	Server::passRequest(Client& client) {
 	std::istringstream iss(client.input());
-	std::string pass;
+	std::string command, pass;
 
-	iss >> pass;
+	iss >> command;
 	iss >> pass;
 	if (this->password != pass) {
 		client.sendMessage(this->makeMessage("464 User :Password incorrect"));

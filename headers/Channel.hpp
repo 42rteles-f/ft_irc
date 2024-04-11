@@ -45,7 +45,7 @@ class Channel {
 
 		void	invalidMode(void);
 		void 	operatorMode(Client &client, std::string mode, std::string argument);
-		void 	inviteMode(Client &client, std::string mode, std::string argument);
+		void 	inviteAndTopicMode(Client &client, std::string mode, std::string argument);
 
 		bool 			isOp(Client &client);
 		bool			isOp(std::string clientName);
