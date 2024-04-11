@@ -22,7 +22,7 @@ SRCS = src/Channel.cpp src/Client.cpp src/Connections.cpp src/Server.cpp src/Ser
 OBJS_PATH = obj/
 SRC_PATH = src/
 
-CXXFLAGS	=	-I ./headers -std=c++98 -Wall -Wextra -Werror -g -fsanitize=address
+CXXFLAGS	=	-I ./headers -std=c++98 -Wall -Wextra -Werror -g# -fsanitize=address
 
 RM			= 	rm -fr
 
