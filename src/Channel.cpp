@@ -13,11 +13,11 @@
 #include <ft_irc.hpp>
 #include <Channel.hpp>
 
-Channel::Channel() : _op(), _topic("")
+Channel::Channel() : _topic(""), _op()
 {
 	_functions['o'] = &Channel::operatorMode;
-	// _functions['i'] = &Channel::inviteMode;
-	// _functions['t'] = &Channel::topicMode;
+	_functions['i'] = &Channel::inviteAndTopicMode;
+	_functions['t'] = &Channel::inviteAndTopicMode;
 	// _functions['k'] = &Channel::keyMode;
 	// _functions['l'] = &Channel::limitMode;
 }
@@ -198,29 +198,30 @@ void Channel::operatorMode(Client &client, std::string mode, std::string argumen
 	if (argument.empty())
 		return ;
 	Client *argClient = this->findClient(argument);
-	if (mode[0] == '+')
+	if (mode[0] == '+' && argClient && !this->isOp(*argClient))
 	{
-		if (argClient && !this->isOp(*argClient))
-		{
-			addOp(*argClient);
-			broadcast(client.makeMessage(("MODE " + _name + " " + mode + " " + argument)));
-		}
+		addOp(*argClient);
+		broadcast(client.makeMessage(("MODE " + _name + " " + mode + " " + argument)));
 	}
-	else
+	else if (argClient && this->isOp(*argClient))
 	{
-		if (argClient && this->isOp(*argClient))
-		{
-			removeOp(*argClient);
-			broadcast(client.makeMessage(("MODE " + _name + " " + mode + " " + argument)));
-		}
+		removeOp(*argClient);
+		broadcast(client.makeMessage(("MODE " + _name + " " + mode + " " + argument)));
 	}
 }
 
-void Channel::inviteMode(Client &client, std::string mode, std::string argument)
+void Channel::inviteAndTopicMode(Client &client, std::string mode, std::string argument)
 {
-	if (mode[0] == '+')
+	(void)argument;
+	if (mode[0] == '+' && _modes[(int)mode[1]].empty())
 	{
-		
+		_modes[(int)mode[1]] = "yes";
+		broadcast(client.makeMessage(("MODE " + _name + " " + mode)));
+	}
+	else if (mode[0] == '-' && !_modes[(int)mode[1]].empty())
+	{
+		_modes[(int)mode[1]].clear();
+		broadcast(client.makeMessage(("MODE " + _name + " " + mode)));
 	}
 }
 
