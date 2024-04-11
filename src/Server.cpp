@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/11 17:45:19 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/11 18:43:50 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ bool	Server::setup(char **init) {
 	struct pollfd	new_server;
 
 	hostName = "irc.example.com";
+	if (!*(init[1])) init[1] = (char *)std::string("6667").c_str();
 	this->password = init[2];
 	_sock.sin_family = AF_INET;
 	_sock.sin_addr.s_addr = INADDR_ANY;

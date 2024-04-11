@@ -6,14 +6,14 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/11 16:49:56 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/11 18:57:51 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft_irc.hpp>
 #include <Channel.hpp>
 
-Channel::Channel() : _op(), _topic("")
+Channel::Channel() : _topic(""), _op()
 {
 	_functions['o'] = &Channel::operatorMode;
 	// _functions['i'] = &Channel::inviteMode;
@@ -218,6 +218,9 @@ void Channel::operatorMode(Client &client, std::string mode, std::string argumen
 
 void Channel::inviteMode(Client &client, std::string mode, std::string argument)
 {
+	(void)client;
+	(void)mode;
+	(void)argument;
 	if (mode[0] == '+')
 	{
 		
