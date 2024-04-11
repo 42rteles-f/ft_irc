@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/10 20:25:16 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/11 17:44:10 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ class Server {
 		bool		_online;
 		t_sock		_sock;
 		std::string	hostName;
+		std::string	password;
 		Connections						_connection;
 		std::map<std::string, Channel>	_channels;
 		std::map<std::string, t_exe>	_functions;
@@ -47,6 +48,7 @@ class Server {
 		void	partRequest(Client& client);
 		void	topicRequest(Client& client);
 		void	quitRequest(Client& client);
+		void	passRequest(Client& client);
 		void	invalidCommand(Client& client);
 		void	modeRequest(Client &client);
 
@@ -58,16 +60,12 @@ class Server {
 
 	public:
 		Server();
-		Server(const Server& tocopy);
 		~Server();
 
 		Server& operator=(const Server& tocopy);
-		void 	messageToClient(Client& client, std::string message);
 		t_exe	requestHandler(std::string target);
 
 		bool	setup(char **init);
 		void	online(void);
 		void	offline(void);
-		
-		std::string format(Client& client);
 } ;

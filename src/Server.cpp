@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/10 19:17:03 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/11 17:45:19 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,9 @@ _online(false)
 	_functions["privmsg"] = &Server::privmsgRequest;
 	_functions["WHO"] = &Server::whoRequest;
 	_functions["TOPIC"] = &Server::topicRequest;
+	_functions["PASS"] = &Server::passRequest;
 	_functions["MODE"] = &Server::modeRequest;
 }
-
-Server::Server(const Server& tocopy)
-{}
 
 Server::~Server()
 {}
@@ -38,9 +36,13 @@ Server::~Server()
 Server& Server::operator=(const Server& tocopy) {
 	if (this == &tocopy)
 		return (*this);
-	/*
-	to do;
-	*/
+	this->_online = tocopy._online;
+	this->_sock = tocopy._sock;
+	this->hostName = tocopy.hostName;
+	this->password = tocopy.password;
+	this->_connection = tocopy._connection;
+	this->_channels = tocopy._channels;
+	this->_functions = tocopy._functions;
 	return (*this);
 }
 
@@ -57,6 +59,7 @@ bool	Server::setup(char **init) {
 	struct pollfd	new_server;
 
 	hostName = "irc.example.com";
+	this->password = init[2];
 	_sock.sin_family = AF_INET;
 	_sock.sin_addr.s_addr = INADDR_ANY;
 	_sock.sin_port = htons(atoi(init[1]));
@@ -102,20 +105,6 @@ void	Server::incomingConnections(void) {
 	}
 }
 
-void Server::messageToClient(Client& client, std::string message) {
-	message = message + "\r\n";
-
-	if (send(client.socket->fd, message.c_str(), message.size(), 0) < 0)
-	if (send(client.socket->fd, message.c_str(), message.size(), 0) < 0)
-		std::cerr << "Error sending message to the client." << std::endl;
-}
-
-// ":" + hostName + " " + message + " " + client.getNickName()
-//":sender_nick!user@host PRIVMSG #3 :" + input
-std::string Server::format(Client& client) {
-	return (":" + client.getNick() + "!" + client.getUser() + "@" + hostName);
-}
-
 void	Server::online(void) {
 
 	while (_online)
@@ -131,7 +120,7 @@ void	Server::offline(void) {
 
 	this->_online = false;
 	for (size_t i = 1; i < _connection.size(); i++) {
-		_connection[i].sendMessage(this->makeMessage("Server Closing Down."));
+		_connection[i].sendMessage(this->makeMessage("421", this->hostName, ":Server Closing Down."));
 		close(_connection[i].socket->fd);
 	}
 	close(_connection[0].socket->fd);

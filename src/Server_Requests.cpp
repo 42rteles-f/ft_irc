@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 10:02:13 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/10 20:34:01 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/11 17:31:16 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,3 +194,18 @@ void	Server::modeRequest(Client &client)
 		client.sendMessage(":" + hostName + " 482 " + client.getNick() + " "
 							+ channel + " :You're not channel operator" + "\r\n");
 }
+
+void	Server::passRequest(Client& client) {
+	std::istringstream iss(client.input());
+	std::string pass;
+
+	iss >> pass;
+	iss >> pass;
+	if (this->password != pass) {
+		client.sendMessage(this->makeMessage("464 User :Password incorrect"));
+		client.endConnection();
+		return ;
+	}
+	client.setPassword(pass);
+}
+// :server.example.com 464 <nickname> :Password incorrect
