@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/11 18:43:50 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/11 19:03:53 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,9 +93,7 @@ void	Server::incomingMessages(void) {
 
 void	Server::incomingConnections(void) {
 	struct pollfd	new_client;
-	char			buffer[READSIZE];
 	std::string		info;
-	int 			size;
 
 	if (_connection.serverRequest()) {
 		new_client.fd = _connection.serverAccept((sockaddr *)&_sock);
@@ -133,7 +131,7 @@ std::string	Server::makeMessage(const std::string message) const {
 }
 
 std::string	Server::makeMessage(std::string code, std::string message) const {
-	return (":" + hostName + " " + message + "\r\n");
+	return (":" + hostName + " " + code + " " + message + "\r\n");
 }
 
 std::string	Server::makeMessage(std::string code, std::string client, std::string message) const {

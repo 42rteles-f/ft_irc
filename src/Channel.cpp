@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/11 18:59:05 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/11 19:00:20 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,6 +212,7 @@ void Channel::operatorMode(Client &client, std::string mode, std::string argumen
 
 void Channel::inviteAndTopicMode(Client &client, std::string mode, std::string argument)
 {
+	(void)argument;
 	if (mode[0] == '+')
 	{
 		_modes[(int)mode[1]] = "yes";

@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 18:05:27 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/11 18:37:39 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/11 19:11:46 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 void	ft_signal_handler(int signal, Server *save) {
 	static Server	*server;
 
+	(void)signal;
 	if (!server) {
 		server = save;
 		return ;
@@ -26,12 +27,14 @@ void	ft_signal_handler(int signal, Server *save) {
 int main(int ac, char **args)
 {
 	Server				server;
-	struct sigaction	info = {0};
+	struct sigaction	info;
 
-	if (ac != 3 && std::cout << "Error: Usage: /ft_irc <Port> <Password>" << std::endl
+	if ((ac != 3 && std::cout << "Error: Usage: /ft_irc <Port> <Password>" << std::endl)
 		|| !server.setup(args)) {		
 		return (1);
 	}
+	for (size_t i = 0; i < sizeof(info); i++)
+		((char *)&info)[i] = 0;
 	ft_signal_handler(0, &server);
 	info.sa_sigaction = (void (*)(int, siginfo_t *, void *))ft_signal_handler;
 	info.sa_flags = SA_SIGINFO;

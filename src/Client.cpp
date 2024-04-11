@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:37:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/11 17:32:54 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/11 19:01:20 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 #include <Client.hpp>
 
 Client::Client():
-socket(NULL), _input(""), _command(false), _closed(false), _nick(""), _user(""), _real("")
+_command(false), _closed(false), socket(NULL)
 {}
 
 Client::Client(struct pollfd* socket):
-socket(socket), _input(""), _command(false), _closed(false)
+_command(false), _closed(false), socket(socket)
 {}
 
 Client::Client(const Client& tocopy):

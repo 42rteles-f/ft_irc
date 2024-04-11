@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/11 17:46:24 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/11 19:01:39 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,6 @@ Connections::Connections(const Connections& tocopy)
 
 Connections::~Connections()
 {
-	std::vector<Client*>::iterator	find = _clients.begin();
-
 	for (std::vector<Client*>::iterator	find = _clients.begin();
 				find != _clients.end(); find++)
 		delete (*find);
