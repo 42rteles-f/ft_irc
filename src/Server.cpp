@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/11 17:05:26 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/11 17:31:49 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ void	Server::offline(void) {
 
 	this->_online = false;
 	for (size_t i = 1; i < _connection.size(); i++) {
-		_connection[i].sendMessage(this->makeMessage("Server Closing Down."));
+		_connection[i].sendMessage(this->makeMessage("421", this->hostName, ":Server Closing Down."));
 		close(_connection[i].socket->fd);
 	}
 	close(_connection[0].socket->fd);

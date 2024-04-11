@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 10:02:13 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/11 16:59:17 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/11 17:31:16 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,9 +181,10 @@ void	Server::passRequest(Client& client) {
 	iss >> pass;
 	iss >> pass;
 	if (this->password != pass) {
-		client.sendMessage(this->makeMessage("Denied Connection: Invalid Password."));
+		client.sendMessage(this->makeMessage("464 User :Password incorrect"));
 		client.endConnection();
 		return ;
 	}
 	client.setPassword(pass);
 }
+// :server.example.com 464 <nickname> :Password incorrect
