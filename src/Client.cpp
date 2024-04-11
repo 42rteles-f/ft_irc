@@ -105,7 +105,7 @@ void	Client::makeRequest(Server& server) {
 }
 
 void	Client::setPassword(std::string pass) {
-	this->_password = pass;
+	this->_password = pass.empty() ? "Valid." : pass;
 }
 
 const std::string&	Client::getPassword(void) const {

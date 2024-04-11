@@ -45,6 +45,7 @@ Channel& Channel::operator=(const Channel& tocopy) {
 	this->_topic = tocopy._topic;
 	this->_clients = tocopy._clients;
 	this->_op = tocopy._op;
+	std::cout << "operator=" << std::endl;
 	return (*this);
 }
 
