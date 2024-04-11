@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/11 16:49:55 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/11 17:46:24 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,3 @@ std::vector<Client*>::iterator	Connections::find(std::string nick) {
 std::vector<Client*>::iterator	Connections::end(void) {
 	return (_clients.end());
 }
-
-// void	Connections::send(std::string message) {
-
-// }

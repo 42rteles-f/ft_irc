@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/11 17:31:49 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/11 17:45:19 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,18 +29,19 @@ _online(false)
 	_functions["PASS"] = &Server::passRequest;
 }
 
-Server::Server(const Server& tocopy)
-{}
-
 Server::~Server()
 {}
 
 Server& Server::operator=(const Server& tocopy) {
 	if (this == &tocopy)
 		return (*this);
-	/*
-	to do;
-	*/
+	this->_online = tocopy._online;
+	this->_sock = tocopy._sock;
+	this->hostName = tocopy.hostName;
+	this->password = tocopy.password;
+	this->_connection = tocopy._connection;
+	this->_channels = tocopy._channels;
+	this->_functions = tocopy._functions;
 	return (*this);
 }
 
@@ -101,20 +102,6 @@ void	Server::incomingConnections(void) {
 		_connection.add(new_client);
 		std::cout << "Connected: " << new_client.fd << std::endl;
 	}
-}
-
-void Server::messageToClient(Client& client, std::string message) {
-	message = message + "\r\n";
-
-	if (send(client.socket->fd, message.c_str(), message.size(), 0) < 0)
-	if (send(client.socket->fd, message.c_str(), message.size(), 0) < 0)
-		std::cerr << "Error sending message to the client." << std::endl;
-}
-
-// ":" + hostName + " " + message + " " + client.getNickName()
-//":sender_nick!user@host PRIVMSG #3 :" + input
-std::string Server::format(Client& client) {
-	return (":" + client.getNick() + "!" + client.getUser() + "@" + hostName);
 }
 
 void	Server::online(void) {

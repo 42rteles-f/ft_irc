@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/11 16:51:01 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/11 17:44:10 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,16 +58,12 @@ class Server {
 
 	public:
 		Server();
-		Server(const Server& tocopy);
 		~Server();
 
 		Server& operator=(const Server& tocopy);
-		void 	messageToClient(Client& client, std::string message);
 		t_exe	requestHandler(std::string target);
 
 		bool	setup(char **init);
 		void	online(void);
 		void	offline(void);
-		
-		std::string format(Client& client);
 } ;
