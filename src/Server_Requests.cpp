@@ -174,6 +174,27 @@ void	Server::quitRequest(Client& client) {
 	std::cout << "channells removed" << std::endl;
 }
 
+void	Server::modeRequest(Client &client)
+{
+	std::istringstream	iss(client.input());
+	std::string			channel;
+	std::string			mode;
+	std::string			modeArg;
+
+	iss >> channel;
+	iss >> channel;
+	iss >> mode;
+	iss >> modeArg;
+	if (mode[0] != '+' && mode[0] != '-')
+		mode = "+" + mode;
+	if (_channels.find(channel) != _channels.end() && _channels[channel].isOp(client)) {
+		_channels[channel].addMode(client, mode, modeArg);
+	}
+	else
+		client.sendMessage(":" + hostName + " 482 " + client.getNick() + " "
+							+ channel + " :You're not channel operator" + "\r\n");
+}
+
 void	Server::passRequest(Client& client) {
 	std::istringstream iss(client.input());
 	std::string pass;

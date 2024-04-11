@@ -50,6 +50,8 @@ class Server {
 		void	quitRequest(Client& client);
 		void	passRequest(Client& client);
 		void	invalidCommand(Client& client);
+		void	modeRequest(Client &client);
+
 
 		//Code -> client.nick -> message;
 		std::string	makeMessage(const std::string) const;

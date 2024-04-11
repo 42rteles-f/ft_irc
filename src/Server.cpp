@@ -27,6 +27,7 @@ _online(false)
 	_functions["WHO"] = &Server::whoRequest;
 	_functions["TOPIC"] = &Server::topicRequest;
 	_functions["PASS"] = &Server::passRequest;
+	_functions["MODE"] = &Server::modeRequest;
 }
 
 Server::~Server()
