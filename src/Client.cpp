@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:37:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/10 19:58:18 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/11 17:08:16 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,9 @@ bool	Client::update(void) {
 		return (false);
 	while ((length = recv(socket->fd, (void *)buffer, READSIZE, MSG_DONTWAIT)) > 0)
 		this->_read.append(buffer, length);
-	if (!length) {
+	if (!length)
+	{
+		std::cout << _read << std::endl;
 		this->_closed = true;
 		this->_read.clear();
 		return (false);
@@ -79,7 +81,6 @@ bool	Client::update(void) {
 	return (true);
 }
 
-
 void	Client::makeRequest(Server& server) {
 	std::istringstream	iss;
 	std::string			command;
@@ -88,6 +89,8 @@ void	Client::makeRequest(Server& server) {
 
 	if (!_command)
 		return ;
+	if (_password.empty() && _read.find("PASS") == _read.npos)
+		_read = "PASS \n" + _read;
 	iss.str(_read);
 	while (std::getline(iss, _input) && _read.find("\n") != _read.npos) {
 		command = _input.substr(0, _input.find(" "));
@@ -99,7 +102,15 @@ void	Client::makeRequest(Server& server) {
 	_command = false;
 	_input.clear();
 }
- 
+
+void	Client::setPassword(std::string pass) {
+	this->_password = pass;
+}
+
+const std::string&	Client::getPassword(void) const {
+	return (this->_password);
+}
+
 void	Client::setNick(std::string nick) {
 	this->_nick = nick;
 }
@@ -155,3 +166,9 @@ std::vector<Channel*>	Client::getChannels(void)  {
 	return (_myChannels);
 }
 
+void	Client::endConnection(void) {
+	this->_read.clear();
+	this->_input.clear();
+	this->_command = false;
+	close(this->socket->fd);
+}

@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 10:02:13 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/10 20:34:01 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/11 16:59:17 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,4 +172,18 @@ void	Server::quitRequest(Client& client) {
 		this->updateChannel(*channels[i]);
 	}
 	std::cout << "channells removed" << std::endl;
+}
+
+void	Server::passRequest(Client& client) {
+	std::istringstream iss(client.input());
+	std::string pass;
+
+	iss >> pass;
+	iss >> pass;
+	if (this->password != pass) {
+		client.sendMessage(this->makeMessage("Denied Connection: Invalid Password."));
+		client.endConnection();
+		return ;
+	}
+	client.setPassword(pass);
 }

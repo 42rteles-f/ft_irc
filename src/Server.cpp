@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/10 19:17:03 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/11 17:05:26 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ _online(false)
 	_functions["privmsg"] = &Server::privmsgRequest;
 	_functions["WHO"] = &Server::whoRequest;
 	_functions["TOPIC"] = &Server::topicRequest;
+	_functions["PASS"] = &Server::passRequest;
 }
 
 Server::Server(const Server& tocopy)
@@ -56,6 +57,7 @@ bool	Server::setup(char **init) {
 	struct pollfd	new_server;
 
 	hostName = "irc.example.com";
+	this->password = init[2];
 	_sock.sin_family = AF_INET;
 	_sock.sin_addr.s_addr = INADDR_ANY;
 	_sock.sin_port = htons(atoi(init[1]));
