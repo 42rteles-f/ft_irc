@@ -6,12 +6,15 @@
 #    By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/02 20:08:19 by rteles-f          #+#    #+#              #
-#    Updated: 2024/04/03 21:59:08 by rteles-f         ###   ########.fr        #
+#    Updated: 2024/04/11 18:16:49 by rteles-f         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME	=	ft_irc
+COLOR_RESET =	\033[0m
+COLOR_GREEN =	\033[32m
 
+NAME	=	ft_irc
+SRCS = src/Channel.cpp src/Client.cpp src/Connections.cpp src/Server.cpp src/Server_Requests.cpp src/main.cpp
 CXX		=	c++
 
 SRCS = src/Channel.cpp src/Client.cpp src/Connections.cpp src/Server.cpp src/Server_Requests.cpp src/main.cpp
@@ -37,12 +40,18 @@ $(OBJS_PATH):
 
 $(NAME):	$(OBJS)
 			@$(CXX) $(CXXFLAGS) $(OBJS) -o $(NAME)
+			@echo "[$(COLOR_GREEN)info$(COLOR_RESET)]: IRC Built"
+
 
 clean:			
 				@$(RM) $(OBJS_PATH)	
+				@echo "[$(COLOR_GREEN)info$(COLOR_RESET)]: Clean"
+
 
 fclean:			clean
 				@$(RM) $(NAME)
+				@echo "[$(COLOR_GREEN)info$(COLOR_RESET)]: Full"
+
 
 re:				fclean att all
 

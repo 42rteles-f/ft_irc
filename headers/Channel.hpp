@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/10 20:24:14 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/11 17:55:01 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ class Channel {
 		Channel& 	operator()(const std::string name);
 
 		void	addClient(Client& add);
-		const std::string& name(void);
 		void	removeClient(Client& remove);
 		void	removeClient(std::string remove);
 		void	broadcast(Client& client);
@@ -44,11 +43,15 @@ class Channel {
 		bool 			isOp(Client &client);
 		bool			isOp(std::string clientName);
 
+		const std::string& name(void);
 		void			changeOp(Client &client);
 		std::string		getTopic();
+		void			setTopic(std::string newTopic);
 		Client&			getClient(size_t index);
 		std::vector<Client*>&	getClients();
 		size_t 			NumberOfClients();
-		void			setTopic(std::string newTopic);
 		void			printOPName();
 } ;
+
+// 1700 sem bot
+// 1830 com bot
