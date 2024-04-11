@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/11 17:45:19 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/11 18:59:15 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ _online(false)
 	_functions["TOPIC"] = &Server::topicRequest;
 	_functions["PASS"] = &Server::passRequest;
 	_functions["MODE"] = &Server::modeRequest;
+	_functions["INVITE"] = &Server::inviteRequest;
+
 }
 
 Server::~Server()
