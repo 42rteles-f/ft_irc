@@ -18,8 +18,8 @@ Channel::Channel() : _topic(""), _op()
 	_functions['o'] = &Channel::operatorMode;
 	_functions['i'] = &Channel::inviteAndTopicMode;
 	_functions['t'] = &Channel::inviteAndTopicMode;
-	// _functions['k'] = &Channel::keyMode;
-	// _functions['l'] = &Channel::limitMode;
+	_functions['k'] = &Channel::keyAndLimitMode;
+	_functions['l'] = &Channel::keyAndLimitMode;
 }
 
 Channel::Channel(const Channel& tocopy)
@@ -182,19 +182,22 @@ Client* Channel::findClient(std::string clientName) {
 
 void Channel::addMode(Client &client, std::string mode, std::string argument)
 {
+	std::cout << "mode: " << mode << " argument: " << argument << std::endl;
 	std::map<char, t_exe>::const_iterator	found = _functions.find(mode[1]);
 	if (found != _functions.end())
 		(this->*(found->second))(client, mode, argument);
 	else
-		invalidMode();
+		invalidMode(client, mode);
 }
 
-void	Channel::invalidMode(void) {
-	std::cout << "Invalid mode" << std::endl;
+void	Channel::invalidMode(Client &client, std::string mode) {
+	client.sendMessage(std::string(HOSTNAME) + " 472 " + client.getNick() + " " + mode + " :is unknown mode char to me for");
 }
 
 void Channel::operatorMode(Client &client, std::string mode, std::string argument)
 {
+	std::cout << "operatorMode" << std::endl;
+	std::cout << "mode: " << mode << " argument: " << argument << std::endl;
 	if (argument.empty())
 		return ;
 	Client *argClient = this->findClient(argument);
@@ -203,7 +206,7 @@ void Channel::operatorMode(Client &client, std::string mode, std::string argumen
 		addOp(*argClient);
 		broadcast(client.makeMessage(("MODE " + _name + " " + mode + " " + argument)));
 	}
-	else if (argClient && this->isOp(*argClient))
+	else if (mode[0] == '-' && argClient && this->isOp(*argClient))
 	{
 		removeOp(*argClient);
 		broadcast(client.makeMessage(("MODE " + _name + " " + mode + " " + argument)));
@@ -212,6 +215,8 @@ void Channel::operatorMode(Client &client, std::string mode, std::string argumen
 
 void Channel::inviteAndTopicMode(Client &client, std::string mode, std::string argument)
 {
+	std::cout << "invite and topic" << std::endl;
+	std::cout << "mode: " << mode << " argument: " << argument << std::endl;
 	(void)argument;
 	if (mode[0] == '+')
 	{
@@ -225,32 +230,20 @@ void Channel::inviteAndTopicMode(Client &client, std::string mode, std::string a
 	}
 }
 
-	// if (mode.find('o') != std::string::npos)
-	// {
-	// 	Client *client = this->findClient(argument);
-	// 	if (client)
-	// 	{
-	// 		if (mode[0] == '+')
-	// 			this->addOp(*client);
-	// 		else
-	// 			this->removeOp(*client);
-	// 	}
-	// }
-	// if (mode[0] == '+')
-	// {
-	// 	if (mode[1] == 'i' || mode[1] == 't')
-	// 		argument = "yes";
-	// 	if (argument.empty())
-	// 	{
-	// 		client.sendMessage("irc.example.com 461 " + client.getNick() + " MODE " + mode + " :Not enough parameters");
-	// 		return ;
-	// 	}
-	// 	_modes[mode[1]] = argument; 
-	// }
-	// else
-	// {
-	// 	if (_modes[mode[1]].empty())
-	// 		return ;
-	// 	_modes[mode[1]].clear();
-	// }
-	// broadcast(client.makeMessage(("MODE " + _name + " " + mode + " " + argument)));
+void Channel::keyAndLimitMode(Client &client, std::string mode, std::string argument)
+{
+	std::cout << "key and limit" << std::endl;
+	std::cout << "mode: " << mode << " argument: " << argument << std::endl;
+	if (argument.empty())
+		return ;
+	if (mode[0] == '+')
+	{
+		_modes[(int)mode[1]] = argument;
+		broadcast(client.makeMessage(("MODE " + _name + " " + mode + " " + argument)));
+	}
+	else if (mode[0] == '-' && !_modes[(int)mode[1]].empty())
+	{
+		_modes[(int)mode[1]].clear();
+		broadcast(client.makeMessage(("MODE " + _name + " " + mode + " " + argument)));
+	}
+}

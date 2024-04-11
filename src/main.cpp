@@ -12,10 +12,11 @@
 
 #include <ft_irc.hpp>
 
-void	ft_signal_handler(int signal, Server *save) {
+void	ft_signal_handler(int signal, Server *save, void *a) {
 	static Server	*server;
 
 	(void)signal;
+	(void)a;
 	if (!server) {
 		server = save;
 		return ;
@@ -35,7 +36,7 @@ int main(int ac, char **args)
 	}
 	for (size_t i = 0; i < sizeof(info); i++)
 		((char *)&info)[i] = 0;
-	ft_signal_handler(0, &server);
+	ft_signal_handler(0, &server, 0);
 	info.sa_sigaction = (void (*)(int, siginfo_t *, void *))ft_signal_handler;
 	info.sa_flags = SA_SIGINFO;
 	sigaction(SIGINT, &info, 0);
