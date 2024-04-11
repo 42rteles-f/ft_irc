@@ -14,10 +14,13 @@
 #include <Channel.hpp>
 
 Channel::Channel() : _op(), _topic("")
-{}
-
-Channel::Channel(std::string name) : _op(), _topic("")
-{}
+{
+	_functions['o'] = &Channel::operatorMode;
+	// _functions['i'] = &Channel::inviteMode;
+	// _functions['t'] = &Channel::topicMode;
+	// _functions['k'] = &Channel::keyMode;
+	// _functions['l'] = &Channel::limitMode;
+}
 
 Channel::Channel(const Channel& tocopy)
 {
@@ -94,7 +97,9 @@ void	Channel::printOPName() {
 	}
 }
 
-void Channel::changeOp(Client &client) {
+void Channel::addOp(Client &client) {
+	if (this->isOp(client))
+		return;
 	this->_op.push_back(&client);
 }
 
@@ -134,6 +139,17 @@ bool Channel::isOp(Client& client) {
 	return false;
 }
 
+void Channel::removeOp(Client& client) {
+	std::vector<Client*>::iterator find;
+
+	find = std::find(_op.begin(), _op.end(), &client);
+	if (find != _op.end())
+		_op.erase(find);
+	
+	if (_clients.size() && _op.size() == 0)
+		_op.push_back(_clients[0]);
+}
+
 bool Channel::isOp(std::string clientName) {
 	std::vector<Client*>::iterator find;
 
@@ -145,18 +161,6 @@ bool Channel::isOp(std::string clientName) {
 	return false;
 }
 
-// Client Channel::findClient(std::string clientName) {
-// 	std::vector<Client*>::iterator find;
-
-// 	find = _clients.begin();
-// 	for (;find != _clients.end(); ++find) {
-// 		if (clientName.compare(find->getNick()) == 0)
-// 			return *find;
-// 	}
-// 	return (NULL);
-// }
-
-
 Client& Channel::getClient(size_t index){
 	return (*(_clients[index]));
 }
@@ -164,3 +168,88 @@ Client& Channel::getClient(size_t index){
 std::vector<Client*>& Channel::getClients() {
 	return (_clients);
 }
+
+Client* Channel::findClient(std::string clientName) {
+	std::vector<Client*>::iterator find;
+
+	find = _clients.begin();
+	for (;find != _clients.end(); ++find) {
+		if (clientName.compare((*find)->getNick()) == 0)
+			return (*find);
+	}
+	return (NULL);
+}
+
+void Channel::addMode(Client &client, std::string mode, std::string argument)
+{
+	std::map<char, t_exe>::const_iterator	found = _functions.find(mode[1]);
+	if (found != _functions.end())
+		(this->*(found->second))(client, mode, argument);
+	else
+		invalidMode();
+}
+
+void	Channel::invalidMode(void) {
+	std::cout << "Invalid mode" << std::endl;
+}
+
+void Channel::operatorMode(Client &client, std::string mode, std::string argument)
+{
+	if (argument.empty())
+		return ;
+	Client *argClient = this->findClient(argument);
+	if (mode[0] == '+')
+	{
+		if (argClient && !this->isOp(*argClient))
+		{
+			addOp(*argClient);
+			broadcast(client.makeMessage(("MODE " + _name + " " + mode + " " + argument)));
+		}
+	}
+	else
+	{
+		if (argClient && this->isOp(*argClient))
+		{
+			removeOp(*argClient);
+			broadcast(client.makeMessage(("MODE " + _name + " " + mode + " " + argument)));
+		}
+	}
+}
+
+void Channel::inviteMode(Client &client, std::string mode, std::string argument)
+{
+	if (mode[0] == '+')
+	{
+		
+	}
+}
+
+	// if (mode.find('o') != std::string::npos)
+	// {
+	// 	Client *client = this->findClient(argument);
+	// 	if (client)
+	// 	{
+	// 		if (mode[0] == '+')
+	// 			this->addOp(*client);
+	// 		else
+	// 			this->removeOp(*client);
+	// 	}
+	// }
+	// if (mode[0] == '+')
+	// {
+	// 	if (mode[1] == 'i' || mode[1] == 't')
+	// 		argument = "yes";
+	// 	if (argument.empty())
+	// 	{
+	// 		client.sendMessage("irc.example.com 461 " + client.getNick() + " MODE " + mode + " :Not enough parameters");
+	// 		return ;
+	// 	}
+	// 	_modes[mode[1]] = argument; 
+	// }
+	// else
+	// {
+	// 	if (_modes[mode[1]].empty())
+	// 		return ;
+	// 	_modes[mode[1]].clear();
+	// }
+	// broadcast(client.makeMessage(("MODE " + _name + " " + mode + " " + argument)));

@@ -12,6 +12,8 @@
 
 #pragma once
 
+# define HOSTNAME "irc.example.com"
+
 # include <iostream>
 # include <vector>
 # include <map>

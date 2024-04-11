@@ -48,6 +48,8 @@ class Server {
 		void	topicRequest(Client& client);
 		void	quitRequest(Client& client);
 		void	invalidCommand(Client& client);
+		void	modeRequest(Client &client);
+
 
 		//Code -> client.nick -> message;
 		std::string	makeMessage(const std::string) const;

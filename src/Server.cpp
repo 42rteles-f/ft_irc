@@ -26,6 +26,7 @@ _online(false)
 	_functions["privmsg"] = &Server::privmsgRequest;
 	_functions["WHO"] = &Server::whoRequest;
 	_functions["TOPIC"] = &Server::topicRequest;
+	_functions["MODE"] = &Server::modeRequest;
 }
 
 Server::Server(const Server& tocopy)
