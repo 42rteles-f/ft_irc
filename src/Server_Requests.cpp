@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 10:02:13 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/11 17:31:16 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/11 19:19:07 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,9 @@ void	Server::invalidCommand(Client& client) {
 	std::string			command;
 
 	iss >> command;
-	std::cout << command << ": Not a valid Command in this Server." << std::endl;
+	client.sendMessage(this->makeMessage(
+		"421", client.getNick(), ": Not a valid Command in this Server."));
+	// std::cout << command <<  << std::endl;
 }
 
 void Server::whoRequest(Client& client) {

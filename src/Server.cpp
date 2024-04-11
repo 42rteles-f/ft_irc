@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/11 19:03:53 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/11 19:25:45 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,17 +57,18 @@ Server::t_exe	Server::requestHandler(std::string target)
 
 bool	Server::setup(char **init) {
 	struct pollfd	new_server;
+	const char		*defaultPort = "6667";
 
 	hostName = "irc.example.com";
-	if (!*(init[1])) init[1] = (char *)std::string("6667").c_str();
+	if (!*(init[1])) init[1] = (char *)defaultPort;
 	this->password = init[2];
 	_sock.sin_family = AF_INET;
 	_sock.sin_addr.s_addr = INADDR_ANY;
 	_sock.sin_port = htons(atoi(init[1]));
 	new_server.events = POLLIN;
-	if ((new_server.fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0 ||
-		bind(new_server.fd, (struct sockaddr*)&_sock, sizeof(_sock)) != 0 ||
-		listen(new_server.fd, 0) < 0)
+	if ((new_server.fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0
+	||	bind(new_server.fd, (struct sockaddr*)&_sock, sizeof(_sock)) != 0
+	||	listen(new_server.fd, 0) < 0)
 	{
 		setsockopt(new_server.fd, SOL_SOCKET, SO_REUSEADDR, &new_server.events, sizeof(new_server.events));
 		std::cout << "Error SetingUp Server" << std::endl;
