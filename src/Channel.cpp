@@ -3,9 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
+/*   Updated: 2024/04/11 19:45:04 by lliberal         ###   ########.fr       */
 /*   Updated: 2024/04/11 19:37:15 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
@@ -229,6 +230,15 @@ void Channel::inviteAndTopicMode(Client &client, std::string mode, std::string a
 		_modes[(int)mode[1]].clear();
 		broadcast(client.makeMessage(("MODE " + _name + " " + mode)));
 	}
+}
+
+
+bool Channel::isClientInChannel(Client* guest) {
+	std::vector<Client *>::iterator it = std::find(_clients.begin(), _clients.end(), guest);
+
+	if (it != _clients.end())
+		return true;
+	return false;
 }
 
 void Channel::keyAndLimitMode(Client &client, std::string mode, std::string argument)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server_Requests.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 10:02:13 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/11 19:30:24 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/11 20:12:03 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,4 +212,39 @@ void	Server::passRequest(Client& client) {
 	}
 	client.setPassword(pass);
 }
+
 // :server.example.com 464 <nickname> :Password incorrect
+//Hexchat format: "/invite <nickname> <channel>"
+//"<client> <nick> <channel>"
+void	Server::inviteRequest(Client& client) {
+	//verificar se o channel existe (check)
+	//verificar se o client está na lista de clients do canal (check) 
+	//verificar se o client já pertence ao channel (check) 
+	//enviar mensagem para o client alvo que ele pode realizar o join no channel
+	std::istringstream iss(client.input());
+	std::string nick, channel;
+
+	iss >> nick;
+	iss >> nick;
+	iss >> channel;
+	std::map<std::string, Channel>::iterator it_channel = _channels.find(channel);
+	if (it_channel == _channels.end()) {
+		//Enviar mensagem de error para o anfitrião a dizer que o canal ñ exist
+		client.sendMessage(client.makeMessage("Error: This channel doesn't Exist."));
+		return ;
+	}
+	// _channels[channel].findClient(nick);
+	Client* guest = it_channel->second.findClient(nick);
+	if (!guest) {
+		//Enviar mensagem de error para o anfitrião a dizer que o cliente referido ñ existe
+		client.sendMessage(client.makeMessage("Error: This client doesn't Exist."));
+		return ;
+	}
+	if (it_channel->second.isClientInChannel(guest)) {
+		// Enviar mensagem de error para o anfitrião a dizer que o cliente referido já faz parte do channel
+		client.sendMessage(client.makeMessage("Error: this client is already in channel."));
+		return ;
+	}
+	guest->addChannel(&(it_channel->second));
+	(*guest).sendMessage((*guest).makeMessage(" WERE INVITED TO " + channel));
+}
