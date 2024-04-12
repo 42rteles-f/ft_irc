@@ -12,3 +12,22 @@
 · k: Set/remove the channel key (password) (JOIN)
 · o: Give/take channel operator privilege 
 · l: Set/remove the user limit to channel (JOIN)
+
+
+1 - 
+$ make
+[\033[32minfo\033[0m]: IRC Built
+
+2 - 
+make re
+[\033[32minfo\033[0m]: Clean
+[\033[32minfo\033[0m]: Full
+[\033[32minfo\033[0m]: IRC Built
+
+
+3 - Error in Join 
+GARBAGE:  irc.example.com 472 nick + :is unknown mode char to me for:irc.example.com  332 nick #3 
+
+
+
+

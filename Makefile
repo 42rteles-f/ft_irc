@@ -14,7 +14,7 @@ COLOR_RESET =	\033[0m
 COLOR_GREEN =	\033[32m
 
 NAME	=	ft_irc
-SRCS = src/Channel.cpp src/Client.cpp src/Connections.cpp src/Server.cpp src/Server_Requests.cpp src/main.cpp
+SRCS = src/Channel.cpp src/Client.cpp src/Connections.cpp src/main.cpp src/Server.cpp src/Server_Requests.cpp
 CXX		=	c++
 
 SRCS = src/Channel.cpp src/Client.cpp src/Connections.cpp src/main.cpp src/Server.cpp src/Server_Requests.cpp

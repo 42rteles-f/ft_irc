@@ -6,10 +6,10 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/11 19:45:04 by lliberal         ###   ########.fr       */
-/*   Updated: 2024/04/11 19:37:15 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/12 19:08:19 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include <ft_irc.hpp>
 #include <Channel.hpp>
