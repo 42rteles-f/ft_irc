@@ -6,7 +6,7 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/12 19:08:19 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/12 22:16:44 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,15 +190,15 @@ void Channel::addMode(Client &client, std::string mode, std::string argument)
 {
 	std::cout << "mode: " << mode << " argument: " << argument << std::endl;
 	std::map<char, t_exe>::const_iterator	found = _functions.find(mode[1]);
-	if (found != _functions.end())
+	if (found != _functions.end() && mode.size() == 2)
 		(this->*(found->second))(client, mode, argument);
-	else
-		invalidMode(client, mode);
+	// else
+	// 	invalidMode(client)
 }
 
-void	Channel::invalidMode(Client &client, std::string mode) {
-	client.sendMessage(": " + std::string(HOSTNAME) + " 472 " + client.getNick() + " " + mode + " :is unknown mode char to me for");
-}
+// void	Channel::invalidMode(Client &client) {
+// 	client.sendMessage(": " + std::string(HOSTNAME) + " 472 " + client.getNick() + " :is unknown mode char to me for\r\n");
+// }
 
 void Channel::operatorMode(Client &client, std::string mode, std::string argument)
 {
@@ -243,10 +243,10 @@ bool Channel::isClientInChannel(Client* guest) {
 
 void Channel::keyAndLimitMode(Client &client, std::string mode, std::string argument)
 {
-	if (argument.empty())
-		return ;
 	if (mode[0] == '+')
 	{
+		if (argument.empty())
+			return ;
 		_modes[(int)mode[1]] = argument;
 		broadcast(client.makeMessage(("MODE " + _name + " " + mode + " " + argument)));
 	}
