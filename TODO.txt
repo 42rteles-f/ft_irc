@@ -1,3 +1,14 @@
 - change the join message sender
 - finish the kick command
 - 
+
+
+∗ KICK - Eject a client from the channel 
+∗ INVITE - Invite a client to a channel (joinRequest)
+∗ TOPIC - Change or view the channel topic (topicRequest)
+∗ MODE - Change the channel’s mode:
+· i: Set/remove Invite-only channel (JOIN)
+· t: Set/remove the restrictions of the TOPIC command to channel operators (TOPIC)
+· k: Set/remove the channel key (password) (JOIN)
+· o: Give/take channel operator privilege 
+· l: Set/remove the user limit to channel (JOIN)

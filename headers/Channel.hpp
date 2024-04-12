@@ -29,7 +29,6 @@ class Channel {
 
 	public:
 		Channel();
-		Channel(std::string name);
 		Channel(const Channel& tocopy);
 		~Channel();
 
@@ -63,6 +62,7 @@ class Channel {
 		Client* 		findClient(std::string clientName);
 		void 			addMode(Client &client, std::string mode, std::string argument);
 		void 			removeOp(Client& client);
+		std::string		getMode(char mode);
 
 
 } ;

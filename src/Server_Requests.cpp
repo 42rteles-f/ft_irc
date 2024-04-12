@@ -80,22 +80,31 @@ void	Server::kickRequest(Client& client) {
 }
 
 void	Server::joinRequest(Client& client) {
-	std::string channel, input = client.input();
+	std::string password, channel, input = client.input();
 	std::istringstream iss(input);
 
 	std::replace(input.begin(), input.end(), ',', ' ');
 	iss >> channel;
 	while (iss >> channel) {
+		iss >> password;
 		if (channel[0] == '#') {
-			_channels[channel](channel).addClient(client);
-			// client.sendMessage(client.makeMessage("JOIN :" + channel));
+			Channel &chan = _channels[channel](channel);
+			if (!chan.getMode('k').empty() && chan.getMode('k').compare(password) != 0) {
+				client.sendMessage(makeMessage(" 475 " + client.getNick() + " " + channel + " :Cannot join channel (+k)"));
+				continue;
+			}
+			if (!chan.getMode('l').empty() && chan.getClients().size() >= (size_t)std::atol(chan.getMode('l').c_str())) {
+				client.sendMessage(makeMessage(" 471 " + client.getNick() + " " + channel + " :Cannot join channel (+l)"));
+				continue;
+			}
+			chan.addClient(client);
 		}
 		else {
 			//foi o xaleira
 			client.sendMessage(client.makeMessage(channel + ": Channel not found"));
 		}
 	}
-	_channels[channel].printOPName();
+	// _channels[channel].printOPName();
 }
 
 void Server::topicRequest(Client& client) {
@@ -106,7 +115,7 @@ void Server::topicRequest(Client& client) {
 	iss >> channel;
 	iss >> channel;
 	iss >> topic;
-	if (_channels.find(channel) != _channels.end() && _channels[channel].isOp(client)) {
+	if (_channels.find(channel) != _channels.end() && (_channels[channel].isOp(client) || !_channels[channel].getMode('t').empty())) {
 		_channels[channel].setTopic(topic);
 		_channels[channel].broadcast(client.makeMessage());
 	}
