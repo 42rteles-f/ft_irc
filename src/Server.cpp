@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/13 14:55:57 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/13 15:54:37 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ Server& Server::operator=(const Server& tocopy) {
 Server::t_exe	Server::requestHandler(std::string target)
 {
 	std::map<std::string, t_exe>::const_iterator	found = _functions.find(target);
-	std::cout << target << std::endl;
 	if (found != _functions.end())
 		return (found->second);
 	return (&Server::invalidCommand);
