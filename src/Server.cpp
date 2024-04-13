@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/13 15:54:37 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/13 22:33:01 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ Server::Server():
 _online(false)
 {
 	_functions["QUIT"] = &Server::quitRequest;
+	_functions["CAP"] = &Server::capRequest;
 	_functions["JOIN"] = &Server::joinRequest;
 	_functions["PART"] = &Server::partRequest;
 	_functions["NICK"] = &Server::nickRequest;

@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 10:02:13 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/13 15:05:39 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/13 22:48:55 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ void	Server::nickRequest(Client& client) {
 	iss >> nick;
 	iss >> nick;
 	if (_connection.find(nick) == _connection.end()) {
-        if (client.getNick().empty()) client.setNick(nick);
+        if (client.getNick().empty())
+			client.setNick(nick);
         client.sendMessage(client.makeMessage());
 		client.setNick(nick);
 	}
@@ -51,11 +52,14 @@ void	Server::nickRequest(Client& client) {
 void	Server::userRequest(Client& client) {
 	std::istringstream	iss(client.input());
 	std::string			user;
+	size_t				spot;
 
 	iss >> user;
 	iss >> user;
 	client.setUser(user);
-	client.setRealName(client.input().substr(client.input().find(":")));
+	spot = client.input().find(":");
+	if (spot != std::string::npos)	
+		client.setRealName(client.input().substr(spot));
 }
 
 void	Server::kickRequest(Client& client) {
@@ -72,7 +76,12 @@ void	Server::kickRequest(Client& client) {
 		else
 			_channels[channel].broadcast(client.makeMessage("KICK " + channel + " " + remove + " :" + client.getNick()));
 		_channels[channel].removeClient(remove);
+		updateChannel(_channels[channel]);
 	}
+}
+
+void	Server::capRequest(Client& client) {
+	(void)client;
 }
 
 void	Server::joinRequest(Client& client) {
