@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server_Requests.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 10:02:13 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/11 19:30:24 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/12 22:33:36 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,12 @@ void	Server::privmsgRequest(Client& sender) {
 	iss >> recipient;
 	if (_channels.find(recipient) != _channels.end())
 		_channels[recipient].broadcast(sender);
-	else if ((found = _connection.find(recipient)) != _connection.end()) {
+	else if ((found = _connection.find(recipient)) != _connection.end())
 		(*found)->sendMessage(sender.makeMessage());
-    }
+	else if (recipient[0] == '#')
+		sender.sendMessage(this->makeMessage("403", sender.getNick(), recipient + " :no such channel"));
+	else
+		sender.sendMessage(this->makeMessage("401", sender.getNick(), recipient + " :no such nick"));
 }
 
 void	Server::nickRequest(Client& client) {
@@ -80,22 +83,35 @@ void	Server::kickRequest(Client& client) {
 }
 
 void	Server::joinRequest(Client& client) {
-	std::string channel, input = client.input();
+	std::string password, channel, input = client.input();
 	std::istringstream iss(input);
 
 	std::replace(input.begin(), input.end(), ',', ' ');
 	iss >> channel;
 	while (iss >> channel) {
+		iss >> password;
 		if (channel[0] == '#') {
-			_channels[channel](channel).addClient(client);
-			// client.sendMessage(client.makeMessage("JOIN :" + channel));
+			Channel &chan = _channels[channel](channel);
+			if (!chan.getMode('i').empty() && std::find(client.getChannels().begin(), client.getChannels().end(), &chan) == client.getChannels().end()) {
+				client.sendMessage(makeMessage(" 473 " + client.getNick() + " " + channel + " :Cannot join channel (+i)"));
+				continue;
+			}
+			if (!chan.getMode('k').empty() && chan.getMode('k').compare(password) != 0) {
+				client.sendMessage(makeMessage(" 475 " + client.getNick() + " " + channel + " :Cannot join channel (+k)"));
+				continue;
+			}
+			if (!chan.getMode('l').empty() && chan.getClients().size() >= (size_t)std::atol(chan.getMode('l').c_str())) {
+				client.sendMessage(makeMessage(" 471 " + client.getNick() + " " + channel + " :Cannot join channel (+l)"));
+				continue;
+			}
+			chan.addClient(client);
 		}
 		else {
 			//foi o xaleira
 			client.sendMessage(client.makeMessage(channel + ": Channel not found"));
 		}
 	}
-	_channels[channel].printOPName();
+	// _channels[channel].printOPName();
 }
 
 void Server::topicRequest(Client& client) {
@@ -106,7 +122,7 @@ void Server::topicRequest(Client& client) {
 	iss >> channel;
 	iss >> channel;
 	iss >> topic;
-	if (_channels.find(channel) != _channels.end() && _channels[channel].isOp(client)) {
+	if (_channels.find(channel) != _channels.end() && (_channels[channel].isOp(client) || !_channels[channel].getMode('t').empty())) {
 		_channels[channel].setTopic(topic);
 		_channels[channel].broadcast(client.makeMessage());
 	}
@@ -124,7 +140,10 @@ void	Server::partRequest(Client& client) {
 	if (_channels.find(channel) != _channels.end()) {
 		_channels[channel].broadcast(client.makeMessage());
 		_channels[channel].removeClient(client);
-		this->updateChannel(_channels[channel]);
+		if (_channels[channel].getClients().size())
+			this->updateChannel(_channels[channel]);
+		else
+			_channels.erase(_channels.find(channel));
 	}
 }
 
@@ -135,7 +154,6 @@ void	Server::invalidCommand(Client& client) {
 	iss >> command;
 	client.sendMessage(this->makeMessage(
 		"421", client.getNick(), command + ": Not a valid Command in this Server."));
-	// std::cout << command <<  << std::endl;
 }
 
 void Server::whoRequest(Client& client) {
@@ -180,14 +198,19 @@ void	Server::modeRequest(Client &client)
 	iss >> channel;
 	iss >> mode;
 	iss >> modeArg;
+	if (mode.empty())
+		return ;
+	if (channel.empty())
+		return client.sendMessage(this->makeMessage("461", client.getNick(), " MODE :No such channel"));
 	if (mode[0] != '+' && mode[0] != '-')
 		mode = "+" + mode;
-	if (_channels.find(channel) != _channels.end() && _channels[channel].isOp(client)) {
-		_channels[channel].addMode(client, mode, modeArg);
-	}
-	else
+	if (_channels.find(channel) != _channels.end()) {
+		if (_channels[channel].isOp(client))
+			_channels[channel].addMode(client, mode, modeArg);
+		else
 		client.sendMessage(":" + hostName + " 482 " + client.getNick() + " "
-							+ channel + " :You're not channel operator" + "\r\n");
+							+ channel + " :You're not channel operator\r\n");
+	}
 }
 
 void	Server::passRequest(Client& client) {
@@ -203,4 +226,29 @@ void	Server::passRequest(Client& client) {
 	}
 	client.setPassword(pass);
 }
-// :server.example.com 464 <nickname> :Password incorrect
+
+void	Server::inviteRequest(Client& client) { 
+	std::istringstream iss(client.input());
+	std::string nick, channel;
+
+	iss >> nick;
+	iss >> nick;
+	iss >> channel;
+	
+	if (_channels.find(channel) == _channels.end())
+		return client.sendMessage(this->makeMessage("403", client.getNick(), channel + " :No such channel"));
+	if (!_channels[channel].getMode('i').empty() && !_channels[channel].isOp(client))
+		return client.sendMessage(":" + hostName + " 482 " + client.getNick() + " " + channel + " :You're not channel operator" + "\r\n");
+	std::vector<Client*>::iterator guest = _connection.find(nick);
+	
+	if (guest == _connection.end())
+		return client.sendMessage(this->makeMessage("401", client.getNick(), channel + " :No such nick"));
+	if (_channels[channel].isClientInChannel((*guest)))
+		return client.sendMessage(this->makeMessage("443", client.getNick(), channel + " :is already on channel"));
+		
+	(*guest)->addChannel(&(_channels[channel]));
+	client.sendMessage(this->makeMessage("341", client.getNick(), (*guest)->getNick() + " " + channel));
+	(*guest)->sendMessage(client.makeMessage(" INVITE " + (*guest)->getNick() + " " + channel));
+}
+
+// >> :lliberal!lliberal@AN-A795207B.226.108.93.rev.vodafone.pt INVITE lliberal_ #3

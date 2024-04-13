@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:37:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/11 19:39:14 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/12 20:38:41 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ void	Client::makeRequest(Server& server) {
 }
 
 void	Client::setPassword(std::string pass) {
-	this->_password = pass;
+	this->_password = pass.empty() ? "Valid." : pass;
 }
 
 const std::string&	Client::getPassword(void) const {
@@ -153,6 +153,8 @@ void	Client::sendMessage(std::string message) const {
 }
 
 void	Client::addChannel(Channel *channel) {
+	if (std::find(_myChannels.begin(), _myChannels.end(), channel) != _myChannels.end())
+		return ;
 	_myChannels.push_back(channel);
 }
 

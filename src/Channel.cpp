@@ -6,9 +6,10 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/11 20:39:55 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/13 14:08:08 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include <ft_irc.hpp>
 #include <Channel.hpp>
@@ -42,9 +43,8 @@ const std::string& Channel::name(void) {
 Channel& Channel::operator=(const Channel& tocopy) {
 	if (this == &tocopy)
 		return (*this);
-	std::cout << "equal called" << std::endl;
 	this->_name = tocopy._name;
-	for (size_t i = 0; i < 255; i++)
+	for(int i = 0; i < 255; i++)
 		this->_modes[i] = tocopy._modes[i];
 	this->_topic = tocopy._topic;
 	this->_functions = tocopy._functions;
@@ -189,41 +189,37 @@ void Channel::addMode(Client &client, std::string mode, std::string argument)
 {
 	std::cout << "mode: " << mode << " argument: " << argument << std::endl;
 	std::map<char, t_exe>::const_iterator	found = _functions.find(mode[1]);
-	if (found != _functions.end())
+	if (found != _functions.end() && mode.size() == 2)
 		(this->*(found->second))(client, mode, argument);
-	else
-		invalidMode(client, mode);
+	// else
+	// 	invalidMode(client)
 }
 
-void	Channel::invalidMode(Client &client, std::string mode) {
-	client.sendMessage(std::string(HOSTNAME) + " 472 " + client.getNick() + " " + mode + " :is unknown mode char to me for");
-}
+// void	Channel::invalidMode(Client &client) {
+// 	client.sendMessage(": " + std::string(HOSTNAME) + " 472 " + client.getNick() + " :is unknown mode char to me for\r\n");
+// }
 
 void Channel::operatorMode(Client &client, std::string mode, std::string argument)
 {
-	std::cout << "operatorMode" << std::endl;
-	std::cout << "mode: " << mode << " argument: " << argument << std::endl;
 	if (argument.empty())
 		return ;
 	Client *argClient = this->findClient(argument);
 	if (mode[0] == '+' && argClient && !this->isOp(*argClient))
 	{
+		broadcast(client.makeMessage(("MODE " + _name + " " + mode + " " + argument)));
 		addOp(*argClient);
-		broadcast(client.makeMessage(("MODE " + _name + " " + mode + " " + argument)));
 	}
-	else if (mode[0] == '-' && argClient && this->isOp(*argClient))
+	else if (mode[0] == '-' && argClient && this->isOp(*argClient) && _op.size() > 1)
 	{
-		removeOp(*argClient);
 		broadcast(client.makeMessage(("MODE " + _name + " " + mode + " " + argument)));
+		removeOp(*argClient);
 	}
 }
 
 void Channel::inviteAndTopicMode(Client &client, std::string mode, std::string argument)
 {
-	std::cout << "invite and topic" << std::endl;
-	std::cout << "mode: " << mode << " argument: " << argument << std::endl;
 	(void)argument;
-	if (mode[0] == '+')
+	if (mode[0] == '+' && _modes[(int)mode[1]].empty())
 	{
 		_modes[(int)mode[1]] = "yes";
 		broadcast(client.makeMessage(("MODE " + _name + " " + mode)));
@@ -235,14 +231,21 @@ void Channel::inviteAndTopicMode(Client &client, std::string mode, std::string a
 	}
 }
 
+
+bool Channel::isClientInChannel(Client* guest) {
+	std::vector<Client *>::iterator it = std::find(_clients.begin(), _clients.end(), guest);
+
+	if (it != _clients.end())
+		return true;
+	return false;
+}
+
 void Channel::keyAndLimitMode(Client &client, std::string mode, std::string argument)
 {
-	std::cout << "key and limit" << std::endl;
-	std::cout << "mode: " << mode << " argument: " << argument << std::endl;
-	if (argument.empty())
-		return ;
 	if (mode[0] == '+')
 	{
+		if (argument.empty())
+			return ;
 		_modes[(int)mode[1]] = argument;
 		broadcast(client.makeMessage(("MODE " + _name + " " + mode + " " + argument)));
 	}
@@ -251,4 +254,8 @@ void Channel::keyAndLimitMode(Client &client, std::string mode, std::string argu
 		_modes[(int)mode[1]].clear();
 		broadcast(client.makeMessage(("MODE " + _name + " " + mode + " " + argument)));
 	}
+}
+
+std::string	Channel::getMode(char mode) {
+	return _modes[(int)mode];
 }

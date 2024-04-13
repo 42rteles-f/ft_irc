@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/11 17:44:10 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/11 18:59:26 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ class Server {
 		void	passRequest(Client& client);
 		void	invalidCommand(Client& client);
 		void	modeRequest(Client &client);
+		void	inviteRequest(Client &client);
+
 
 
 		//Code -> client.nick -> message;
