@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/11 19:37:15 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/11 20:39:55 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,12 @@ const std::string& Channel::name(void) {
 Channel& Channel::operator=(const Channel& tocopy) {
 	if (this == &tocopy)
 		return (*this);
+	std::cout << "equal called" << std::endl;
+	this->_name = tocopy._name;
+	for (size_t i = 0; i < 255; i++)
+		this->_modes[i] = tocopy._modes[i];
 	this->_topic = tocopy._topic;
+	this->_functions = tocopy._functions;
 	this->_clients = tocopy._clients;
 	this->_op = tocopy._op;
 	return (*this);
