@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/12 22:09:22 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/13 14:18:53 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ class Channel {
 		void	broadcast(std::string message);
 
 		void 	inviteAndTopicMode(Client &client, std::string mode, std::string argument);
-		void	invalidMode(Client &client);
 		void 	operatorMode(Client &client, std::string mode, std::string argument);
 		void 	keyAndLimitMode(Client &client, std::string mode, std::string argument);
 
@@ -58,7 +57,6 @@ class Channel {
 		Client&					getClient(size_t index);
 		std::vector<Client*>&	getClients();
 		size_t 					NumberOfClients();
-		void					printOPName();
 		Client* 				findClient(std::string clientName);
 		void 					addMode(Client &client, std::string mode, std::string argument);
 		void 					removeOp(Client& client);

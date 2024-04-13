@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server_Requests.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 10:02:13 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/12 22:33:36 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/13 14:18:02 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,6 @@ void	Server::nickRequest(Client& client) {
 
 	iss >> nick;
 	iss >> nick;
-	// if (_connection.size())
-	// 	std::cout << "end: " + _connection.end()->getNick() << std::endl;
 	if (_connection.find(nick) == _connection.end()) {
         if (client.getNick().empty()) client.setNick(nick);
         client.sendMessage(client.makeMessage());
@@ -60,11 +58,6 @@ void	Server::userRequest(Client& client) {
 	client.setRealName(client.input().substr(client.input().find(":")));
 }
 
-//check if the client who sent the message is a op
-//check if the client who will be kicked is in the channel
-//
-// >> :lliberal_!lliberal KICK #3 lliberal :pqsim
-// /KICK #example user123 Spamming is not allowed!
 void	Server::kickRequest(Client& client) {
 	std::istringstream	iss(client.input());
 	std::string			channel, remove, message;
@@ -106,10 +99,8 @@ void	Server::joinRequest(Client& client) {
 			}
 			chan.addClient(client);
 		}
-		else {
-			//foi o xaleira
+		else 
 			client.sendMessage(client.makeMessage(channel + ": Channel not found"));
-		}
 	}
 	// _channels[channel].printOPName();
 }
@@ -250,5 +241,3 @@ void	Server::inviteRequest(Client& client) {
 	client.sendMessage(this->makeMessage("341", client.getNick(), (*guest)->getNick() + " " + channel));
 	(*guest)->sendMessage(client.makeMessage(" INVITE " + (*guest)->getNick() + " " + channel));
 }
-
-// >> :lliberal!lliberal@AN-A795207B.226.108.93.rev.vodafone.pt INVITE lliberal_ #3

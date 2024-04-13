@@ -6,7 +6,7 @@
 #    By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/02 20:08:19 by rteles-f          #+#    #+#              #
-#    Updated: 2024/04/11 19:28:49 by rteles-f         ###   ########.fr        #
+#    Updated: 2024/04/13 14:16:58 by rteles-f         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,10 +14,8 @@ COLOR_RESET =	\033[0m
 COLOR_GREEN =	\033[32m
 
 NAME	=	ft_irc
-SRCS = src/Channel.cpp src/Client.cpp src/Connections.cpp src/main.cpp src/Server.cpp src/Server_Requests.cpp
+SRCS = src/Channel.cpp src/Channel_Modes.cpp src/Client.cpp src/Connections.cpp src/Server.cpp src/Server_Requests.cpp src/main.cpp
 CXX		=	c++
-
-SRCS = src/Channel.cpp src/Client.cpp src/Connections.cpp src/main.cpp src/Server.cpp src/Server_Requests.cpp
 
 OBJS_PATH = obj/
 SRC_PATH = src/
