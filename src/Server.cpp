@@ -3,15 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/11 18:59:15 by lliberal         ###   ########.fr       */
+/*   Updated: 2024/04/13 14:55:57 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft_irc.hpp>
 #include <Server.hpp>
+
+std::string	Server::hostName = "irc.example.com";
 
 Server::Server():
 _online(false)
@@ -40,7 +42,6 @@ Server& Server::operator=(const Server& tocopy) {
 		return (*this);
 	this->_online = tocopy._online;
 	this->_sock = tocopy._sock;
-	this->hostName = tocopy.hostName;
 	this->password = tocopy.password;
 	this->_connection = tocopy._connection;
 	this->_channels = tocopy._channels;
@@ -61,7 +62,6 @@ bool	Server::setup(char **init) {
 	struct pollfd	new_server;
 	const char		*defaultPort = "6667";
 
-	hostName = "irc.example.com";
 	if (!*(init[1])) init[1] = (char *)defaultPort;
 	this->password = init[2];
 	_sock.sin_family = AF_INET;
@@ -129,15 +129,15 @@ void	Server::offline(void) {
 	setsockopt(_connection[0].socket->fd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse));
 }
 
-std::string	Server::makeMessage(const std::string message) const {
+std::string	Server::makeMessage(const std::string message) {
 	return (":" + hostName + " " + message + "\r\n");
 }
 
-std::string	Server::makeMessage(std::string code, std::string message) const {
+std::string	Server::makeMessage(std::string code, std::string message) {
 	return (":" + hostName + " " + code + " " + message + "\r\n");
 }
 
-std::string	Server::makeMessage(std::string code, std::string client, std::string message) const {
+std::string	Server::makeMessage(std::string code, std::string client, std::string message) {
 	return (":" + hostName + " " + code + " " + client + " " + message + "\r\n");
 }
 

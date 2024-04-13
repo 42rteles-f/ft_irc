@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/13 14:21:35 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/13 15:01:54 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ class Server {
 	private:
 		bool		_online;
 		t_sock		_sock;
-		std::string	hostName;
+		static std::string	hostName;
 		std::string	password;
 		Connections						_connection;
 		std::map<std::string, Channel>	_channels;
@@ -54,9 +54,6 @@ class Server {
 		void	inviteRequest(Client &client);
 
 		//Code -> client.nick -> message;
-		std::string	makeMessage(const std::string) const;
-		std::string	makeMessage(std::string code, std::string message) const;
-		std::string	makeMessage(std::string code, std::string client, std::string message) const;
 
 	public:
 		Server();
@@ -68,4 +65,8 @@ class Server {
 		bool	setup(char **init);
 		void	online(void);
 		void	offline(void);
+
+		static std::string	makeMessage(const std::string);
+		static std::string	makeMessage(std::string code, std::string message);
+		static std::string	makeMessage(std::string code, std::string client, std::string message);
 } ;

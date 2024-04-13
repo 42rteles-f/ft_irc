@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 10:02:13 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/13 14:18:02 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/13 15:05:39 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,26 +83,11 @@ void	Server::joinRequest(Client& client) {
 	iss >> channel;
 	while (iss >> channel) {
 		iss >> password;
-		if (channel[0] == '#') {
-			Channel &chan = _channels[channel](channel);
-			if (!chan.getMode('i').empty() && std::find(client.getChannels().begin(), client.getChannels().end(), &chan) == client.getChannels().end()) {
-				client.sendMessage(makeMessage(" 473 " + client.getNick() + " " + channel + " :Cannot join channel (+i)"));
-				continue;
-			}
-			if (!chan.getMode('k').empty() && chan.getMode('k').compare(password) != 0) {
-				client.sendMessage(makeMessage(" 475 " + client.getNick() + " " + channel + " :Cannot join channel (+k)"));
-				continue;
-			}
-			if (!chan.getMode('l').empty() && chan.getClients().size() >= (size_t)std::atol(chan.getMode('l').c_str())) {
-				client.sendMessage(makeMessage(" 471 " + client.getNick() + " " + channel + " :Cannot join channel (+l)"));
-				continue;
-			}
-			chan.addClient(client);
-		}
+		if (channel[0] == '#')
+			_channels[channel](channel).addClient(client, password);
 		else 
 			client.sendMessage(client.makeMessage(channel + ": Channel not found"));
 	}
-	// _channels[channel].printOPName();
 }
 
 void Server::topicRequest(Client& client) {

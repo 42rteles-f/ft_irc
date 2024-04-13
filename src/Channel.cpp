@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/13 14:16:28 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/13 15:06:55 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,16 +52,23 @@ Channel& Channel::operator=(const Channel& tocopy) {
 	return (*this);
 }
 
-void	Channel::addClient(Client& add) {
-	std::vector<Client*>::iterator find;
+void	Channel::addClient(Client& client, std::string password) {
 
-	find = std::find(_clients.begin(), _clients.end(), &add);
+	if (!_modes[(int)'i'].empty() && std::find(client.getChannels().begin(), client.getChannels().end(), this) == client.getChannels().end())
+		return client.sendMessage(Server::makeMessage(" 473 " + client.getNick() + " " + this->_name + " :Cannot join channel (+i)"));
+	if (!_modes[(int)'k'].empty() && _modes[(int)'k'].compare(password) != 0)
+		return client.sendMessage(Server::makeMessage(" 475 " + client.getNick() + " " + this->_name + " :Cannot join channel (+k)"));
+	if (!_modes[(int)'l'].empty() && this->getClients().size() >= (size_t)std::atol(_modes[(int)'l'].c_str()))
+		return client.sendMessage(Server::makeMessage(" 471 " + client.getNick() + " " + this->_name + " :Cannot join channel (+l)"));
+
+	std::vector<Client*>::iterator find = std::find(_clients.begin(), _clients.end(), &client);
+
 	if (find == _clients.end())
-		_clients.push_back(&add);
+		_clients.push_back(&client);
 	if (_op.size() == 0)
-		_op.push_back(&add);
-	this->broadcast(add.makeMessage());
-	add.addChannel(this);
+		_op.push_back(&client);
+	this->broadcast(client.makeMessage());
+	client.addChannel(this);
 }
 
 void	Channel::removeClient(Client& remove) {

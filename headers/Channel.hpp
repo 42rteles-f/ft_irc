@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/13 14:18:53 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/13 15:03:02 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ class Channel {
 		bool		operator==(const Client& compare);
 		Channel& 	operator()(const std::string name);
 
-		void	addClient(Client& add);
+		void	addClient(Client& add, std::string pass);
 		void	removeClient(Client& remove);
 		void	removeClient(std::string remove);
 		void	broadcast(Client& client);
