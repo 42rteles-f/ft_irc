@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 10:02:13 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/13 22:48:55 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/14 13:11:51 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void	Server::kickRequest(Client& client) {
 		else
 			_channels[channel].broadcast(client.makeMessage("KICK " + channel + " " + remove + " :" + client.getNick()));
 		_channels[channel].removeClient(remove);
-		updateChannel(_channels[channel]);
+		_channels[channel].update();
 	}
 }
 
@@ -126,7 +126,7 @@ void	Server::partRequest(Client& client) {
 		_channels[channel].broadcast(client.makeMessage());
 		_channels[channel].removeClient(client);
 		if (_channels[channel].getClients().size())
-			this->updateChannel(_channels[channel]);
+			_channels[channel].update();
 		else
 			_channels.erase(_channels.find(channel));
 	}
@@ -169,7 +169,7 @@ void	Server::quitRequest(Client& client) {
 	{
 		channels[i]->broadcast(client.makeMessage());
 		channels[i]->removeClient(client);
-		this->updateChannel(*channels[i]);
+		channels[i]->update();
 	}
 	std::cout << "channells removed" << std::endl;
 }

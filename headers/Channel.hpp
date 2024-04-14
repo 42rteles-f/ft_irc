@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 17:30:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/13 15:03:02 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/14 10:05:26 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ class Channel {
 		void	removeClient(std::string remove);
 		void	broadcast(Client& client);
 		void	broadcast(std::string message);
+		void 	update(void);
 
 		void 	inviteAndTopicMode(Client &client, std::string mode, std::string argument);
 		void 	operatorMode(Client &client, std::string mode, std::string argument);

@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/13 15:06:55 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/14 13:12:52 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,4 +142,20 @@ bool Channel::isClientInChannel(Client* guest) {
 	if (it != _clients.end())
 		return true;
 	return false;
+}
+
+void Channel::update(void) {
+	for (size_t id = 0; id < _clients.size(); id++) {
+		_clients[id]->sendMessage(Server::makeMessage(" 332 " + _clients[id]->getNick() + " " + _name + " " + _topic));
+		std::vector<Client*>::iterator it = _clients.begin();
+		std::string message;
+		for (; it != _clients.end(); it++) {
+			if (this->isOp(**it))
+				message += "@" + (*it)->getNick() + " ";
+			else
+				message += (*it)->getNick() + " ";
+		}
+		_clients[id]->sendMessage(Server::makeMessage(" 353 " + _clients[id]->getNick() + " = " + _name + " :" + message));
+		_clients[id]->sendMessage(Server::makeMessage(" 366 " + _clients[id]->getNick() + " " + _name + " :End of /WHO list."));
+	}
 }
