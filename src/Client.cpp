@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:37:16 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/11 19:39:14 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/13 21:51:09 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ Client& Client::operator=(const Client& tocopy) {
 bool	Client::operator==(const Client& compare) {
 		return (this->socket->fd == compare.socket->fd ? true : false);
 }
-
 
 bool	Client::operator!=(const Client& compare) {
 		return (this->socket->fd != compare.socket->fd ? true : false);
@@ -94,8 +93,10 @@ void	Client::makeRequest(Server& server) {
 		_read = "PASS \n" + _read;
 	iss.str(_read);
 	while (std::getline(iss, _input) && _read.find("\n") != _read.npos) {
+		for (size_t i = 0; i < _input.size() && _input[i] != ' '; i++)
+			_input[i] = std::toupper(_input[i]);
 		command = _input.substr(0, _input.find(" "));
-		handler = server.requestHandler(command);
+		handler = server.requestHandler(command.substr(0, command.find("\r")));
 		(server.*handler)(*this);
 		breakline = _read.find("\n");
 		_read = (breakline != _read.npos) ? _read.substr(++breakline) : "";
@@ -153,6 +154,8 @@ void	Client::sendMessage(std::string message) const {
 }
 
 void	Client::addChannel(Channel *channel) {
+	if (std::find(_myChannels.begin(), _myChannels.end(), channel) != _myChannels.end())
+		return ;
 	_myChannels.push_back(channel);
 }
 

@@ -6,7 +6,7 @@
 /*   By: rteles-f <rteles-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 21:18:54 by rteles-f          #+#    #+#             */
-/*   Updated: 2024/04/11 19:37:15 by rteles-f         ###   ########.fr       */
+/*   Updated: 2024/04/14 13:12:52 by rteles-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,28 +39,38 @@ const std::string& Channel::name(void) {
 	return (_name);
 }
 
-// Channel& Channel::operator=(const Channel& tocopy) {
-// 	if (this == &tocopy)
-// 		return (*this);
-// 	this->_topic = tocopy._topic;
-// 	this->_clients = tocopy._clients;
-// 	this->_op = tocopy._op;
-// 	return (*this);
-// }
-
-void	Channel::addClient(Client& add) {
-	std::vector<Client*>::iterator find;
-
-	find = std::find(_clients.begin(), _clients.end(), &add);
-	if (find == _clients.end())
-		_clients.push_back(&add);
-	if (_op.size() == 0)
-		_op.push_back(&add);
-	this->broadcast(add.makeMessage());
-	add.addChannel(this);
+Channel& Channel::operator=(const Channel& tocopy) {
+	if (this == &tocopy)
+		return (*this);
+	this->_name = tocopy._name;
+	for(int i = 0; i < 255; i++)
+		this->_modes[i] = tocopy._modes[i];
+	this->_topic = tocopy._topic;
+	this->_functions = tocopy._functions;
+	this->_clients = tocopy._clients;
+	this->_op = tocopy._op;
+	return (*this);
 }
 
-//Remove doenst broadcast the client leaving due to the kick message being custom.
+void	Channel::addClient(Client& client, std::string password) {
+
+	if (!_modes[(int)'i'].empty() && std::find(client.getChannels().begin(), client.getChannels().end(), this) == client.getChannels().end())
+		return client.sendMessage(Server::makeMessage(" 473 " + client.getNick() + " " + this->_name + " :Cannot join channel (+i)"));
+	if (!_modes[(int)'k'].empty() && _modes[(int)'k'].compare(password) != 0)
+		return client.sendMessage(Server::makeMessage(" 475 " + client.getNick() + " " + this->_name + " :Cannot join channel (+k)"));
+	if (!_modes[(int)'l'].empty() && this->getClients().size() >= (size_t)std::atol(_modes[(int)'l'].c_str()))
+		return client.sendMessage(Server::makeMessage(" 471 " + client.getNick() + " " + this->_name + " :Cannot join channel (+l)"));
+
+	std::vector<Client*>::iterator find = std::find(_clients.begin(), _clients.end(), &client);
+
+	if (find == _clients.end())
+		_clients.push_back(&client);
+	if (_op.size() == 0)
+		_op.push_back(&client);
+	this->broadcast(client.makeMessage());
+	client.addChannel(this);
+}
+
 void	Channel::removeClient(Client& remove) {
 	std::vector<Client*>::iterator find;
 
@@ -90,19 +100,6 @@ size_t Channel::NumberOfClients() {
 	return _clients.size();
 }
 
-void	Channel::printOPName() {
-	std::vector<Client*>::iterator it = _op.begin();
-	for (; it != _op.end(); it++) {
-		std::cout << (*it)->getNick() << std::endl;
-	}
-}
-
-void Channel::addOp(Client &client) {
-	if (this->isOp(client))
-		return;
-	this->_op.push_back(&client);
-}
-
 void	Channel::broadcast(Client& sender)
 {
 	std::string	message = sender.makeMessage();
@@ -117,48 +114,7 @@ void	Channel::broadcast(Client& sender)
 void	Channel::broadcast(std::string message)
 {
 	for (size_t i = 0; i < _clients.size(); i++)
-	{
 		send(_clients[i]->socket->fd, message.c_str(), message.size(), 0);
-	}
-}
-
-void	Channel::setTopic(std::string topic) {
-	this->_topic = topic;
-}
-
-std::string	Channel::getTopic(void) {
-	return (this->_topic);
-}
-
-bool Channel::isOp(Client& client) {
-	std::vector<Client*>::iterator find;
-
-	find = std::find(_op.begin(), _op.end(), &client);
-	if (find != _op.end())
-		return true;
-	return false;
-}
-
-void Channel::removeOp(Client& client) {
-	std::vector<Client*>::iterator find;
-
-	find = std::find(_op.begin(), _op.end(), &client);
-	if (find != _op.end())
-		_op.erase(find);
-	
-	if (_clients.size() && _op.size() == 0)
-		_op.push_back(_clients[0]);
-}
-
-bool Channel::isOp(std::string clientName) {
-	std::vector<Client*>::iterator find;
-
-	find = _op.begin();
-	for (;find != _op.end(); ++find) {
-		if (clientName.compare((*find)->getNick()) == 0)
-			return true;
-	}
-	return false;
 }
 
 Client& Channel::getClient(size_t index){
@@ -180,70 +136,26 @@ Client* Channel::findClient(std::string clientName) {
 	return (NULL);
 }
 
-void Channel::addMode(Client &client, std::string mode, std::string argument)
-{
-	std::cout << "mode: " << mode << " argument: " << argument << std::endl;
-	std::map<char, t_exe>::const_iterator	found = _functions.find(mode[1]);
-	if (found != _functions.end())
-		(this->*(found->second))(client, mode, argument);
-	else
-		invalidMode(client, mode);
+bool Channel::isClientInChannel(Client* guest) {
+	std::vector<Client *>::iterator it = std::find(_clients.begin(), _clients.end(), guest);
+
+	if (it != _clients.end())
+		return true;
+	return false;
 }
 
-void	Channel::invalidMode(Client &client, std::string mode) {
-	client.sendMessage(std::string(HOSTNAME) + " 472 " + client.getNick() + " " + mode + " :is unknown mode char to me for");
-}
-
-void Channel::operatorMode(Client &client, std::string mode, std::string argument)
-{
-	std::cout << "operatorMode" << std::endl;
-	std::cout << "mode: " << mode << " argument: " << argument << std::endl;
-	if (argument.empty())
-		return ;
-	Client *argClient = this->findClient(argument);
-	if (mode[0] == '+' && argClient && !this->isOp(*argClient))
-	{
-		addOp(*argClient);
-		broadcast(client.makeMessage(("MODE " + _name + " " + mode + " " + argument)));
-	}
-	else if (mode[0] == '-' && argClient && this->isOp(*argClient))
-	{
-		removeOp(*argClient);
-		broadcast(client.makeMessage(("MODE " + _name + " " + mode + " " + argument)));
-	}
-}
-
-void Channel::inviteAndTopicMode(Client &client, std::string mode, std::string argument)
-{
-	std::cout << "invite and topic" << std::endl;
-	std::cout << "mode: " << mode << " argument: " << argument << std::endl;
-	(void)argument;
-	if (mode[0] == '+')
-	{
-		_modes[(int)mode[1]] = "yes";
-		broadcast(client.makeMessage(("MODE " + _name + " " + mode)));
-	}
-	else if (mode[0] == '-' && !_modes[(int)mode[1]].empty())
-	{
-		_modes[(int)mode[1]].clear();
-		broadcast(client.makeMessage(("MODE " + _name + " " + mode)));
-	}
-}
-
-void Channel::keyAndLimitMode(Client &client, std::string mode, std::string argument)
-{
-	std::cout << "key and limit" << std::endl;
-	std::cout << "mode: " << mode << " argument: " << argument << std::endl;
-	if (argument.empty())
-		return ;
-	if (mode[0] == '+')
-	{
-		_modes[(int)mode[1]] = argument;
-		broadcast(client.makeMessage(("MODE " + _name + " " + mode + " " + argument)));
-	}
-	else if (mode[0] == '-' && !_modes[(int)mode[1]].empty())
-	{
-		_modes[(int)mode[1]].clear();
-		broadcast(client.makeMessage(("MODE " + _name + " " + mode + " " + argument)));
+void Channel::update(void) {
+	for (size_t id = 0; id < _clients.size(); id++) {
+		_clients[id]->sendMessage(Server::makeMessage(" 332 " + _clients[id]->getNick() + " " + _name + " " + _topic));
+		std::vector<Client*>::iterator it = _clients.begin();
+		std::string message;
+		for (; it != _clients.end(); it++) {
+			if (this->isOp(**it))
+				message += "@" + (*it)->getNick() + " ";
+			else
+				message += (*it)->getNick() + " ";
+		}
+		_clients[id]->sendMessage(Server::makeMessage(" 353 " + _clients[id]->getNick() + " = " + _name + " :" + message));
+		_clients[id]->sendMessage(Server::makeMessage(" 366 " + _clients[id]->getNick() + " " + _name + " :End of /WHO list."));
 	}
 }

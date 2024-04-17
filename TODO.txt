@@ -1,3 +1,0 @@
-- change the join message sender
-- finish the kick command
-- 
