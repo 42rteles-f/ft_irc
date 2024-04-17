@@ -30,11 +30,11 @@ class Channel {
 	public:
 		Channel();
 		Channel(std::string name);
-		Channel(const Channel& tocopy);
+		// Channel(const Channel& tocopy);
 		~Channel();
 
 		Channel&	operator=(const Channel& tocopy);
-		bool		operator==(const Client& compare);
+		// bool		operator==(const Client& compare);
 		Channel& 	operator()(const std::string name);
 
 		void	addClient(Client& add);

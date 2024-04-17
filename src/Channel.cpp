@@ -22,10 +22,10 @@ Channel::Channel() : _topic(""), _op()
 	_functions['l'] = &Channel::keyAndLimitMode;
 }
 
-Channel::Channel(const Channel& tocopy)
-{
-	*this = tocopy;
-}
+// Channel::Channel(const Channel& tocopy)
+// {
+// 	*this = tocopy;
+// }
 
 Channel::~Channel()
 {}
@@ -39,15 +39,14 @@ const std::string& Channel::name(void) {
 	return (_name);
 }
 
-Channel& Channel::operator=(const Channel& tocopy) {
-	if (this == &tocopy)
-		return (*this);
-	this->_topic = tocopy._topic;
-	this->_clients = tocopy._clients;
-	this->_op = tocopy._op;
-	std::cout << "operator=" << std::endl;
-	return (*this);
-}
+// Channel& Channel::operator=(const Channel& tocopy) {
+// 	if (this == &tocopy)
+// 		return (*this);
+// 	this->_topic = tocopy._topic;
+// 	this->_clients = tocopy._clients;
+// 	this->_op = tocopy._op;
+// 	return (*this);
+// }
 
 void	Channel::addClient(Client& add) {
 	std::vector<Client*>::iterator find;
