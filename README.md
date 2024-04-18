@@ -9,3 +9,5 @@ For classes we needed: <br>
 * Channels - That groups clients and manages this group;
 * Connections - That handles all the in and out of Clients and sockets;
 
+https://github.com/42rteles-f/ft_irc/assets/89268663/c17ea32a-7edd-47db-aafc-83920ad57522
+
