@@ -4,7 +4,7 @@ The ft_irc - Internet Relay Chat -  is a Project about Sockets, Servers, Connect
 
 The core of our project is the combination of the principles in Observer Pattern, the Factory Pattern, the std::map container, and function pointers, making the Server concise, highly adaptable and easy to correct/maintain. <br>
 For classes we needed: <br>
-* Server - Who manages connections and Acts as the Observer; <br>
+* Server - Who manages connections, Acts as the Observer and the Factory; <br>
 * Client - That stores, handles all Clients operations and inputs, and Acts as the Subjects; 
 * Channels - That groups clients and manages this group;
 * Connections - That handles all the in and out of Clients and sockets;
